@@ -5,6 +5,18 @@ A random generator for creating characters for old school fantasy rpgs.
 
 Right now it just creates characters for Lamentations of the Flame Princess or Labyrinth Lord rules (though they could be easily used for other OSR type games).
 
+Install
+-------
+
+* Click the "Download ZIP" button at right to get a zip file of the app.
+* Unzip the file ("osr-random-generator-master.zip") on your computer (most of the time, just double click and your computer should know what to do).
+* Find the new folder that was made (should be called: "osr-random-generator-master").
+* Open the "index.html" file in your browser (Chrome is preferred and the only one I've tested).
+* Give it a try.
+* If you save settings/characters they will be saved in your browser's local storage (so be careful when clearing data from your browser).
+* Let me know if you have trouble or feature suggestions.
+
+
 Credits
 ------
 
