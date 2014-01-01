@@ -17,7 +17,7 @@ var AppRouter = Backbone.Router.extend({
 		this.AppSettingsView = new AppSettingsView({ model: this.AppSettings });
 		$('#settings').html(this.AppSettingsView.render().el);
 		//console.log(this);
-		$('#character-form').html(new CharForm({ model: this.AppSettings }).render().el);
+		$('#character-form').append(new CharForm({ model: this.AppSettings }).render().el);
     },
 	
     list: function () {

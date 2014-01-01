@@ -25,24 +25,30 @@
 		  <li class="active"><a href="#npcs" data-toggle="tab">NPCs</a></li>
 		  <li><a href="#other" data-toggle="tab">t.b.d.</a></li>
 		  <li><a href="#settings" data-toggle="tab">Settings</a></li>
+		  <li><a href="#help" data-toggle="tab">Help</a></li>
 		  <li><a href="#credits" data-toggle="tab">Credits</a></li>
 		</ul>
 		
 		<div class="tab-content">
 			<div class="tab-pane active" id="npcs">
 				<div class="row">
+					<div class="col-sm-6">
+						<section id="characters-new">
+							<h1>Current Characters</h1>
+						</section>
+					</div>
+					
 					<div class="col-sm-6 hidden-print">
-						<div id="character-form">
+						<section id="character-form">
+							<h1>Create Character</h1>
 							<!-- Character creation form here. -->
-						</div>
+						</section>
 						<div id="characters-list">
 							<!-- Character list here. -->
 						</div>
 					</div>
 	    	
-					<div class="col-sm-6">
-						<div id="characters-new"></div>
-					</div>
+					
 				</div>
 			</div>
 			
@@ -55,9 +61,32 @@
 				<!-- The global settings form goes here. -->
 			</div>
 			
+			<div class="tab-pane hidden-print" id="help">
+				<section>
+					<h1>Help</h1>
+					<h2>General</h2>
+					<ul>
+						<li>Only tested in Chrome so far.</li>
+						<li>Saved characters and settings are stored in your browser's local storage. Be careful when clearing your browser cache/data else you may delete what you've saved.</li>
+						<li>Printing from the NPC tab should only print the NPCs in the "Current Characters" list as 5" wide cards (going for 3"x5" cards but height is hard to maintain).</li>
+					</ul>
+					
+					<h3>NPCs</h3>
+					<ul>
+						<li>The rules setting dictates ability score modifiers, class parameters (hd, spell choice, attack bonus, etc.), armor class details, and 0-level human stats.</li>
+						<li>Ability scores are rolled 4d6 drop the lowest (I'll probably make this a setting at some point).</li>
+						<li>Attack Bonus is shown as a melee/missile breakdown (based on class, level, and strength or dexterity as appropriate to the rules) or as a single number if both bonuses would be the same.</li>
+						<li>Level calculations/options stop at 9.</li>
+						<li>Gender only effects the random name generator.</li>
+						<li>Surnames are applied to non-Holmesian names 50% of the time.</li>
+						<li>Most 0-level humans are not given armor, but a few <em>are</em> based on their occupation.</li>
+					</ul>
+				</section>
+			</div>
+			
 			<div class="tab-pane hidden-print" id="credits">
 				<!-- Credits -->
-				<p>Coding by Derik A. Badman. Made with: <a href="http://jquery.com">jQuery</a>, <a href="http://getbootstrap.com/">Bootstrap</a>, <a href="http://backbonejs.org/">Backbone</a> (with the <a href="https://github.com/jeromegn/Backbone.localStorage">Local Storage adapter</a>), and <a href="http://underscorejs.org/">Underscore</a>.</p>
+				<p>Coding by <a href="http://madinkbeard.com">Derik A. Badman</a>. Made with: <a href="http://jquery.com">jQuery</a>, <a href="http://getbootstrap.com/">Bootstrap</a>, <a href="http://backbonejs.org/">Backbone</a> (with the <a href="https://github.com/jeromegn/Backbone.localStorage">Local Storage adapter</a>), and <a href="http://underscorejs.org/">Underscore</a>.</p>
 				<section>
 					<h3>Sources</h3>
 					<ul>
@@ -67,6 +96,8 @@
 						<li>Spell list as compiled by <a href="https://plus.google.com/u/0/102353265648840654058/about">Adam Taylor</a> by way of html from <a href="http://save.vs.totalpartykill.ca/grab-bag/">Ramanan Sivaranjan</a> (which I converted into JSON).</li>
 						<li>Appearance and Personality lists from <a href="http://www.lulu.com/shop/courtney-campbell/on-the-non-player-character/ebook/product-21094127.html">On the Non-Player Character</a> by <a href="http://hackslashmaster.blogspot.com/">Courtney Campbell</a>.</li>
 						<li>Personality and Quirks lists from <a href="http://www.roleplayingtips.com/articles/npc-essentials.html">GM Mastery: NPC Essentials</a> by <a href="http://www.roleplayingtips.com/">Johnn Four</a></li>
+						<li>Holmesian Names are adapted from the <a href="http://zenopusarchives.blogspot.com/2013/07/random-names-one-sheet.html">Zenopus Archives' Holmesian Name Generator</a>.</li>
+						<li><a href="http://jrients.blogspot.com/2011/09/random-cornish-names.html">Cornish</a> and <a href="http://jrients.blogspot.com/2012/01/medieval-flemish-names.html">Flemish</a> first names taken from Jeff Rients.</li>
 					</ul>
 				</section>
 				<section>

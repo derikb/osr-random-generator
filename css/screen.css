@@ -1,15 +1,43 @@
 .tab-pane { padding: 20px; }
 
-@media (min-width: 768px) {
-	.dl-horizontal dt { width: auto; }
+section h1 {
+	margin-top: 10px;
+	font-size: 25px;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 5px;
+}
+section h2 {
+	margin-top: 10px;
+	font-size: 21px;
+}
+
+
+/* @media (min-width: 768px) { */
+	.dl-horizontal dt {
+		width: auto;
+		
+		float: left;
+		clear: left;
+/*
+		text-align: right;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+*/
+	}
 	.dl-horizontal dd { float: left; margin-left: 15px; }
 
 	.spell-details .dl-horizontal dt, .dl-horizontal dd {
 		margin-bottom: 5px;
 	}
-}
+	
+	.character-traits dt { margin-top: 5px; }
+	.character-traits dt:first-child { margin-top: 0px; }
+	
+/* } */
 
-#npc-form {
+#character-form, #characters-list, #characters-new {
 	padding-bottom: 10px;
 	border-bottom: 1px solid rgb(221,221,221);
 	margin-bottom: 10px;

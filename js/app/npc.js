@@ -404,16 +404,16 @@ var CharacterBlock = Backbone.View.extend({
     
     
     template: function(data){
-    	var char_full = '<div class="row"><div class="col-sm-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %>, <span data-field="level">Lvl <%= level %></span></dd><% } %></dl>';
+    	var char_full = '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %>, <span data-field="level">Lvl <%= level %></span></dd><% } %></dl>';
     	char_full += '<dl class="dl-horizontal clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %> (<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span></dd><% }); %></dl>';
     	
     	char_full += '<dl class="dl-horizontal clearfix"><dt>HP</dt><dd><span data-field="hp"><%= hp %></span></dd><dt>AC</dt><dd><%= ac %><% if (armor !== "") { %> (<%= armor %>)<% } %></dd><dt>Attack Bonus</dt><% if (attack.melee == attack.missile) { %><dd><%= attack.melee %></dd><% } else { %><dd><%= attack.melee %> Melee</dd><dd><%= attack.missile %> Missile</dd><% } %><dt></dt><dd></dd></dl>';
     	
-    	char_full += '</div><div class="col-sm-6">';
+    	char_full += '</div><div class="col-xs-6">';
     	
     	char_full += '<dl class="dl-horizontal clearfix"><dt data-field="chargroup">Group</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
     	
-    	char_full += '<dl class="clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %></dl>';
+    	char_full += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %></dl>';
     	
     	char_full += '<% if (spellcaster == true) { %><section><h4 data-field="spells">Spells</h4><dl class=""><% _.each(spells, function(v,k) { %><dt data-field="spells"><%= k %></dt><% _.each(v, function(y,x) { %><dd class="spell" data-spell="<%= y %>"><%= y %> <span class="glyphicon glyphicon-info-sign"></span></dd><% }); }); %></dl></section><% } %>'; //spells
 		
@@ -855,14 +855,16 @@ var CharForm = Backbone.View.extend({
 			}
 		form += '<option value="random">Random</option></select><div class="help-block"></div></div></div>';
     	
-    	form += '<div class="form-group"><label for="name_type" class="control-label">Name Type</label><select class="form-control" id="name_type" name="name_type">';
-    		_.each(appdata.name.options, function(v){
-	    		form += '<option value="'+v.option+'">'+v.label+'</option>';
-    		});
-		form += '</select><div class="help-block"></div></div>';
-		
-		form += '<div class="form-group"><label for="chargroup" class="control-label">Character Group</label><input type=text class="form-control" name="chargroup" id="chargroup" value="" /><div class="help-block">You can define groups to organize your saved NPCs.</div></div>';
-    	    	
+    	form += '<div class="row">';
+	    	form += '<div class="form-group col-sm-6"><label for="name_type" class="control-label">Name Type</label><select class="form-control" id="name_type" name="name_type">';
+	    		_.each(appdata.name.options, function(v){
+		    		form += '<option value="'+v.option+'">'+v.label+'</option>';
+	    		});
+			form += '</select><div class="help-block"></div></div>';
+			
+			form += '<div class="form-group col-sm-6"><label for="chargroup" class="control-label">Character Group</label><input type=text class="form-control" name="chargroup" id="chargroup" value="" /><div class="help-block">For organizing your saved NPCs.</div></div>';
+    	form += '</div>';
+    	
     	form += '<div class="form-group"><button type=submit class="btn btn-primary">Generate NPC</button></div>';
     	
     	$(this.el).html(form);

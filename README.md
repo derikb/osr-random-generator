@@ -39,6 +39,8 @@ Made with: <a href="http://jquery.com">jQuery</a>, <a href="http://getbootstrap.
 * Spell list as compiled by <a href="https://plus.google.com/u/0/102353265648840654058/about">Adam Taylor</a> by way of html from <a href="http://save.vs.totalpartykill.ca/grab-bag/">Ramanan Sivaranjan</a> (which I converted into JSON).
 * Appearance and Personality lists from <a href="http://www.lulu.com/shop/courtney-campbell/on-the-non-player-character/ebook/product-21094127.html">On the Non-Player Character</a> by <a href="http://hackslashmaster.blogspot.com/">Courtney Campbell</a>.
 * Personality and Quirks lists from <a href="http://www.roleplayingtips.com/articles/npc-essentials.html">GM Mastery: NPC Essentials</a> by <a href="http://www.roleplayingtips.com/">Johnn Four</a>
+* Holmesian Names are adapted from the <a href="http://zenopusarchives.blogspot.com/2013/07/random-names-one-sheet.html">Zenopus Archives' Holmesian Name Generator</a>.
+* <a href="http://jrients.blogspot.com/2011/09/random-cornish-names.html">Cornish</a> and <a href="http://jrients.blogspot.com/2012/01/medieval-flemish-names.html">Flemish</a> first names taken from Jeff Rients.
 
 ### Notes
 
