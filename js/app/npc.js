@@ -247,7 +247,7 @@ var Character = Backbone.Model.extend({
 
 		if (armor !== '') {
 			var armordata = _.findWhere(this.getRules().armor, { name: armor });
-			console.log(armordata);
+			//console.log(armordata);
 			if (armordata.ac_base > 0) { ac = armordata.ac_base; }
 			if (armordata.ac_bonus > 0) {
 				if (method == 'asc') {
@@ -358,7 +358,7 @@ var CharacterBlock = Backbone.View.extend({
     
     removeCharacter: function(e) {
 	    e.preventDefault();
-	    console.log(this.model.changedAttributes());
+	    //console.log(this.model.changedAttributes());
 	    if (this.model.isNew()) {
 		    if (!confirm('You have not saved this character. Are you sure you with to delete it?')) {
 			    return false;
@@ -383,7 +383,7 @@ var CharacterBlock = Backbone.View.extend({
 	    //console.log(spell);
 	    
 	    var spellv = new SpellView({spell: spell});
-	    console.log(spellv);
+	    //console.log(spellv);
 	    $('#editmodal .modal-title').html('Spell Details: '+spell.title.capitalize());
 	    $('#editmodal .modal-body').html(spellv.render().el);
 		$('#editmodal').modal({});
@@ -430,8 +430,8 @@ var CharacterBlock = Backbone.View.extend({
     
     render: function() {
     	//something
-    	console.log('view render');
-    	console.trace();
+    	//console.log('view render');
+    	//console.trace();
     	this.$el.html(this.template(this.model.attributes));
     	    	
 		return this;
@@ -503,12 +503,12 @@ var EditView = Backbone.View.extend({
 	
 	commitEdit: function(e) {
 		formdata = $(e.target).serializeObject();
-		console.log(formdata);
+		//console.log(formdata);
 		
 		if (this.field == 'ability_scores') {
 			
 			var scores = _.clone( this.model.get('ability_scores') );
-			console.log(scores);
+			//console.log(scores);
 			a = _.findWhere(scores, { name: formdata.ability });
 			a.score = formdata.score;
 			a.modifier = this.model.calcModifier(a.name, a.score);
@@ -520,7 +520,7 @@ var EditView = Backbone.View.extend({
 			}
 						
 			scores[index] = a;
-			console.log(scores);
+			//console.log(scores);
 			this.model.set({ ability_scores: scores });
 			//this.model.save({ ability_scores: scores });
 			this.model.trigger('change:'+a.name, this.model);
@@ -549,7 +549,7 @@ var EditView = Backbone.View.extend({
 	
 	loadRandom: function(e) {
 		
-		console.log(e);
+		//console.log(e);
 		var inputtarget = $(e.target).attr('data-targetfield');
 		var list = $(e.target).attr('data-list');
 		
@@ -577,7 +577,7 @@ var EditView = Backbone.View.extend({
 		var field = this.field;
 		var subfield = this.subfield;
 		
-		console.log(this);
+		//console.log(this);
 		var form = '<form>';
 		switch (field) {
 			case 'ability_scores':

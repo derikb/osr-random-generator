@@ -16,7 +16,7 @@ var AppRouter = Backbone.Router.extend({
 		this.AppSettings.fetch();
 		this.AppSettingsView = new AppSettingsView({ model: this.AppSettings });
 		$('#settings').html(this.AppSettingsView.render().el);
-		console.log(this);
+		//console.log(this);
 		$('#character-form').html(new CharForm({ model: this.AppSettings }).render().el);
     },
 	
@@ -169,7 +169,7 @@ this.randomNumber = function(min, max) {
 	
 	//roll die(dice) defaults to d6, 1 time, 0 modifier
 	this.roll = function(die, number, modifier) {
-		console.log(arguments);
+		//console.log(arguments);
 		if (typeof modifier == 'undefined') {
 			var modifier = 0;
 		}
