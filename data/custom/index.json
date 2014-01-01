@@ -23,16 +23,23 @@ See examples.
 
 */
 
+/*
+
+EXAMPLE: Add Appearance list
+
 //push an option to the appearance data this lets the app know your custom data exists and what to call it.
-appdata.appearance.options.push({ option: "testing", label: "Test test" });
+appdata.appearance.options.push({ option: "weird", label: "Weird Traits" });
 //set the data using the "option" value above, this is the data itself.
 appdata.appearance.testing = [
-		"Red hair",
-		"Brown hair",
-		"Black hair",
-		"Blond hair"
+		"Devil horns",
+		"Blue skin",
+		"Hooved feet",
+		"Third eye",
+		"Webbed fingers/toes",
+		"Vaguely fish-like"
 	];
 	
+*/
 	
 /*
 
@@ -50,22 +57,11 @@ appdata.personality.weird = [
 
 */
 
-appdata.appearance.options.push({ option: "weird", label: "Weird Traits"});
-appdata.appearance.weird = [
-	"Devil horns",
-	"Blue skin",
-	"Hooved feet",
-	"Third eye",
-	"Webbed fingers/toes",
-	"Vaguely fish-like"
-];
-
 
 /*
 
 EXAMPLE: Add Names list
 
-*/
 appdata.name.options.push({ option: "japanese", label: "Japanese (ish)"});
 appdata.name.japanese = {
 	"male": [
@@ -91,3 +87,5 @@ appdata.name.japanese = {
 		"Kawabata"
 	]
 };
+
+*/

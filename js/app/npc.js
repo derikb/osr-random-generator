@@ -335,6 +335,7 @@ var CharacterBlock = Backbone.View.extend({
 	
 	initialize: function() {
     	this.listenTo(this.model, "change", this.render);
+    	this.listenTo(this.model, "destroy", this.remove);
     	//this.listenTo(this.model, "change", this.model.save);
     },
     
@@ -802,6 +803,7 @@ var CharacterListItem = Backbone.View.extend({
     
     deleteCharacter: function(e) {
 		e.preventDefault();
+		if (!confirm('Are you sure you want to delete this character?')) { return; }
 		this.model.destroy();
     },
     
