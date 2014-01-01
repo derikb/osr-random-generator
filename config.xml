@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+    <widget xmlns   = "http://www.w3.org/ns/widgets"
+        xmlns:gap   = "http://phonegap.com/ns/1.0"
+        id          = "com.madinkbeard.osr-random-generator"
+        version     = "0.1.0" >
+
+    <name>OSR Random Generator</name>
+
+    <description>
+        A random generator for old school fantasy rpgs. Currently creates NPCs for LotFP and Labyrinth Lord. 
+    </description>
+
+    <author href="http://madinkbeard.com" email="support@madinkbeard.com">
+        Derik A. Badman
+    </author>
+    
+    <gap:platform name="android" />
+
+</widget>
