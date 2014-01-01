@@ -5,7 +5,7 @@
 //!Character model
 var Character = Backbone.Model.extend({
 	
-	localStorage: new Backbone.LocalStorage("NPCs"),
+	localStorage: new Backbone.LocalStorage("osr-random-generator-npcs"),
 	
 	defaults: function() {
 		return {
@@ -713,7 +713,7 @@ var EditView = Backbone.View.extend({
 var CharCollection = Backbone.Collection.extend({
 
     model: Character,
-	localStorage: new Backbone.LocalStorage("NPCs"), // Unique name within your app.
+	localStorage: new Backbone.LocalStorage("osr-random-generator-npcs"), // Unique name within your app.
 	
 	comparator: function(char) {
       return [char.get("group"), char.get("name")]

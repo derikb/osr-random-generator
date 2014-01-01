@@ -42,7 +42,7 @@ loadCustomData: function(){
 //! AppSettings - for storing settings
 var AppSettings = Backbone.Model.extend({
 	
-	localStorage: new Backbone.LocalStorage("RandSettings"), // Unique name within your app.
+	localStorage: new Backbone.LocalStorage("osr-random-generator-settings"), // Unique name within your app.
 	
 	defaults: function() {
 		return {
