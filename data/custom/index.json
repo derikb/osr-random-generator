@@ -1,0 +1,93 @@
+appdata = (typeof appdata == "undefined") ? {} : appdata;
+
+/*
+
+Important:
+
+	-Put all data strings in double quotes.
+	-Use a forward slash before double quotes inside any double quotes:
+		- Constantly says "Umm"
+		- "Constantly says \"Umm\""
+	-Use commas to separate items in a list, but DO NOT put a comma after the last item in a list
+	
+
+Data that can be customized:
+	-personality
+		-a list of strings
+	-appearance
+		-a list of strings
+	-name
+		-an object containing a list of strings for "male", "female", and "surname"
+
+See examples.
+
+*/
+
+//push an option to the appearance data this lets the app know your custom data exists and what to call it.
+appdata.appearance.options.push({ option: "testing", label: "Test test" });
+//set the data using the "option" value above, this is the data itself.
+appdata.appearance.testing = [
+		"Red hair",
+		"Brown hair",
+		"Black hair",
+		"Blond hair"
+	];
+	
+	
+/*
+
+EXAMPLE: Add Personality list
+
+appdata.personality.options.push({ option: "weird", label: "Weird Traits"});
+appdata.personality.weird = [
+	"Superstitious",
+	"Throws salt over shoulder at mention of ___",
+	"Talks in rhyme",
+	"Schizophrenic",
+	"Thinks s/he is possessed, incorrectly",
+	"Thinks s/he is possessed, correctly",
+];
+
+*/
+
+appdata.appearance.options.push({ option: "weird", label: "Weird Traits"});
+appdata.appearance.weird = [
+	"Devil horns",
+	"Blue skin",
+	"Hooved feet",
+	"Third eye",
+	"Webbed fingers/toes",
+	"Vaguely fish-like"
+];
+
+
+/*
+
+EXAMPLE: Add Names list
+
+*/
+appdata.name.options.push({ option: "japanese", label: "Japanese (ish)"});
+appdata.name.japanese = {
+	"male": [
+		"Kazuo",
+		"Ryuichi",
+		"Ryu",
+		"Kenzo",
+		"Masamune",
+		"Akira"
+	],
+	"female": [
+		"Yukiko",
+		"Natsume",
+		"Kai",
+		"Kiriko",
+		"Mari"
+	],
+	"surname": [
+		"Kurosawa",
+		"Ono",
+		"Otomo",
+		"Oe",
+		"Kawabata"
+	]
+};

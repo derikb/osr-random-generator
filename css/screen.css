@@ -1,0 +1,38 @@
+.tab-pane { padding: 20px; }
+
+@media (min-width: 768px) {
+	.dl-horizontal dt { width: auto; }
+	.dl-horizontal dd { float: left; margin-left: 15px; }
+
+	.spell-details .dl-horizontal dt, .dl-horizontal dd {
+		margin-bottom: 5px;
+	}
+}
+
+#npc-form {
+	padding-bottom: 10px;
+	border-bottom: 1px solid rgb(221,221,221);
+	margin-bottom: 10px;
+}
+
+.delete { color: rgb(169, 68, 66); margin-left: 10px; }
+.character-block .delete { margin-left: 50px; }
+
+.character-block {
+	padding: 10px;
+	border: 1px solid rgb(221,221,221);
+	border-radius: 5px;
+	margin-bottom: 10px;
+	background-color: aliceblue;
+}
+
+li.character-list {
+	padding: 5px;
+	border: 1px solid rgb(221,221,221);
+	border-radius: 5px;
+	margin-bottom: 5px;
+	background-color: aliceblue;
+	line-height: 1.8;
+}
+
+

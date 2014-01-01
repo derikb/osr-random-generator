@@ -1,0 +1,68 @@
+.hidden-print { display: none; }
+    	
+.character-block {
+	font-size: 11pt;
+	box-sizing: border-box;
+	width: 5in;
+	/* height: 3in; */
+	/* background-color: #ccc; */
+	border: 1px solid #ccc;
+	padding: .125in;
+	margin-bottom: .25in;
+	page-break-inside: avoid;
+}	
+
+.character-block .col-sm-6 { width: 50%; float: left; }
+
+dl {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+dt, dd {
+  line-height: 1.428571429;
+}
+dt {
+  font-weight: bold;
+}
+dd {
+  margin-left: 0;
+}
+.dl-horizontal dt {
+	float: left;
+	width: 160px;
+	clear: left;
+	text-align: right;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.dl-horizontal dd {
+	margin-left: 180px;
+}
+.dl-horizontal dd:before,
+.dl-horizontal dd:after {
+	content: " ";
+	display: table;
+}
+.dl-horizontal dd:after {
+	clear: both;
+}
+.dl-horizontal dd:before,
+.dl-horizontal dd:after {
+	content: " ";
+	display: table;
+}
+.dl-horizontal dd:after {
+	clear: both;
+}
+
+.clearfix:before,
+.clearfix:after {
+	content: " ";
+	display: table;
+}
+.clearfix:after {
+	clear: both;
+}
+.dl-horizontal dt { width: auto; clear: left; }
+.dl-horizontal dd { float: left; margin-left: 15px; }

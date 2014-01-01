@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Random Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   <link rel="stylesheet" href="css/bootstrap.min.css" media="screen">
+   <link rel="stylesheet" href="css/screen.css" media="screen">
+   <link rel="stylesheet" href="css/print.css" media="print">
+    
+  </head>
+  <body>
+	  <div class="container">
+	    <div class="row hidden-print">
+	    	<div class="col-sm-12">
+				<h1>Random Generator</h1>
+	    	</div>
+	    </div>
+	    
+	    
+	    <ul id="maintab" class="nav nav-tabs hidden-print">
+		  <li class="active"><a href="#npcs" data-toggle="tab">NPCs</a></li>
+		  <li><a href="#other" data-toggle="tab">t.b.d.</a></li>
+		  <li><a href="#settings" data-toggle="tab">Settings</a></li>
+		  <li><a href="#credits" data-toggle="tab">Credits</a></li>
+		</ul>
+		
+		<div class="tab-content">
+			<div class="tab-pane active" id="npcs">
+				<div class="row">
+					<div class="col-sm-6 hidden-print">
+						<div id="character-form">
+							<!-- Character creation form here. -->
+						</div>
+						<div id="characters-list">
+							<!-- Character list here. -->
+						</div>
+					</div>
+	    	
+					<div class="col-sm-6">
+						<div id="characters-new"></div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="tab-pane hidden-print" id="other">
+				<!-- Some other generator here. -->
+				<div class="alert alert-info">Planning on adding some other generators soon.</div>
+			</div>
+			
+			<div class="tab-pane hidden-print" id="settings">
+				<!-- The global settings form goes here. -->
+			</div>
+			
+			<div class="tab-pane hidden-print" id="credits">
+				<!-- Credits -->
+				<p>Coding by Derik A. Badman. Made with: <a href="http://jquery.com">jQuery</a>, <a href="http://getbootstrap.com/">Bootstrap</a>, <a href="http://backbonejs.org/">Backbone</a> (with the <a href="https://github.com/jeromegn/Backbone.localStorage">Local Storage adapter</a>), and <a href="http://underscorejs.org/">Underscore</a>.</p>
+				<section>
+					<h3>Sources</h3>
+					<ul>
+						<li><a href="http://www.lotfp.com/">Lamentations of the Flame Princess</a> rules by James Edward Raggi IV.</li>
+						<li><a href="http://www.goblinoidgames.com/labyrinthlord.html">Labyrinth Lord</a> rules by Daniel Proctor.</li>
+						<li>Occupations list adapted from <a href="http://thegruenextdoor.blogspot.com/2013/12/characters-in-flesh.html">Christopher Adams</a></li>
+						<li>Spell list as compiled by <a href="https://plus.google.com/u/0/102353265648840654058/about">Adam Taylor</a> by way of html from <a href="http://save.vs.totalpartykill.ca/grab-bag/">Ramanan Sivaranjan</a> (which I converted into JSON).</li>
+						<li>Appearance and Personality lists from <a href="http://www.lulu.com/shop/courtney-campbell/on-the-non-player-character/ebook/product-21094127.html">On the Non-Player Character</a> by <a href="http://hackslashmaster.blogspot.com/">Courtney Campbell</a>.</li>
+						<li>Personality and Quirks lists from <a href="http://www.roleplayingtips.com/articles/npc-essentials.html">GM Mastery: NPC Essentials</a> by <a href="http://www.roleplayingtips.com/">Johnn Four</a></li>
+					</ul>
+				</section>
+				<section>
+					<h3>Notes</h3>
+					<ul>
+						<li>My original goal for this application was to create something that would be directly useful for me in prepping sessions for my game (we use LotFP rules), but that also might be useful during a session if something quick needs to be rolled up. I had collected so many books and pdfs and tables from various places that it was all a little overwhelming and hard to keep track of, so I thought I might be able to easily consolidate what I wanted to use in a simple way.</li>
+						<li>I tried to make the application without any server-based component so that it could be downloaded and run in the browser without any difficult set-up procedure. One could even run it without a network connection if all the required js libraries were downloaded locally.</li>
+						<li>I'm also trying to make the data elements of the app easily expandable so users can customize what tables they want to use. Unfortunately there's no simple way to take a table from a book, pdf, or blog post and make it structured enough that the application could make use of it. But if you are willing to put in some conversion time (much easier if you have a good text editor and some knowledge of regular expressions, which is how I converted all the data), it should be pretty easy to add your own tables.</li>
+						<li>Warning: I've only tested this in Chrome, any other browser may not work right (especially Internet Explorer). I'll do more testing later (especially for mobile).</li>
+					</ul>
+			</div>
+			
+		</div>
+		
+		
+	</div>
+	
+	<div id="editmodal" class="modal fade hidden-print">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">xx</h4>
+				</div>
+				<div class="modal-body">
+					x
+				</div>
+				<!--<div class="modal-footer">
+					
+<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+
+				</div>-->
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+
+    <script src="js/lib/jquery-min.js"></script> 
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/underscore-min.js"></script>
+    <script src="js/lib/backbone-min.js"></script>
+    <script src="js/lib/backbone.localStorage-min.js"></script>
+		
+	<script src="data/general.json"></script>
+	<script src="data/rules.json"></script>
+	<script src="data/personality.json"></script>
+	<script src="data/appearance.json"></script>
+	<script src="data/names.json"></script>
+	<script src="data/spells.json"></script>
+	<script src="data/occupations.json"></script>
+	<script src="data/custom/index.json"></script>
+	
+	<script src="js/app/app.js"></script>
+	<script src="js/app/npc.js"></script>
+
+	
+	
+	<!-- <script data-main="js/config.js" src="js/require.js"></script> -->
+	
+	
+	<script>
+		jQuery(document).ready(function(){
+				
+			window.app = new AppRouter();
+			Backbone.history.start();
+			//window.npcs = new CharCollection();
+		
+		});
+	</script>
+
+  </body>
+</html>
+
+
+
+
+	
+	
+	
