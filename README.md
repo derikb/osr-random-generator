@@ -16,6 +16,13 @@ Install
 * If you save settings/characters they will be saved in your browser's local storage (so be careful when clearing data from your browser).
 * Let me know if you have trouble or feature suggestions.
 
+Usage
+-----
+
+* Use the Settings tab to set some parameters (rules, which data lists to use, how many traits to include).
+* Use the NPCs tab to create new characters. You can click on most fields to edit them (some fields that are generated exclusively from other fields cannot be edited, i.e. Attack Bonus, AC). Click the first icon to save or the second to remove/delete.
+* Assign characters to groups for sorting purposes on the "Saved Characters" list. From that list you can open the full character details (the character card will appear in the right column) or delete the character.
+* Try printing. You should only get a print-out of the characters displayed in the right column, they should be set up as 5" wide cards (it's hard to limit it to 3" height, but I was going for a 3x5 card output, maybe I can improve this later on).
 
 Credits
 ------
