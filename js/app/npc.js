@@ -407,7 +407,7 @@ var CharacterBlock = Backbone.View.extend({
     	var char_full = '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %>, <span data-field="level">Lvl <%= level %></span></dd><% } %></dl>';
     	char_full += '<dl class="dl-horizontal clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %> (<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span></dd><% }); %></dl>';
     	
-    	char_full += '<dl class="dl-horizontal clearfix"><dt>HP</dt><dd><span data-field="hp"><%= hp %></span></dd><dt>AC</dt><dd><%= ac %><% if (armor !== "") { %> (<%= armor %>)<% } %></dd><dt>Attack Bonus</dt><% if (attack.melee == attack.missile) { %><dd><%= attack.melee %></dd><% } else { %><dd><%= attack.melee %> Melee</dd><dd><%= attack.missile %> Missile</dd><% } %><dt></dt><dd></dd></dl>';
+    	char_full += '<dl class="dl-horizontal clearfix"><dt>HP</dt><dd><span data-field="hp"><%= hp %></span></dd><dt>AC</dt><dd><%= ac %><% if (armor !== "") { %> (<span data-field="armor"><%= armor %></span>)<% } %></dd><dt>Attack Bonus</dt><% if (attack.melee == attack.missile) { %><dd><%= attack.melee %></dd><% } else { %><dd><%= attack.melee %> Melee</dd><dd><%= attack.missile %> Missile</dd><% } %><dt></dt><dd></dd></dl>';
     	
     	char_full += '</div><div class="col-xs-6">';
     	
@@ -688,6 +688,18 @@ var EditView = Backbone.View.extend({
 				
 			
 				break;
+				
+			case 'armor':
+								
+				form += '<div class="form-group"><label for="armor" class="control-label">Armor</label><select class="form-control" id="armor" name="armor">';
+					_.each(this.model.getRules().armor, function(v,k,l) {
+						var sel = (v.name == this.model.get(field)) ? 'selected=selected' : '';
+						form += '<option value="'+v.name+'" '+sel+'>'+v.name.capitalize()+'</option>';
+						
+					}, this)
+				form += '</select><div class="help-block"></div></div>';
+			
+				break;
 			
 			default:
 				form += '<div class="form-group"><label class="control-label" for="edit'+field+'">'+field+'</label><input type=text class="form-control" id="edit'+field+'" name="'+field+'" value="<%= '+field+' %>" /><span class="help-block"></span></div>';
@@ -834,7 +846,8 @@ var CharForm = Backbone.View.extend({
 	id: 'npc-form',
 	
     events:{
-        "submit": "newChar"
+        "submit": "newChar",
+        "change #chargroup": "addGroup"
     },
  
     initialize:function () {
@@ -862,7 +875,14 @@ var CharForm = Backbone.View.extend({
 	    		});
 			form += '</select><div class="help-block"></div></div>';
 			
-			form += '<div class="form-group col-sm-6"><label for="chargroup" class="control-label">Character Group</label><input type=text class="form-control" name="chargroup" id="chargroup" value="" /><div class="help-block">For organizing your saved NPCs.</div></div>';
+			//form += '<div class="form-group col-sm-6"><label for="chargroup" class="control-label">Character Group</label><input type=text class="form-control" name="chargroup" id="chargroup" value="" /><div class="help-block">For organizing your saved NPCs.</div></div>';
+			form += '<div class="form-group col-sm-6"><label for="chargroup" class="control-label">Character Group</label><select class="form-control" name="chargroup" id="chargroup">';
+				form += '<option value="">---</option>';
+				_.each(this.model.get('chargroup'), function(v,k) {
+					form += '<option value="'+v.name+'">'+v.name+'</option>';
+				}, this);
+				form += '<option value="0">Add New Group</option>';
+			form += '</select><div class="help-block">For organizing your saved NPCs.</div></div>';
     	form += '</div>';
     	
     	form += '<div class="form-group"><button type=submit class="btn btn-primary">Generate NPC</button></div>';
@@ -876,8 +896,72 @@ var CharForm = Backbone.View.extend({
     	formdata = $(e.target).serializeObject();
     	var char = new Character(formdata);
     	char.create();
-    	$('#characters-new').append(new CharacterBlock({model:char}).render().el)
+    	$('#characters-new').append(new CharacterBlock({model:char}).render().el);
+    },
+    
+    addGroup: function(e) {
+	    var val = $(e.target).val();
+	    if (val == '0') {
+		    console.log('new group modal');
+		    
+		    var form = ''; 
+		    
+		    $('#editmodal .modal-title').html('Add Character Group');
+			$('#editmodal .modal-body').html(new CharGroupView({model:this.model}).render().el);
+			$('#editmodal').modal({});
+		    $(e.target).val('');
+	    }
     }
+    
 });
 
 
+//!CharGroup
+var CharGroupView = Backbone.View.extend({
+	
+	tagName: 'form',
+	className: 'chargroup-add clearfix',
+	
+	initialize: function(options) {
+		//this.options = options || {};
+	},
+	
+	events: {
+        "submit": "newGroup"
+    },
+	
+	template: function(data) {
+		//console.log('CharGroupView: here is template');
+		var html = '';
+		
+		html += '<div class="form-group"><label for="newgroup" class="control-label">New Character Group</label><input type="text" class="form-control" id="newgroup" name="newgroup" value="" /></div><div class="form-group"><button type=submit class="btn btn-primary">Add</button></div>';
+
+		
+		return html;
+	},
+	
+	render: function(){
+		//console.log('CharGroupView: here is render');
+		this.$el.html(this.template(this.spell));
+		return this;
+	},
+	
+	newGroup: function(e) {
+		e.preventDefault();
+    	var formdata = $(e.target).serializeObject();
+    	if (formdata.newgroup !== '') {
+    		var groups = _.clone( this.model.get('chargroup') );
+	    	if (typeof _.findWhere(groups, { name: formdata.newgroup }) == 'undefined') {
+		    	groups.push({ name: formdata.newgroup });
+		    	//this.model.set('chargroup', groups);
+		    	this.model.save('chargroup', groups);
+	    	} else {
+		    	alert("That group already exists!");
+		    	return false;
+	    	}
+	    	$('#editmodal').modal('hide');
+	    	
+    	}
+	}
+	
+});

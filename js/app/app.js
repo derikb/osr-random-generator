@@ -52,6 +52,7 @@ var AppSettings = Backbone.Model.extend({
 			appearance_type: 'onthenpc',
 			personality_count: 2,
 			appearance_count: 2,
+			chargroup: []
 		}	
 	},
 	

@@ -62,7 +62,7 @@ appdata.rules = {
 				"attack": function(lvl) { return 1; },
 				"spellcaster": true,
 				"spells": [ [1], [2], [2,1], [2,2], [3,2,1], [3,2,2], [3,3,2,1], [4,3,2,2], [4,3,3,2,1] ],
-				"armor": ['']
+				"armor": ["No Armor"]
 			},
 			"cleric": {
 				"label": "Cleric",
@@ -92,7 +92,7 @@ appdata.rules = {
 			{ "name": "Chainmail", "ac_base": 16, "ac_bonus": 0 },
 			{ "name": "Morion", "ac_base": 0, "ac_bonus": 1 },
 			{ "name": "Shield", "ac_base": 0, "ac_bonus": 1 },
-			{ "name": "", "ac_base": 12, "ac_bonus": 0 }
+			{ "name": "No Armor", "ac_base": 12, "ac_bonus": 0 }
 		]
 		
 	},
@@ -174,14 +174,14 @@ appdata.rules = {
 				"attack": function(lvl) { return 0; },
 				"spellcaster": false,
 				"armor": ["Buff Coat"],
-				"weapon": ["Weapon, Minor", "Weapon, Small", "Pistol"]
+				"weapon": ["Club", "Dagger", "Sling"]
 			},
 			"fighter": {
 				"label": "Fighter",
 				"hd": 8,
 				"attack": function(lvl) { b = [0, 1, 1, 2, 3, 4, 5, 6, 6, 7]; return b[lvl]; },
 				"spellcaster": false,
-				"armor": ["Leather", "Chainmail", "Platemail", ],
+				"armor": ["Leather", "Chainmail", "Platemail"],
 			},
 			"magic-user": {
 				"label": "Magic-User",
@@ -189,7 +189,7 @@ appdata.rules = {
 				"attack": function(lvl) { b = [0, 1, 1, 1, 2, 2, 2, 2, 3, 3]; return b[lvl]; },
 				"spellcaster": true,
 				"spells": [ [1], [2], [2,1], [2,2], [2,2,1], [2,2,2], [3,2,2,1], [3,3,2,2], [3,3,3,2,1] ],
-				"armor": ['']
+				"armor": ["No Armor"]
 			},
 			"cleric": {
 				"label": "Cleric",
@@ -204,7 +204,7 @@ appdata.rules = {
 				"hd": 4,
 				"attack": function(lvl) { b = [0, 1, 1, 1, 2, 2, 3, 3, 3, 4]; return b[lvl]; },
 				"spellcaster": false,
-				"armor": ["", "Leather"],
+				"armor": ["No Armor", "Leather"],
 			},
 			"random": {
 				"label": "Random Selection",
@@ -217,7 +217,7 @@ appdata.rules = {
 			{ "name": "Chainmail", "ac_base": 5, "ac_bonus": 0 },
 			{ "name": "Platemail", "ac_base": 3, "ac_bonus": 1 },
 			{ "name": "Shield", "ac_base": 0, "ac_bonus": 1 },
-			{ "name": "", "ac_base": 9, "ac_bonus": 0 }
+			{ "name": "No Armor", "ac_base": 9, "ac_bonus": 0 }
 		]
 	},
 	//!sw
