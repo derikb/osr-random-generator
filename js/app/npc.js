@@ -854,7 +854,14 @@ var CharForm = Backbone.View.extend({
         this.render();
         this.listenTo(this.model, 'change', this.render);
     },
-     
+    
+/*
+    rerender: function() {
+	    formdata = $(e.target).serializeObject();
+	    this.render(formdata);
+    }
+*/
+    
     render: function () {
     	var rules = appdata.rules[this.model.get('rules_set')];
     	var form = '<div class="row"><div class="form-group col-sm-9"><label for="charclass" class="control-label">Class</label><select class="form-control" id="charclass" name="charclass">';
@@ -907,8 +914,11 @@ var CharForm = Backbone.View.extend({
 		    var form = ''; 
 		    
 		    $('#editmodal .modal-title').html('Add Character Group');
-			$('#editmodal .modal-body').html(new CharGroupView({model:this.model}).render().el);
+			$('#editmodal .modal-body').html(new CharGroupView({model:this.model}).render().el);			
 			$('#editmodal').modal({});
+			$('#editmodal').on('shown.bs.modal', function(e) {
+				$(e.target).find('input[type="text"]:first').focus();
+			});
 		    $(e.target).val('');
 	    }
     }
@@ -942,7 +952,7 @@ var CharGroupView = Backbone.View.extend({
 	
 	render: function(){
 		//console.log('CharGroupView: here is render');
-		this.$el.html(this.template(this.spell));
+		this.$el.html(this.template());
 		return this;
 	},
 	
@@ -953,8 +963,11 @@ var CharGroupView = Backbone.View.extend({
     		var groups = _.clone( this.model.get('chargroup') );
 	    	if (typeof _.findWhere(groups, { name: formdata.newgroup }) == 'undefined') {
 		    	groups.push({ name: formdata.newgroup });
-		    	//this.model.set('chargroup', groups);
-		    	this.model.save('chargroup', groups);
+		    	//save groups, avoid rerendering and just add the new group and select it
+		    	//this keeps the form values that are already set
+		    	this.model.save( { 'chargroup': groups }, { silent: true });
+		    	$('#chargroup').append(jQuery('<option></option>').attr('value', formdata.newgroup).text(formdata.newgroup));
+		    	$('#chargroup').val(formdata.newgroup);
 	    	} else {
 		    	alert("That group already exists!");
 		    	return false;
