@@ -4,6 +4,7 @@ appdata.rules = {
 	"options": [
 		{ option: 'lotfp', label: 'Lamentations of the Flame Princess' },
 		{ option: 'labyrinthlord', label: 'Labyrinth Lord' },
+		{ option: 'sandw', label: 'Swords & Wizardry' },
 	],
 	//!lotfp
 	"lotfp": {
@@ -173,7 +174,7 @@ appdata.rules = {
 				"hd": 6,
 				"attack": function(lvl) { return 0; },
 				"spellcaster": false,
-				"armor": ["Buff Coat"],
+				"armor": ["No Armor", "Leather"],
 				"weapon": ["Club", "Dagger", "Sling"]
 			},
 			"fighter": {
@@ -274,17 +275,17 @@ appdata.rules = {
 				"5": 0,
 				"6": 0,
 				"7": 0,
-				"8": 1,
-				"9": 1,
-				"10": 2,
-				"11": 2,
-				"12": 3,
-				"13": 3,
-				"14": 4,
-				"15": 4,
-				"16": 5,
-				"17": 5,
-				"18": 6
+				"8": 0,
+				"9": 0,
+				"10": 0,
+				"11": 0,
+				"12": 0,
+				"13": 0,
+				"14": 0,
+				"15": 0,
+				"16": 0,
+				"17": 0,
+				"18": 0
 			}
 		},
 		"armorclass": {
@@ -292,14 +293,91 @@ appdata.rules = {
 			"method": "asc",	
 		},
 		"classes": {
-		
+			"none": {
+				"label": "0-level human",
+				"hd": 6,
+				"attack": function(lvl) { return 0; },
+				"spellcaster": false,
+				"armor": ["No Armor", "Leather"],
+				"weapon": ["Club", "Dagger", "Sling"]
+			},
+			"assassin": {
+				"label": "Assassin",
+				"hd": 6,
+				"attack": function(lvl) { b = [0, 0, 0, 0, 1, 1, 2, 2, 3, 3]; return b[lvl]; },
+				"armor": ["No Armor", "Leather"],
+			},
+			"cleric": {
+				"label": "Cleric",
+				"hd": 6,
+				"attack": function(lvl) { b = [0, 0, 0, 1, 1, 2, 2, 3, 3, 4]; return b[lvl]; },
+				"spellcaster": true,
+				"spells": [ [0], [1], [2], [2,1], [2,2], [2,2,1,1], [2,2,2,1,1], [2,2,2,2,2], [3,3,3,2,2] ],
+				"armor": ["Leather", "Chainmail"],
+			},
+			"druid": {
+				"label": "Druid",
+				"hd": 6,
+				"attack": function(lvl) { b = [0, 0, 0, 1, 1, 2, 2, 3, 3, 4]; return b[lvl]; },
+				"spellcaster": true,
+				"spells": [ [1], [2,1], [3,1], [3,1,1], [3,2,1], [3,2,2], [4,2,2,1], [4,3,2,1], [4,3,3,2] ],
+				"armor": ["No Armor", "Leather"],
+			},
+			"fighter": {
+				"label": "Fighter",
+				"hd": 8,
+				"attack": function(lvl) { b = [0, 0, 0, 1, 2, 2, 3, 4, 5, 6]; return b[lvl]; },
+				"spellcaster": false,
+				"armor": ["Leather", "Chainmail", "Platemail"],
+			},
+			"magic-user": {
+				"label": "Magic-User",
+				"hd": 4,
+				"attack": function(lvl) { b = [0, 0, 0, 0, 1, 1, 2, 2, 3, 3]; return b[lvl]; },
+				"spellcaster": true,
+				"spells": [ [1], [2], [3,1], [3,2], [4,2,1], [4,2,2], [4,3,2,1], [4,3,3,2], [4,3,3,2,1] ],
+				"armor": ["No Armor"]
+			},
+			"monk": {
+				"label": "Monk",
+				"hd": 4,
+				"attack": function(lvl) { b = [0, 0, 0, 1, 1, 2, 2, 3, 3, 4]; return b[lvl]; },
+				"ac": function(lvl) { return 10 + (lvl - 1); },
+				"armor": ["No Armor"]
+			},
+			"paladin": {
+				"label": "Paladin",
+				"hd": 8,
+				"attack": function(lvl) { b = [0, 1, 1, 1, 2, 2, 3, 3, 3, 4]; return b[lvl]; },
+				"spellcaster": false,
+				"armor": ["Leather", "Chainmail", "Platemail"],
+			},
+			"ranger": {
+				"label": "Ranger",
+				"hd": 8,
+				"attack": function(lvl) { b = [0, 1, 1, 1, 2, 2, 3, 3, 3, 4]; return b[lvl]; },
+				"spellcaster": false,
+				"armor": ["Leather", "Chainmail", "Platemail"],
+			},
+			"thief": {
+				"label": "Thief",
+				"hd": 4,
+				"attack": function(lvl) { b = [0, 0, 0, 0, 1, 1, 2, 2, 3, 3]; return b[lvl]; },
+				"spellcaster": false,
+				"armor": ["No Armor", "Leather"],
+			},
+			"random": {
+				"label": "Random Selection",
+				"options": ["assassin", "druid", "fighter", "thief", "cleric", "magic-user", "monk", "ranger", "paladin"],
+				"weight": [1,1,2,2,2,2,1,1,1]
+			}
 		},
 		"armor": [
 			{ "name": "Leather", "ac_base": 0, "ac_bonus": 2 },
 			{ "name": "Chainmail", "ac_base": 0, "ac_bonus": 4 },
 			{ "name": "Platemail", "ac_base": 0, "ac_bonus": 6 },
 			{ "name": "Shield", "ac_base": 0, "ac_bonus": 1 },
-			{ "name": "", "ac_base": 9, "ac_bonus": 0 }
+			{ "name": "No Armor", "ac_base": 10, "ac_bonus": 0 }
 		]
 	}
 }

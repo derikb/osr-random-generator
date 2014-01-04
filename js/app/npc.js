@@ -188,14 +188,16 @@ var Character = Backbone.Model.extend({
 	//randomly choose spells
 	selectSpells: function() {
 		if (this.checkSpellCaster() == true) {
-			var spelluse = this.getRules().classes[this.get('charclass')].spells[this.get('level') - 1];
+			var charclass = this.get('charclass');
+			var spelluse = this.getRules().classes[charclass].spells[this.get('level') - 1];
 			var selected = {};
+			if (charclass == "druid") { charclass = 'cleric'; } //cause no druid spell list yet
 			for(var i=0; i < spelluse.length; i++) {
 				var level = i+1;
 				lvl = 'lvl'+level;
 				var sp = [];
 				for (j=0; j < spelluse[i]; j++) {
-					sp.push( _.sample(appdata.spells.bylevel[this.get('charclass')][lvl]) );
+					sp.push( _.sample(appdata.spells.bylevel[charclass][lvl]) );
 				}
 				selected['Level '+level] = sp;
 			}
@@ -242,6 +244,12 @@ var Character = Backbone.Model.extend({
 	},
 	
 	calcAC: function() {
+		//accounting for monk basically...
+		if (typeof this.getRules().classes[this.get('charclass')]['ac'] !== 'undefined') {
+			ac = this.getRules().classes[this.get('charclass')]['ac'](this.get('level'));
+			this.set('ac', ac);
+			return;
+		}
 		
 		var ac = parseInt(this.getRules().armorclass.base);
 		var method = this.getRules().armorclass.method;
@@ -391,6 +399,7 @@ var CharacterBlock = Backbone.View.extend({
 		    var title = $(e.target).parent().attr('data-spell');
 	    }
 	    var type = this.model.get('charclass');
+	    if (type == 'druid') { type = 'cleric'; }
 	    spell = _.findWhere(appdata.spells[type], { title: title });
 	    
 	    //console.log(spell);
@@ -577,9 +586,10 @@ var EditView = Backbone.View.extend({
 		} else if (this.field == 'spells') {
 			
 			//list = lvl1
-			//var charclass = this.model.get('charclass');
+			var charclass = this.model.get('charclass');
+			if (charclass == 'druid') { charclass = 'cleric'; }
 			
-			var newval = _.sample(appdata.spells.bylevel[this.model.get('charclass')][list]);
+			var newval = _.sample(appdata.spells.bylevel[charclass][list]);
 			$('#'+inputtarget).val(newval);
 		} else if (this.field == 'goal') {
 			var newval = _.sample(appdata.personality.goals);
