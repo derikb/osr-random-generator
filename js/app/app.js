@@ -52,7 +52,9 @@ var AppSettings = Backbone.Model.extend({
 			appearance_type: 'onthenpc',
 			personality_count: 2,
 			appearance_count: 2,
-			chargroup: []
+			chargroup: [],
+			character_display: 'full',
+			ability_display: 'full',
 		}	
 	},
 	
@@ -93,6 +95,30 @@ var AppSettingsView = Backbone.View.extend({
 		form += '</select></div>';
 		
 		form += '<fieldset><legend>NPC Settings</legend>';
+		
+		form += '<fieldset><legend>Display</legend>';
+		
+			form += '<div class="row"><div class="form-group col-sm-6">';
+			
+			var char_display = [{ option: 'full', label: 'Full Character Display' }, { option: 'soft', label: 'No Stats/Numbers' } ];
+    		_.each(char_display, function(v){
+    			var sel = (v.option == this.model.get('character_display')) ? 'checked=checked' : '';
+	    		form += '<label class="radio-inline"><input type="radio" name="character_display" value="'+v.option+'" '+sel+' /> '+v.label+'</label>'
+    		
+    		}, this);
+			form += '<div class="help-block">If you don\'t want the numbers, change this setting.</div></div>';
+			
+			form += '<div class="form-group col-sm-6">';
+			
+			var ability_display = [{ option: 'full', label: 'Full (all abilities/scores/modifiers)' }, { option: 'minimal', label: 'Minimal (Only abilities with modifiers not 0)' } ];
+    		_.each(ability_display, function(v){
+    			var sel = (v.option == this.model.get('ability_display')) ? 'checked=checked' : '';
+	    		form += '<label class="radio-inline"><input type="radio" name="ability_display" value="'+v.option+'" '+sel+' /> '+v.label+'</label>'
+    		
+    		}, this);
+			form += '<div class="help-block">For shorter character blocks pick "minimal".</div></div>';
+			
+			form += '</div></fieldset>';
 		
 		form += '<div class="row"><div class="form-group col-sm-9"><label for="personality_type" class="control-label">Personality List</label><select class="form-control" id="personality_type" name="personality_type">';
     		_.each(appdata.personality.options, function(v){

@@ -12,30 +12,20 @@ section h2 {
 	font-size: 21px;
 }
 
+.dl-horizontal dt {
+	width: auto;
+	float: left;
+	clear: left;
+}
+.dl-horizontal dd { float: left; margin-left: 15px; }
 
-/* @media (min-width: 768px) { */
-	.dl-horizontal dt {
-		width: auto;
-		
-		float: left;
-		clear: left;
-/*
-		text-align: right;
-overflow: hidden;
-text-overflow: ellipsis;
-white-space: nowrap;
-*/
-	}
-	.dl-horizontal dd { float: left; margin-left: 15px; }
+.spell-details .dl-horizontal dt, .dl-horizontal dd {
+	margin-bottom: 5px;
+}
 
-	.spell-details .dl-horizontal dt, .dl-horizontal dd {
-		margin-bottom: 5px;
-	}
-	
-	.character-traits dt { margin-top: 5px; }
-	.character-traits dt:first-child { margin-top: 0px; }
-	
-/* } */
+.character-traits dt { margin-top: 5px; }
+.character-traits dt:first-child { margin-top: 0px; }
+
 
 #character-form, #characters-list, #characters-new {
 	padding-bottom: 10px;
@@ -63,4 +53,8 @@ li.character-list {
 	line-height: 1.8;
 }
 
+/* nested fieldset legends should be smaller */
+fieldset fieldset legend {
+	font-size: 16px;
+}
 
