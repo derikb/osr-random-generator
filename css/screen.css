@@ -34,6 +34,7 @@ section h2 {
 }
 
 .delete { color: rgb(169, 68, 66); margin-left: 10px; }
+.edit { margin-left: 10px; }
 .character-block .delete { margin-left: 50px; }
 
 .character-block {
@@ -44,7 +45,7 @@ section h2 {
 	background-color: aliceblue;
 }
 
-li.character-list {
+li.character-list, li.chargroup-list {
 	padding: 5px;
 	border: 1px solid rgb(221,221,221);
 	border-radius: 5px;

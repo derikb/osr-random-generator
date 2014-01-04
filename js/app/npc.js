@@ -189,15 +189,15 @@ var Character = Backbone.Model.extend({
 	selectSpells: function() {
 		if (this.checkSpellCaster() == true) {
 			var charclass = this.get('charclass');
+			var spelllist = this.getRules().classes[charclass].spelllist;
 			var spelluse = this.getRules().classes[charclass].spells[this.get('level') - 1];
 			var selected = {};
-			if (charclass == "druid") { charclass = 'cleric'; } //cause no druid spell list yet
 			for(var i=0; i < spelluse.length; i++) {
 				var level = i+1;
 				lvl = 'lvl'+level;
 				var sp = [];
 				for (j=0; j < spelluse[i]; j++) {
-					sp.push( _.sample(appdata.spells.bylevel[charclass][lvl]) );
+					sp.push( _.sample(appdata.spells.bylevel[spelllist][lvl]) );
 				}
 				selected['Level '+level] = sp;
 			}
@@ -398,9 +398,9 @@ var CharacterBlock = Backbone.View.extend({
 	    if (typeof title == 'undefined') {
 		    var title = $(e.target).parent().attr('data-spell');
 	    }
-	    var type = this.model.get('charclass');
-	    if (type == 'druid') { type = 'cleric'; }
-	    spell = _.findWhere(appdata.spells[type], { title: title });
+	    var charclass = this.model.get('charclass');
+	    var spelllist = this.model.getRules().classes[charclass].spelllist;
+	    spell = _.findWhere(appdata.spells[spelllist], { title: title });
 	    
 	    //console.log(spell);
 	    
@@ -607,9 +607,8 @@ var EditView = Backbone.View.extend({
 			
 			//list = lvl1
 			var charclass = this.model.get('charclass');
-			if (charclass == 'druid') { charclass = 'cleric'; }
-			
-			var newval = _.sample(appdata.spells.bylevel[charclass][list]);
+			var spelllist = this.model.getRules().classes[charclass].spelllist;		
+			var newval = _.sample(appdata.spells.bylevel[spelllist][list]);
 			$('#'+inputtarget).val(newval);
 		} else if (this.field == 'goal') {
 			var newval = _.sample(appdata.personality.goals);
@@ -790,6 +789,17 @@ var CharCollection = Backbone.Collection.extend({
 	},
 	
 	
+	editGroups: function(oldgroup, newgroup) {
+		
+		var ch = this.where({chargroup: oldgroup});
+		//console.log(ch);
+		_.each(ch, function(v,k,l){
+			//console.log(v);
+			v.save({ chargroup: newgroup });
+		});
+			
+	},
+	
 	/*
 addChar: function(m,r,opt) {
 		this.add(m);
@@ -936,13 +946,13 @@ var CharForm = Backbone.View.extend({
 	    		});
 			form += '</select><div class="help-block"></div></div>';
 			
-			//form += '<div class="form-group col-sm-6"><label for="chargroup" class="control-label">Character Group</label><input type=text class="form-control" name="chargroup" id="chargroup" value="" /><div class="help-block">For organizing your saved NPCs.</div></div>';
+
 			form += '<div class="form-group col-sm-6"><label for="chargroup" class="control-label">Character Group</label><select class="form-control" name="chargroup" id="chargroup">';
 				form += '<option value="">---</option>';
 				_.each(this.model.get('chargroup'), function(v,k) {
 					form += '<option value="'+v.name+'">'+v.name+'</option>';
 				}, this);
-				form += '<option value="0">Add New Group</option>';
+				form += '<option value="">------</option><option value="0">Manage Groups</option>';
 			form += '</select><div class="help-block">For organizing your saved NPCs.</div></div>';
     	form += '</div>';
     	
@@ -967,7 +977,7 @@ var CharForm = Backbone.View.extend({
 		    
 		    var form = ''; 
 		    
-		    $('#editmodal .modal-title').html('Add Character Group');
+		    $('#editmodal .modal-title').html('Manage Character Groups');
 			$('#editmodal .modal-body').html(new CharGroupView({model:this.model}).render().el);			
 			$('#editmodal').modal({});
 			$('#editmodal').on('shown.bs.modal', function(e) {
@@ -991,12 +1001,22 @@ var CharGroupView = Backbone.View.extend({
 	},
 	
 	events: {
-        "submit": "newGroup"
+        "submit": "newGroup",
+        "click .delete": "deleteGroup",
+        "click .edit": "setupEdit",
+        "click .saveedit": "editGroup",
+        "click .cancel": "render"
     },
 	
 	template: function(data) {
 		//console.log('CharGroupView: here is template');
 		var html = '';
+		
+		html += '<fieldset id="chargroup_edit"><legend>Character Groups</legend><ul class="list-unstyled">';
+			_.each(this.model.get('chargroup'), function (v) {
+				html += '<li class="chargroup-list" data-group="'+v.name+'">'+v.name+' <a href="#" class="edit"><span class="glyphicon glyphicon-edit"></span></a> <a href="#" class="delete"><span class="glyphicon glyphicon-remove"></span></a></li>';
+			});
+		html += '</ul></fieldset>';
 		
 		html += '<div class="form-group"><label for="newgroup" class="control-label">New Character Group</label><input type="text" class="form-control" id="newgroup" name="newgroup" value="" /></div><div class="form-group"><button type=submit class="btn btn-primary">Add</button></div>';
 
@@ -1029,6 +1049,40 @@ var CharGroupView = Backbone.View.extend({
 	    	$('#editmodal').modal('hide');
 	    	
     	}
+	},
+	
+	deleteGroup: function(e) {
+		e.preventDefault();
+		var group = $(e.target).parents('li').attr("data-group");
+		var groups = _.clone( this.model.get('chargroup') );
+		groups = _.reject(groups, function(g){ return g.name == group; });
+		this.model.save( { 'chargroup': groups } );
+		app.charlist.editGroups(group, '');
+		$(e.target).parents('li').remove();
+	},
+	
+	setupEdit: function(e) {
+		e.preventDefault();
+		var $li = $(e.target).parents('li');
+		var group = $li.attr("data-group");
+		$li.html('<div class="input-group"><input type="text" class="form-control" name="editgroup" id="editgroup" value="'+group+'" /><span class="input-group-btn"><button type="button" class="btn btn-primary saveedit">Save</button><button type="button" class="btn btn-default cancel"><span class="glyphicon glyphicon-remove-circle"></span></button></span></div>');
+		
+	},
+	
+	editGroup: function(e) {
+		e.preventDefault();
+		var $li = $(e.target).parents('li');
+		var oldgroup = $li.attr("data-group");
+		var newgroup = $li.find('input').val();
+		
+		var groups = _.clone( this.model.get('chargroup') );
+		groups = _.reject(groups, function(g){ return g.name == oldgroup; });
+		groups.push({ name: newgroup });
+		this.model.save( { 'chargroup': groups } );
+		app.charlist.editGroups(oldgroup, newgroup);
+		this.render();
 	}
+	
+	
 	
 });

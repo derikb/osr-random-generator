@@ -41,6 +41,18 @@ appdata.rules = {
 			"base": 12,
 			"method": "asc",	
 		},
+		"races": {
+			"race_as_class": true,
+			"dwarf": {
+				"ability_scores": [ { "name": "con", "score": 0, "modifier": 1 } ]
+			},
+			"elf": {
+				"ability_scores": []
+			},
+			"halfling": {
+				"ability_scores": [ { "name": "dex", "score": 0, "modifier": 1 } ]
+			},
+		},
 		"classes": {
 			"none": {
 				"label": "0-level human",
@@ -62,6 +74,7 @@ appdata.rules = {
 				"hd": 4,
 				"attack": function(lvl) { return 1; },
 				"spellcaster": true,
+				"spelllist": "magic-user",
 				"spells": [ [1], [2], [2,1], [2,2], [3,2,1], [3,2,2], [3,3,2,1], [4,3,2,2], [4,3,3,2,1] ],
 				"armor": ["No Armor"]
 			},
@@ -70,6 +83,7 @@ appdata.rules = {
 				"hd": 6,
 				"attack": function(lvl) { return 1; },
 				"spellcaster": true,
+				"spelllist": "cleric",
 				"spells": [ [1], [2], [3], [3,1], [3,2,1], [3,3,2], [4,3,3,1], [4,3,3,2], [4,3,3,3,1] ],
 				"armor": ["Buff Coat", "Leather Armor"],
 			},
@@ -80,6 +94,35 @@ appdata.rules = {
 				"spellcaster": false,
 				"armor": ["Buff Coat", "Leather Armor"],
 			},
+/*
+			"elf": {
+				"label": "Elf",
+				"hd": 6,
+				"attack": function(lvl) { return 1; },
+				"spellcaster": true,
+				"spelllist": "magic-user",
+				"spells": [ [1], [2], [2,1], [2,2], [3,2,1], [3,2,2], [3,3,2,1], [4,3,2,2], [4,3,3,2,1] ],
+				"race": true,
+				"armor": ["No Armor", "Buff Coat", "Leather Armor"],
+
+			},
+			"dwarf": {
+				"label": "Dwarf",
+				"hd": 10,
+				"attack": function(lvl) { return 1; },
+				"spellcaster": false,
+				"race": true,
+				"armor": ["No Armor", "Leather Armor", "Chainmail"],
+			},
+			"halfling": {
+				"label": "Halfling",
+				"hd": 6,
+				"attack": function(lvl) { return 1; },
+				"spellcaster": false,
+				"race": true,
+				"armor": ["No Armor", "Leather Armor", "Chainmail"],
+			},
+*/
 			"random": {
 				"label": "Random Selection",
 				"options": ["fighter", "specialist", "cleric", "magic-user"],
@@ -168,6 +211,18 @@ appdata.rules = {
 			"base": 9,
 			"method": "desc",	
 		},
+		"races": {
+			"race_as_class": true,
+			"dwarf": {
+				//"ability_scores": [ { "name": "con", "score": 0, "modifier": 1 } ]
+			},
+			"elf": {
+				//"ability_scores": []
+			},
+			"halfling": {
+				//"ability_scores": [ { "name": "dex", "score": 0, "modifier": 1 } ]
+			},
+		},
 		"classes": {
 			"none": {
 				"label": "0-level human",
@@ -189,6 +244,7 @@ appdata.rules = {
 				"hd": 4,
 				"attack": function(lvl) { b = [0, 1, 1, 1, 2, 2, 2, 2, 3, 3]; return b[lvl]; },
 				"spellcaster": true,
+				"spelllist": "magic-user",
 				"spells": [ [1], [2], [2,1], [2,2], [2,2,1], [2,2,2], [3,2,2,1], [3,3,2,2], [3,3,3,2,1] ],
 				"armor": ["No Armor"]
 			},
@@ -197,6 +253,7 @@ appdata.rules = {
 				"hd": 6,
 				"attack": function(lvl) { b = [0, 1, 1, 1, 2, 2, 3, 3, 3, 4]; return b[lvl]; },
 				"spellcaster": true,
+				"spelllist": "cleric",
 				"spells": [ [1], [2], [2,1], [3,2], [3,2,1], [3,3,2], [4,3,2,1], [4,3,3,2], [4,4,3,2,1] ],
 				"armor": ["Leather", "Chainmail"],
 			},
@@ -207,6 +264,35 @@ appdata.rules = {
 				"spellcaster": false,
 				"armor": ["No Armor", "Leather"],
 			},
+			/*
+"elf": {
+				"label": "Elf",
+				"hd": 6,
+				"attack": function(lvl) { b = [0, 1, 1, 2, 3, 4, 5, 6, 6, 7]; return b[lvl]; },
+				"spellcaster": true,
+				"spelllist": "magic-user",
+				"spells": [ [1], [2], [2,1], [2,2], [2,2,1], [2,2,2], [3,2,2,1], [3,3,2,2], [3,3,3,2,1] ],
+				"race": true,
+				"armor": ["No Armor", "Buff Coat", "Leather Armor"],
+
+			},
+			"dwarf": {
+				"label": "Dwarf",
+				"hd": 8,
+				"attack": function(lvl) { b = [0, 1, 1, 2, 3, 4, 5, 6, 6, 7]; return b[lvl]; },
+				"spellcaster": false,
+				"race": true,
+				"armor": ["No Armor", "Leather Armor", "Chainmail"],
+			},
+			"halfling": {
+				"label": "Halfling",
+				"hd": 6,
+				"attack": function(lvl) { b = [0, 1, 1, 2, 3, 4, 5, 6, 6, 7]; return b[lvl]; },
+				"spellcaster": false,
+				"race": true,
+				"armor": ["No Armor", "Leather Armor", "Chainmail"],
+			},
+*/
 			"random": {
 				"label": "Random Selection",
 				"options": ["fighter", "thief", "cleric", "magic-user"],
@@ -292,6 +378,23 @@ appdata.rules = {
 			"base": 10,
 			"method": "asc",	
 		},
+		"races": {
+			"race_as_class": false,
+			"dwarf": {
+				//"ability_scores": [ { "name": "con", "score": 0, "modifier": 1 } ]
+				"classes": [ "fighter" ]
+			},
+			"elf": {
+				//"ability_scores": []
+				"classes": [ "fighter" ]
+			},
+			"half-elf": {
+				//"ability_scores": []
+			},
+			"halfling": {
+				//"ability_scores": [ { "name": "dex", "score": 0, "modifier": 1 } ]
+			},
+		},
 		"classes": {
 			"none": {
 				"label": "0-level human",
@@ -312,6 +415,7 @@ appdata.rules = {
 				"hd": 6,
 				"attack": function(lvl) { b = [0, 0, 0, 1, 1, 2, 2, 3, 3, 4]; return b[lvl]; },
 				"spellcaster": true,
+				"spelllist": "cleric",
 				"spells": [ [0], [1], [2], [2,1], [2,2], [2,2,1,1], [2,2,2,1,1], [2,2,2,2,2], [3,3,3,2,2] ],
 				"armor": ["Leather", "Chainmail"],
 			},
@@ -320,6 +424,7 @@ appdata.rules = {
 				"hd": 6,
 				"attack": function(lvl) { b = [0, 0, 0, 1, 1, 2, 2, 3, 3, 4]; return b[lvl]; },
 				"spellcaster": true,
+				"spelllist": "cleric",
 				"spells": [ [1], [2,1], [3,1], [3,1,1], [3,2,1], [3,2,2], [4,2,2,1], [4,3,2,1], [4,3,3,2] ],
 				"armor": ["No Armor", "Leather"],
 			},
@@ -335,6 +440,7 @@ appdata.rules = {
 				"hd": 4,
 				"attack": function(lvl) { b = [0, 0, 0, 0, 1, 1, 2, 2, 3, 3]; return b[lvl]; },
 				"spellcaster": true,
+				"spelllist": "magic-user",
 				"spells": [ [1], [2], [3,1], [3,2], [4,2,1], [4,2,2], [4,3,2,1], [4,3,3,2], [4,3,3,2,1] ],
 				"armor": ["No Armor"]
 			},

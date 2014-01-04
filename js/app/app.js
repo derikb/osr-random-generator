@@ -148,7 +148,8 @@ var AppSettingsView = Backbone.View.extend({
 			}
 		form += '</select><div class="help-block"></div></div></div>';
 		
-		form += '<fieldset>';
+				
+		form += '</fieldset>';
 		
 		form += '<div class="form-group"><button type=submit class="btn btn-primary">Save Settings</button></div>';
 	
