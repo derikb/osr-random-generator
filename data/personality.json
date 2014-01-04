@@ -945,6 +945,7 @@ appdata.personality = {
 		"Wrings their hands"
 	],
 	//From Tarnheim's Terrible Tome by Randall S Stukey
+	//with a few added/edited by Derik
 	"goals": [
 		"Furtherance of Scholarly Studies",
 		"Furtherance of Art",
@@ -984,6 +985,8 @@ appdata.personality = {
 		"Personal Feats",
 		"Creation",
 		"Self-Discipline",
-		"Trickery"
+		"Trickery",
+		"Curiosity",
+		"Revenge"
 	]
 }

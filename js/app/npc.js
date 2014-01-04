@@ -29,8 +29,10 @@ var Character = Backbone.Model.extend({
 			spells: {},
 			personality: [],
 			appearance: [],
+			goal: '',
 			armor: '',
 			weapon: '',
+			reaction_roll: 0
 		}
 	},
 		
@@ -278,6 +280,14 @@ var Character = Backbone.Model.extend({
 		this.set('appearance', appearance);
 	},
 	
+	selectGoal: function() {
+		return  _.sample(appdata.personality.goals);
+	},
+	
+	rollReaction: function() {
+		return app.randomizer.roll(6,2);
+	},
+	
 	//////////////////////////////////////////////////////////
 	//run all the various functions to generate the npc object
 	create: function() {
@@ -290,8 +300,10 @@ var Character = Backbone.Model.extend({
 		this.calcAttack();
 		this.selectPersonality(app.AppSettings.get('personality_count'));
 		this.selectAppearance(app.AppSettings.get('appearance_count'));
+		this.set('goal', this.selectGoal());
 		this.set('armor', this.selectArmor());
 		this.calcAC();
+		this.set('reaction_roll', this.rollReaction());
 		
 		//gender
 		this.calcGender();
@@ -407,13 +419,13 @@ var CharacterBlock = Backbone.View.extend({
     	var char_full = '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %>, <span data-field="level">Lvl <%= level %></span></dd><% } %></dl>';
     	char_full += '<dl class="dl-horizontal clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %> (<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span></dd><% }); %></dl>';
     	
-    	char_full += '<dl class="dl-horizontal clearfix"><dt>HP</dt><dd><span data-field="hp"><%= hp %></span></dd><dt>AC</dt><dd><%= ac %><% if (armor !== "") { %> (<span data-field="armor"><%= armor %></span>)<% } %></dd><dt>Attack Bonus</dt><% if (attack.melee == attack.missile) { %><dd><%= attack.melee %></dd><% } else { %><dd><%= attack.melee %> Melee</dd><dd><%= attack.missile %> Missile</dd><% } %><dt></dt><dd></dd></dl>';
+    	char_full += '<dl class="dl-horizontal clearfix"><dt>HP</dt><dd><span data-field="hp"><%= hp %></span></dd><dt>AC</dt><dd><%= ac %><% if (armor !== "") { %> (<span data-field="armor"><%= armor %></span>)<% } %></dd><dt>Attack Bonus</dt><% if (attack.melee == attack.missile) { %><dd><%= attack.melee %></dd><% } else { %><dd><%= attack.melee %> Melee</dd><dd><%= attack.missile %> Missile</dd><% } %><dt>Reaction Roll</dt><dd><%= reaction_roll %></dd></dl>';
     	
     	char_full += '</div><div class="col-xs-6">';
     	
     	char_full += '<dl class="dl-horizontal clearfix"><dt data-field="chargroup">Group</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
     	
-    	char_full += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %></dl>';
+    	char_full += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goal">Goal</dt><dd><span data-field="goal"><%= goal %></span></dd></dl>';
     	
     	char_full += '<% if (spellcaster == true) { %><section><h4 data-field="spells">Spells</h4><dl class=""><% _.each(spells, function(v,k) { %><dt data-field="spells"><%= k %></dt><% _.each(v, function(y,x) { %><dd class="spell" data-spell="<%= y %>"><%= y %> <span class="glyphicon glyphicon-info-sign"></span></dd><% }); }); %></dl></section><% } %>'; //spells
 		
@@ -569,6 +581,9 @@ var EditView = Backbone.View.extend({
 			
 			var newval = _.sample(appdata.spells.bylevel[this.model.get('charclass')][list]);
 			$('#'+inputtarget).val(newval);
+		} else if (this.field == 'goal') {
+			var newval = _.sample(appdata.personality.goals);
+			$('#'+inputtarget).val(newval);
 		}
 		
 	},
@@ -641,6 +656,14 @@ var EditView = Backbone.View.extend({
 					
 				}
 			
+				break;
+			
+			case 'goal':
+				
+				form += '<div class="form-group"><label class="control-label" for="edit'+field+'_'+i+'">'+field.capitalize()+'</label><div class="input-group"><input type=text class="form-control" id="edit'+field+'_'+i+'" name="'+field+'" value="<%= '+field+' %>" />';
+					
+					form += '<div class="input-group-btn"><button type="button" class="btn btn-default randomize" data-targetfield="edit'+field+'_'+i+'" data-list="goals">Randomly Replace</button></div></div></div>';
+				
 				break;
 				
 			case 'gender':
@@ -822,10 +845,11 @@ var CharacterListItem = Backbone.View.extend({
     template: function(data){
     	var char_list = '';
     	
-    	char_list += '<%= name %> <% if(charclass == "none") { %>(<%= occupation %>)<% } else { %>(<% var cc = charclass.capitalize() %><%= cc %> <%= level %>)<% } %>';
  		char_list += '<div class="pull-right"><button title="View" class="btn btn-default btn-xs view"><span class="glyphicon glyphicon-eye-open"></span></button>';
 		
 		char_list += '<% if (typeof id !== "undefined"){ %> <button title="Delete" class="btn btn-default btn-xs delete"><span class="glyphicon glyphicon-remove"></span></button><% } else { %><%} %></div>';
+		
+		char_list += '<%= name %> <% if(charclass == "none") { %>(<%= occupation %>)<% } else { %>(<% var cc = charclass.capitalize() %><%= cc %> <%= level %>)<% } %>';
 				
 		var html = _.template(char_list, data);
 		return html;
