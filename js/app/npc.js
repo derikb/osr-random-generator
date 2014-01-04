@@ -367,6 +367,7 @@ var CharacterBlock = Backbone.View.extend({
 		} else {
 			this.model.save();
 		}
+		this.$el.find('.unsaved').remove();
 		return false;
     },
     
@@ -461,7 +462,11 @@ var CharacterBlock = Backbone.View.extend({
 		
 		}
 		
-		char_full += '<div class="pull-right hidden-print"><button title="Save" class="btn btn-default btn-xs save"><span class="glyphicon glyphicon-save"></span></button>';
+		char_full += '<div class="pull-right hidden-print">';
+		
+		if (this.model.changedAttributes()) { char_full += '<span class="label label-danger unsaved">Unsaved Changes</span> '; }
+		
+		char_full += '<button title="Save" class="btn btn-default btn-xs save"><span class="glyphicon glyphicon-save"></span></button>';
 		
 		char_full += ' <button title="Close" class="btn btn-default btn-xs remove"><span class="glyphicon glyphicon-eye-close"></span></button>';
 		
@@ -752,6 +757,32 @@ var EditView = Backbone.View.extend({
 				form += '</select><div class="help-block"></div></div>';
 			
 				break;
+				
+			case 'chargroup':
+			
+				form += '<div class="form-group"><label for="chargroup" class="control-label">Character Group</label><select class="form-control" id="chargroup" name="chargroup"><option value="">---</option>';
+					_.each(app.AppSettings.get('chargroup'), function(v,k,l) {
+						var sel = (v.name == this.model.get(field)) ? 'selected=selected' : '';
+						form += '<option value="'+v.name+'" '+sel+'>'+v.name+'</option>';
+						
+					}, this)
+				form += '</select><div class="help-block"></div></div>';
+
+				
+				break;
+			
+			case 'race':
+			
+				form += '<div class="form-group"><label for="race" class="control-label">Race</label><select class="form-control" id="race" name="race">';
+					_.each(this.model.getRules().races, function(v,k,l) {
+						var sel = (k == this.model.get(field)) ? 'selected=selected' : '';
+						form += '<option value="'+k+'" '+sel+'>'+v.label+'</option>';
+						
+					}, this)
+				form += '</select><div class="help-block"></div></div>';
+
+				
+				break;
 			
 			default:
 				form += '<div class="form-group"><label class="control-label" for="edit'+field+'">'+field+'</label><input type=text class="form-control" id="edit'+field+'" name="'+field+'" value="<%= '+field+' %>" /><span class="help-block"></span></div>';
@@ -868,7 +899,8 @@ var CharacterListItem = Backbone.View.extend({
 	},
 	
 	initialize: function() {
-    	this.listenTo(this.model, "change", this.render);
+    	//this.listenTo(this.model, "change", this.render);
+    	this.listenTo(this.model, "sync", this.render); //only change when character is saved.
     },
 
     viewCharacter: function(e) {
