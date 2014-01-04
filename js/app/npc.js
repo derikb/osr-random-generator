@@ -429,7 +429,7 @@ var CharacterBlock = Backbone.View.extend({
     	
     	if (character_display == 'soft') {
 	    	
-	    	var char_full = '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %></dd><% } %><dt data-field="chargroup">Group</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
+	    	var char_full = '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %></dd><% } %><dt data-field="race">Race</dt><dd data-field="race"><% var r = race.capitalize() %><%= r %></span></dd><dt data-field="chargroup">Group</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
 	    	
 	    	char_full += '</div><div class="col-xs-6">';
     	
@@ -437,7 +437,7 @@ var CharacterBlock = Backbone.View.extend({
 			
     	} else {
     	
-    		var char_full = '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %>, <span data-field="level">Lvl <%= level %></span></dd><% } %></dl>';
+    		var char_full = '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %>, <span data-field="level">Lvl <%= level %></span></dd><% } %><dt data-field="race">Race</dt><dd data-field="race"><% var r = race.capitalize() %><%= r %></span></dd></dl>';
     	
 	    	if (app.AppSettings.get('ability_display') == 'minimal') {
 		    	
@@ -928,12 +928,20 @@ var CharForm = Backbone.View.extend({
     
     render: function () {
     	var rules = appdata.rules[this.model.get('rules_set')];
-    	var form = '<div class="row"><div class="form-group col-sm-9"><label for="charclass" class="control-label">Class</label><select class="form-control" id="charclass" name="charclass">';
+    	var form = '<div class="row">';
+    	
+    	form += '<div class="form-group col-sm-4"><label for="race" class="control-label">Race</label><select class="form-control" id="race" name="race">';
+    		_.each(rules.races, function(v,k,l) {
+				form += '<option value="'+k+'">'+v.label+'</option>';		
+			}, this);
+    	form += '</select><div class="help-block">Currently no rules effect.</div></div>';
+    	
+    	form += '<div class="form-group col-sm-4"><label for="charclass" class="control-label">Class</label><select class="form-control" id="charclass" name="charclass">';
     		_.each(rules.classes, function(v,k,l) {
 				form += '<option value="'+k+'">'+v.label+'</option>';		
 			}, this);
     	form += '</select><div class="help-block"></div></div>';
-		form += '<div class="form-group col-sm-3"><label for="level" class="control-label">Level</label><select class="form-control" id="level" name="level">';
+		form += '<div class="form-group col-sm-4"><label for="level" class="control-label">Level</label><select class="form-control" id="level" name="level">';
 			for(var i=0; i<10; i++) {
 				form += '<option value="'+i+'">'+i+'</option>';
 			}

@@ -41,21 +41,27 @@ appdata.rules = {
 			"base": 12,
 			"method": "asc",	
 		},
+		"race_as_class": true,
 		"races": {
-			"race_as_class": true,
+			"human": {
+				"label": "Human"
+			},
 			"dwarf": {
+				"label": "Dwarf",
 				"ability_scores": [ { "name": "con", "score": 0, "modifier": 1 } ]
 			},
 			"elf": {
+				"label": "Elf",
 				"ability_scores": []
 			},
 			"halfling": {
+				"label": "Halfling",
 				"ability_scores": [ { "name": "dex", "score": 0, "modifier": 1 } ]
 			},
 		},
 		"classes": {
 			"none": {
-				"label": "0-level human",
+				"label": "0-level",
 				"hd": 6,
 				"attack": function(lvl) { return 0; },
 				"spellcaster": false,
@@ -211,21 +217,27 @@ appdata.rules = {
 			"base": 9,
 			"method": "desc",	
 		},
+		"race_as_class": true,
 		"races": {
-			"race_as_class": true,
+			"human": {
+				"label": "Human"
+			},
 			"dwarf": {
+				"label": "Dwarf",
 				//"ability_scores": [ { "name": "con", "score": 0, "modifier": 1 } ]
 			},
 			"elf": {
+				"label": "Elf",
 				//"ability_scores": []
 			},
 			"halfling": {
+				"label": "Halfling",
 				//"ability_scores": [ { "name": "dex", "score": 0, "modifier": 1 } ]
 			},
 		},
 		"classes": {
 			"none": {
-				"label": "0-level human",
+				"label": "0-level",
 				"hd": 6,
 				"attack": function(lvl) { return 0; },
 				"spellcaster": false,
@@ -378,26 +390,33 @@ appdata.rules = {
 			"base": 10,
 			"method": "asc",	
 		},
+		"race_as_class": false,
 		"races": {
-			"race_as_class": false,
+			"human": {
+				"label": "Human"
+			},
 			"dwarf": {
+				"label": "Dwarf",
 				//"ability_scores": [ { "name": "con", "score": 0, "modifier": 1 } ]
 				"classes": [ "fighter" ]
 			},
 			"elf": {
+				"label": "Elf",
 				//"ability_scores": []
 				"classes": [ "fighter" ]
 			},
 			"half-elf": {
+			"label": "Half-Elf",
 				//"ability_scores": []
 			},
 			"halfling": {
+				"label": "Halfling",
 				//"ability_scores": [ { "name": "dex", "score": 0, "modifier": 1 } ]
 			},
 		},
 		"classes": {
 			"none": {
-				"label": "0-level human",
+				"label": "0-level",
 				"hd": 6,
 				"attack": function(lvl) { return 0; },
 				"spellcaster": false,
