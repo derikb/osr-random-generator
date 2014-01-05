@@ -23,7 +23,7 @@
 	    
 	    <ul id="maintab" class="nav nav-tabs hidden-print">
 		  <li class="active"><a href="#npcs" data-toggle="tab">NPCs</a></li>
-		  <li><a href="#other" data-toggle="tab">t.b.d.</a></li>
+		  <li><a href="#wilderness" data-toggle="tab">Wilderness</a></li>
 		  <li><a href="#settings" data-toggle="tab">Settings</a></li>
 		  <li><a href="#help" data-toggle="tab">Help</a></li>
 		  <li><a href="#credits" data-toggle="tab">Credits</a></li>
@@ -52,9 +52,10 @@
 				</div>
 			</div>
 			
-			<div class="tab-pane hidden-print" id="other">
+			<div class="tab-pane hidden-print" id="wilderness">
 				<!-- Some other generator here. -->
 				<div class="alert alert-info">Planning on adding some other generators soon.</div>
+				
 			</div>
 			
 			<div class="tab-pane hidden-print" id="settings">
@@ -172,6 +173,17 @@
 		jQuery(document).ready(function(){
 			window.app = new AppRouter();
 			Backbone.history.start();
+			
+			// Javascript to enable link to tab
+			var hash = document.location.hash;
+			var prefix = "tab_";
+			if (hash) {
+			    $('.nav-tabs a[href='+hash.replace(prefix,"")+']').tab('show');
+			} 
+			// Change hash for page-reload
+			$('.nav-tabs a').on('shown.bs.tab', function (e) {
+			    window.location.hash = e.target.hash.replace("#", "#" + prefix);;
+			});
 		});
 	</script>
 
