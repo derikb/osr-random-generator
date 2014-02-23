@@ -61,8 +61,6 @@ var RandomTable = Backbone.Model.extend({
 		} else if (typeof start == 'string') {
 			this.set('result', this.selectFromTable(start));
 		} else {
-			//!TODO we have to account for multiple tables in the start attribute
-			//Also multiple times rolling on the same table
 			result = [];
 			_.each(start, function(v){
 				if (_.isString(v)) {
@@ -71,7 +69,6 @@ var RandomTable = Backbone.Model.extend({
 					return;
 				}
 				//its an object
-				//console.log(v);
 				var times = (typeof v.times == 'number' ) ? v.times : 1;
 				for(var i = 1; i<=times; i++) {
 					r = this.selectFromTable(v.table);
@@ -126,58 +123,39 @@ var RandomTable = Backbone.Model.extend({
 			o = o.concat(r);
 		} else if (_.isArray(subtable)) {
 			//subtables is an array, assume reference to other tables, roll on each in turn
-			var subtables = this.checkSubtables(table, result);
-			//console.log(subtables);
-			_.each(subtables, function(v){
+			_.each(subtable, function(v){
 				var r = this.selectFromTable(v);
 				o = o.concat(r);
 				//console.log(o);
 			}, this);
 		} else if (_.isObject(subtable)) {
-			//subtable is object assume embedded table
-			//!TODO account for multiple embedded tables (loop over the keys)
+			//subtable is object assume embedded table(s)
+			//loop over keys
 			var k = _.keys(subtable);
-			result = app.randomizer.rollRandom(subtable[k[0]]);
-			//console.log(result);
-			var desc = '';
-			if (_.isUndefined(subtable[k[0]][result])) {
-				var r = _.findWhere(subtable[k[0]], { label: result });
-				if (_.isObject(r)) {
-					desc = (_.isString(r.description)) ? r.description : '';
-				}				
-			} else {
-				desc = (_.isString(subtable[k[0]][result]['description'])) ? subtable[k[0]][result]['description'] : '';
-			}
-			o.push({ table: k[0], result: result, desc: desc });
+			_.each(k, function(kx){
+				result = app.randomizer.rollRandom(subtable[kx]);
+				//console.log(result);
+				var desc = '';
+				if (_.isUndefined(subtable[kx][result])) {
+					var r = _.findWhere(subtable[kx], { label: result });
+					if (_.isObject(r)) {
+						desc = (_.isString(r.description)) ? r.description : '';
+					}				
+				} else {
+					desc = (_.isString(subtable[kx][result]['description'])) ? subtable[kx][result]['description'] : '';
+				}
+				o.push({ table: kx, result: result, desc: desc });
+				
+			}, this);
+
 		}
 		
 		return o;
 	},
-	
-	//check for subtables
-	//return array (which may be empty) to normalize data
-	checkSubtables: function(table, entry) {
-		var d = this.get('tables')[table];
-		//console.log(d);
-		var e = d[entry];
-		//console.log(e);
-		if (!_.isUndefined(e.subtable)) {
-			if (_.isString(e.subtable)) {
-				return [e.subtable];
-			} else if (_.isArray(e.subtable)) {
-				return e.subtable;
-			} else if (_.isObject(e.subtable)) {
-				//!TODO ...what is this?
-				//object subtable is assumed to be an embedded table?	
-				//return [e.subtable];
-			}
-		}
-		return [];	
-	},
-	
+
 	
 	//show the results as a string
-	//!TODO make this nicer/clearer
+	//!TODO make this nicer/clearer #23
 	//Alternate: write a template to use in the views?
 	niceString: function() {
 		var r = this.get('result');
@@ -209,7 +187,7 @@ var RandomTable = Backbone.Model.extend({
 		}
 		
 		
-		//!TODO complex listing
+		//!TODO complex listing #24
 		return ['Sorry, haven\'t figured out how to best list these complex (sub)tables yet.'];
 		
 	}
@@ -475,7 +453,7 @@ var RTable_List = Backbone.View.extend({
 			$(this.el).append(new RandomTableShort({model:v}).render().el);
     	}, this);
 
-		//!TODO after render we could work in DataTables for sorting?
+		//!TODO after render we could work in DataTables for sorting? #25
         return this;
     }
 	
