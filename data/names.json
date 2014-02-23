@@ -1,5 +1,24 @@
 
 appdata = (typeof appdata == "undefined") ? {} : appdata;
+
+appdata.tables = (typeof appdata.tables == "undefined") ? {} : appdata.tables;
+
+/*
+
+appdata.tables.holmesian_names = {
+	"title": "Holmesian Random Names",
+	"author": "",
+	"source": "From <a href=\"http://zenopusarchives.blogspot.com/2013/07/random-names-one-sheet.html\">Zenopus Archives</a>",
+	"description": "Generate a name a la Holmes.",
+	"tags": ['names', 'npcs'],
+	"table": [],
+	"start": [],
+	"tables": {}
+}
+*/
+
+
+
 appdata.name = {
 	"options": [
 		{ option: "flemish", label: "Flemish" },
@@ -313,10 +332,10 @@ appdata.name = {
 		"the Wanderer",
 		"the Wary",
 		"the Weird",
-		"the {{list:general.color}}",
-		"the {{list:general.ordinal}}",
-		"of the {{list:general.color}} Cloak",
-		"of the {{list:general.direction}}",
+		"the {{table:general.color}}",
+		"the {{table:general.ordinal}}",
+		"of the {{table:general.color}} Cloak",
+		"of the {{table:general.direction}}",
 		"of the Arid Wastes",
 		"of the Beetling Brow",
 		"of the Cyclopean City",
