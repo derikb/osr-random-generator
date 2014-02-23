@@ -8,8 +8,17 @@ Important:
 	-Use a forward slash before double quotes inside any double quotes:
 		- Constantly says "Umm"
 		- "Constantly says \"Umm\""
-	-Use commas to separate items in a list, but DO NOT put a comma after the last item in a list
+	-Use commas to separate items in a list, but DO NOT put a comma after the last item in a list (really that will only break IE)
+	- a [] represents a list of items that are ordered by number
+	- a {} represents on object of attribute: value parts
 	
+*/
+
+/*
+
+//////////////////////////////////////////////////////////////////
+// NPCs
+//////////////////////////////////////////////////////////////////
 
 Data that can be customized:
 	-personality
@@ -21,9 +30,6 @@ Data that can be customized:
 
 See examples.
 
-*/
-
-/*
 
 EXAMPLE: Add Appearance list
 
@@ -87,5 +93,18 @@ appdata.name.japanese = {
 		"Kawabata"
 	]
 };
+
+
+
+//////////////////////////////////////////////////////////////////
+// WILDERNESS
+//////////////////////////////////////////////////////////////////
+
+Data is organized as
+
+appdata.wilderness.terrain - an array of terrain objects
+add
+
+
 
 */

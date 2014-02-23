@@ -1,5 +1,18 @@
 appdata = (typeof appdata == "undefined") ? {} : appdata;
 
+appdata.spells = (typeof appdata.spells == "undefined") ? {} : appdata.spells;
+
+appdata.spells.general = {
+	"title": "Combined Spells",
+	"author": "Adam Taylor",
+	"source": "Spell list as compiled by <a href=\"https://plus.google.com/u/0/102353265648840654058/about\">Adam Taylor</a> by way of html from <a href=\"http://save.vs.totalpartykill.ca/grab-bag/\">Ramanan Sivaranjan</a> (which I converted into JSON).",
+	"description": "Lots of spells... I'm not actually sure what edition they are based on.",
+	"tags": ['spells'],
+	"table": [],
+	"start": [],
+	"tables": {}	
+};
+
 //via Adam Taylor by way of Ramanan Sivaranjan
 appdata.spells = {
 	"bylevel": {

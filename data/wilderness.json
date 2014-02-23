@@ -1,0 +1,279 @@
+appdata = (typeof appdata == "undefined") ? {} : appdata;
+
+appdata.wilderness = {
+	"zone": {
+		"temperate": {},
+		"tropical": {},
+		"arctic": {},
+	},
+	"terrain": {
+		"road": { "label": "Road" },
+		"swamp": { "label": "Swamp" },
+		//"forest": { "label": "Forest" },
+				//"mountains": { "label": "Mountains" },
+		//"sea": { "label": "Sea" },
+	},
+	"weather": {
+		"season": {
+			"spring": {},
+			"summer": {},
+			"autumn": {},
+			"winter": {},
+		},
+		"temperature": [
+			{ "v": "Freezing", "r": 0 },
+			{ "v": "Cold", "r": 1 },
+			{ "v": "Cool", "r": 3 },
+			{ "v": "Warm", "r": 5 },
+			{ "v": "Hot", "r": 6 },
+		],
+		"precipitation": [
+			"clear", //0-1
+			"cloudy", //2-3
+			"light precipitation", //4
+			"moderate precipitation", //5
+			"heavy precipitation", //6-8
+			"extreme weather" //9
+		],
+		"special": [
+			""
+		]
+	},
+}
+
+ 
+appdata.encounters = (typeof appdata.encounters == "undefined") ? {} : appdata.encounters;
+appdata.encounters.swamp = {
+	"title": "Swamp Encounters",
+	"author": "Derik Badman",
+	"source": "",
+	"description": "",
+	"tags": ["swamp"],
+	"start": 'general',	
+ 	"tables": {
+	 	"general": {
+	 		"Trap/Trick": { "subtable": "trap", "print": false, "weight": 1 },
+	 		"Building/Lair": { "subtable": "lair","print": false, "weight": 2 },
+	 		"Animal/Monster": { "subtable": "monster", "print": false, "weight": 3 },
+	 		"Human(oid)": { "subtable": "human", "print": false, "weight": 6 },
+	 		"Natural": { "subtable": "natural", "print": false, "weight": 2 },
+	 		"Special": { "subtable": "special", "print": false, "weight": 1 }
+	 	},
+	 	"trap": {
+	 		"Spiderweb": { "weight": 2 },
+	 		"Tripwire": { "weight": 2 },
+	 		"Net trap": { "weight": 3 },
+	 		"Pit trap": { "weight": 3 },
+	 		"Snare": { "weight": 3 },
+	 		"Rocks from above": { "weight": 1 }
+	 	},
+		"lair": {
+			"Village": { "weight": 1 },   
+			"Campsite": { "weight": 2 },
+			"Ruins": { "weight": 1 },
+			"Cave": { "weight": 1 },
+			"Tree lair": { "weight": 2 },
+			"Nest (ground)": { "weight": 2 },
+			"Nest (water)": { "weight": 2 },
+			"Altar/shrine": { "weight": 1 },
+			"Tower": { "weight": 1 },
+		},
+		"monster": {
+			"Insect swarm": { "weight": 2 },
+			"Frogs": { "weight": 2 },
+			"Alligators": { "weight": 2 },
+			"Giant Grasshoppers": { "weight": 1 },
+			"Spiders": { "weight": 2 },
+			"Fish": { "weight": 2 },
+			"Water Fowl": { "weight": 2 },
+			"Monkeys/Sloths": { "weight": 1 },
+			"Crabs/Crayfish": { "weight": 2 },
+			"Will-o-wisp": { "weight": 1 },
+			"Lizardmen/Snakemen": { "weight": 1 },
+			"Dragon": { "weight": 1 },
+			"Dryad": { "weight": 1 },
+			"Carnivorous Plant": { "weight": 2 },
+			"Zombies (drowners)": { },
+			"Wild Boar": {},
+			"Leeches": { "weight": 2 },
+			"Snakes": { "weight": 2 },
+			"[Other: Something large or dangerous]": {}
+		},
+		"human": {
+			"Militia": { "weight": 1, "subtable": "human actions" },
+			"Local Tribespeople": { "weight": 1, "subtable": "human actions" },
+			"Druid": { "weight": 1 },
+			"Cultist(s)": { "weight": 1 },
+			"Lost Child/Peasant": { "weight": 1 },
+			"NPC adventuring party": { "weight": 1, "subtable": "human actions" },
+			"Mage": { "weight": 1, "subtable": "human actions" },
+			"Bandit/Convict": { "weight": 1, "subtable": "human actions" }
+		},
+		"natural": {
+			"Weather event": { "weight": 1, "subtable": "weather event" },
+			"Fire": { "weight": 1 },
+			"Whirlpool": { "weight": 1 },
+			"Rapids": { "weight": 1 },
+			"Quicksand": { "weight": 1 },
+			"Heavy vines/brush": { "weight": 1 },
+			"Large Dead Tree": { "weight": 1 }
+		},
+		"special": {
+			"Magic Clearing": { "weight": 1 },
+			"Mushroom Circle": { "weight": 1 },
+			"Magic Pool": { "weight": 1 },
+			"Statue": { "weight": 1 },
+			"Grave(s)": { "weight": 1 },
+			"[Demon?]": { "weight": 1 }
+		},
+	 	"human actions": {
+		 	"Hunting": { "weight": 2 },
+		 	"Foraging": {},
+		 	"Lost": {},
+		 	"Camping": { "weight": 2 },
+		 	"Searching for someone": { "subtable": "human"  },
+		 	"Searching for something": {},
+		 	"Travelling": { "weight": 3 },
+		 	"Fighting": {},
+		 	"Religious ceremony": {},
+		 	"Dying": {},
+		 	"Dead": {},
+	 	},
+	 	"weather_event": {
+		 	"Light Fog/mist": { "weight": 2 },
+		 	"Heavy Fog/mist": { "weight": 2 },
+		 	"Light precipitation": { "weight": 2 },
+		 	"Heavy precipitation": {},
+		 	"Light Wind": { "weight": 2 },
+		 	"Heavy Wind": {},
+		 	"Thunder & Lightning": {},
+		 	"Heavy Clouds": {},
+		 	"Sun shower": {},
+		 	"Bright Sun": {},
+		 	"Major Weather event": { "description": "Hurricane, tornado, blizzard, flood, etc." }
+	 	}
+ 	},
+};
+	
+appdata.encounters.road = {
+	"title": "Road Encounters",
+	"author": "Derik Badman",
+	"source": "",
+	"description": "For when travelling in civilization. (Not totally finished yet.)",
+	"tags": ["road"],
+	"start": 'general',	
+ 	"tables": {
+	 	"general": {
+	 		"Trap/Trick": { "subtable": "trap", "print": false, "weight": 1 },
+	 		"Building": { "subtable": "building","print": false, "weight": 2 },
+	 		"Animal/Monster": { "subtable": "monster", "print": false, "weight": 3 },
+	 		"Human(oid)": { "subtable": "human", "print": false, "weight": 6 },
+	 		"Natural": { "subtable": "natural", "print": false, "weight": 2 },
+	 		"Special": { "subtable": "special", "print": false, "weight": 1 }
+	 	},
+	 	"trap": {
+	 		"Barricade (trees)": { "weight": 2 },
+	 		"Barricade (wagons)": { "weight": 2 },
+	 		"Tripwire": { "weight": 2 },
+	 		"Net trap": { "weight": 1 },
+	 		"Pit trap": { "weight": 1 },
+	 		"Snare": { "weight": 1 },
+	 	},
+		"building": {
+			"Inn": { "weight": 3 },
+			"Altar/shrine": { "weight": 3 },
+			"Campsite": { "weight": 3 },
+			"Village": { "weight": 1 },		
+			"Ruins": { "weight": 1 },
+			"Lair/Nest": { "weight": 1 },
+		},
+		"monster": {
+			"Deer": { "weight": 2 },
+			"Bear": {},
+			"Fowl": {},
+			"Wild Cat": {},
+			"Wolves": {},
+			"Dog, Domestic": { "description": "Who is its owner and where are they?" },
+			"Dog, Wild": {},
+			"Demon, Disguised": { "weight": 1 },
+			"Undead": { },
+			"[Something flying overhead]": {},
+			"[Other: Something large or dangerous]": {}
+		},
+		"human": {
+			"Bandits": { "weight": 1, "subtable": ["bandit type", "bandit action"] },
+			"Militia": { "weight": 1, "description": "On patrol or perhaps looking for: bandits, revolutionaries, monster/animal, or even the PCs." },
+			"Mage": { "weight": 1, "subtable": { "Origin": [ { "label": "Local" }, { "label": "From far away on some kind of voyage/search" } ] } },
+			"Priest(s) (religion options here)": { "weight": 1 },
+			"Beggar monk": { "weight": 1, "description": "Mendicant, will offer healing if party gives him some coin or food." },
+			"Merchant": { "weight": 1, "description": "Single wagon or cart, 1-2 guards." },
+			"Caravan": { "weight": 1, "description": "Multiple wagons/carts, guards, etc. Could be merchants, gypsies... immigrants? Diplomatic envoy." },
+			"Craftsmen/tinkerer": { "weight": 1, "description": "Local, a cart and mule if craft necessitates it." },
+			"Farmer/peasant": { "weight": 1, "description": "Going into/out of town on some errand, looking for help of some kind, wedding, funeral, driving livestock." },
+			"Revolutionaries": { "weight": 1, "description": "Attempting to stir up support/funds to overthrow local noble/leader/church." },
+			"Noble": { "weight": 1, "description": "Usually with guards/retainers/retinue." },
+			"Bard/musicians/dancers/theater troupe": { "weight": 1 },
+			"Migrating Family": { "weight": 1 },
+			"Mercenaries": { "weight": 1, "description": "Perhaps looking for work, or having just finished working, or on the job (doing something)." },
+			"Cultists?": { "weight": 1 },
+			"Pilgrims": { "weight": 1 },
+			"NPC Adventuring Party": { "weight": 1 },
+			"Courier": { "weight": 1 },
+		},
+		"natural": {
+			"Weather event": { "weight": 1, "subtable": "weather event" },
+			"Thick Mud": { },
+			"Stream": {},
+			"Fire": { "weight": 1 },
+			"Fallen Tree": { "weight": 1 }
+		},
+		"special": {
+			"Statue": { "weight": 1 },
+			"Grave(s)": { "weight": 1 },
+		},
+		
+		"bandit type": {
+			"Outlaw Archers (A la Robin Hood)": { "weight": 1 },
+			"Brigands (Murderous robbers)": { "weight": 1 },
+			"Highwaymen (Small, fast groups)": { "weight": 1 },
+			"Out-of-work Mercenaries (Hard-bitten veterans)": { "weight": 1 },
+			"Bullies (Local toughs/youngsters)": { "weight": 1 },
+			"Pillagers & Looters (Gangs of peasants)": { "weight": 1 },
+			"Foreign Raiders (Berserker-types)": { "weight": 1 },
+			"Duelists/Extortionists (Solitary Black Knight type)": { "weight": 1 },
+		},
+		"bandit action": {
+			"Waiting to attack": {},
+			"During a fight": {},
+			"Just after a fight": {},
+			"Altercation with militia": {},
+			"Coming back from town drunk/hungover": {},
+		},
+		
+	 	"human actions": {
+		 	"Hunting": { "weight": 2 },
+		 	"Camping": { "weight": 2 },
+		 	"Searching for someone": { "subtable": "human"  },
+		 	"Searching for something": {},
+		 	"Travelling": { "weight": 3 },
+		 	"Fighting": {},
+		 	"Religious ceremony": {},
+		 	"Dying": {},
+		 	"Dead": {},
+	 	},
+	 	"weather event": {
+		 	"Light Fog/mist": { "weight": 2 },
+		 	"Heavy Fog/mist": { "weight": 2 },
+		 	"Light precipitation": { "weight": 2 },
+		 	"Heavy precipitation": {},
+		 	"Light Wind": { "weight": 2 },
+		 	"Heavy Wind": {},
+		 	"Storm": {},
+		 	"Heavy Clouds": { "weight": 2 },
+		 	"Sun shower": { "weight": 2 },
+		 	"Bright Sun": { "weight": 2 },
+		 	"Major Weather event": { "description": "Hurricane, tornado, blizzard, flood, etc." }
+	 	}
+ 	},
+		
+};

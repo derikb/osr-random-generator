@@ -407,21 +407,15 @@ var CharacterBlock = Backbone.View.extend({
 	    
 	    var spellv = new SpellView({spell: spell});
 	    //console.log(spellv);
-	    $('#editmodal .modal-title').html('Spell Details: '+spell.title.capitalize());
-	    $('#editmodal .modal-body').html(spellv.render().el);
-		$('#editmodal').modal({});
-	    
+	    app.showModal('Spell Details: '+spell.title.capitalize(), spellv.render().el);	    
     },
     
     editField: function(e) {
 	    var field = $(e.target).attr('data-field');
 	    //console.log(field);
 	    
-	    var editv = new EditView({model: this.model, field: field});
-	    
-	    $('#editmodal .modal-title').html('Edit Field: '+field.capitalize());
-	    $('#editmodal .modal-body').html(editv.render().el);
-		$('#editmodal').modal({});
+	    var editv = new CharacterEditView({model: this.model, field: field});
+	    app.showModal('Edit Field: '+field.capitalize(), editv.render().el);
     },
     
     
@@ -525,8 +519,8 @@ var SpellView = Backbone.View.extend({
 	
 });
 
-//!View for editing the fields
-var EditView = Backbone.View.extend({
+//!CharacterEditView View for editing the fields
+var CharacterEditView = Backbone.View.extend({
 	
 	tagName: 'div',
 	field: '',
@@ -1013,16 +1007,8 @@ var CharForm = Backbone.View.extend({
     addGroup: function(e) {
 	    var val = $(e.target).val();
 	    if (val == '0') {
-		    console.log('new group modal');
-		    
 		    var form = ''; 
-		    
-		    $('#editmodal .modal-title').html('Manage Character Groups');
-			$('#editmodal .modal-body').html(new CharGroupView({model:this.model}).render().el);			
-			$('#editmodal').modal({});
-			$('#editmodal').on('shown.bs.modal', function(e) {
-				$(e.target).find('input[type="text"]:first').focus();
-			});
+		    app.showModal('Manage Character Groups', new CharGroupView({model:this.model}).render().el);
 		    $(e.target).val('');
 	    }
     }

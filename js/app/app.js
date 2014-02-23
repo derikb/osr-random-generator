@@ -18,15 +18,57 @@ var AppRouter = Backbone.Router.extend({
 		$('#settings').html(this.AppSettingsView.render().el);
 		//console.log(this);
 		$('#character-form').append(new CharForm({ model: this.AppSettings }).render().el);
+		
+		$('#wilderness-form').append(new WildernessForm({ model: this.AppSettings }).render().el);
+		
+		$('#dungeon-form').append(new DungeonForm({ model: this.AppSettings }).render().el);
+		
     },
 	
     list: function () {
-        this.charlist = new CharCollection();
+       	this.charlist = new CharCollection();
         this.charlistview = new CharList({model:this.charlist});
 		this.charlist.fetch({silent: true});
         $('#characters-list').html(this.charlistview.render().el);
-    },
+		
+		this.wildlist = new WildernessCollection();
+        this.wildlistview = new WildernessList({model:this.wildlist});
+		this.wildlist.fetch({silent: true});
+        $('#wilderness-list').html(this.wildlistview.render().el);
 
+		this.dungeonlist = new DungeonCollection();
+        this.dungeonlistview = new DungeonList({model:this.dungeonlist});
+		this.dungeonlist.fetch({silent: true});
+        $('#dungeon-list').html(this.dungeonlistview.render().el);
+
+		this.rtables = new RTable_Collection();
+        this.rtablelist = new RTable_List({model:this.rtables});
+		var load_tables = [];
+		_.each(appdata.tables, function(v, k){
+			if (typeof v.title == 'undefined') {
+				v.title = k;
+			}
+			if (_.isArray(v)) {
+				var newv = { title: k, table: v };
+				v = newv;
+			}
+			load_tables.push(v);
+		});
+		//console.log(load_tables);
+		this.rtables.reset(load_tables);
+        $('#rtable-list').html(this.rtablelist.render().el);
+
+    },
+	
+	
+	showModal: function(title, body) {
+		$('#editmodal .modal-title').html(title);
+		$('#editmodal .modal-body').html(body);
+		$('#editmodal').modal({});
+		$('#editmodal').on('shown.bs.modal', function(e) {
+			$(e.target).find('input[type="text"]:first').focus();
+		});
+	}
 	
 	/*
 loadCustomData: function(){
@@ -55,6 +97,9 @@ var AppSettings = Backbone.Model.extend({
 			chargroup: [],
 			character_display: 'full',
 			ability_display: 'full',
+			
+			hexdressing_count: 3,
+			encounter_count: 5,
 		}	
 	},
 	
@@ -92,7 +137,7 @@ var AppSettingsView = Backbone.View.extend({
 				var sel = (v.option == this.model.get('rules_set')) ? 'selected=selected' : '';
 				form += '<option value='+v.option+' '+sel+'>'+v.label+'</option>';
 			}, this);		
-		form += '</select></div>';
+		form += '</select><div class="help-block">Only effects NPCs at this point.</div></div>';
 		
 		form += '<fieldset><legend>NPC Settings</legend>';
 		
@@ -165,19 +210,21 @@ var AppSettingsView = Backbone.View.extend({
 //!AppRandomizer - for various randomization functions
 var AppRandomizer = function() {
 	
-	//random number between min and max
-	//use _.random(min, max) instead
-	/*
-this.randomNumber = function(min, max) {
-		return Math.floor(Math.random() * (max - min + 1)) + min;
-	}
-*/
-	
-	//random value from an array (returns string, object, array... whatever the array is of)	
+	//random value from an array/object (returns string, object, array... whatever the array is of)
+	//arrays return the element
+	//objects return the key
 	this.randomValue = function(arr) {
 		if (typeof arr == 'undefined') { return ''; }
-		x = _.random(0, arr.length-1);
-		return arr[x];
+		if (typeof arr == 'string') { return arr; }
+		if (typeof arr == 'integer') { return arr; }
+		if ($.isArray(arr)) {
+			x = _.random(0, arr.length-1);
+			return arr[x];
+		} else {
+			k = _.keys(arr);
+			x = _.random(0, k.length-1);
+			return k[x];
+		}
 	}
 	
 	//random value from an arr(values) weighted by an arr(weights)
@@ -185,7 +232,9 @@ this.randomNumber = function(min, max) {
 	//weights is an array of weighted integer for each output (ie they have to be in the same order as the values)
 	this.getWeightedRandom = function (values, weights){ 
 	    n = 0; 
-	    num = _.random(0, this.arraySum(weights));
+	    num = _.random(1, this.arraySum(weights));
+	    //console.log('roll '+num);
+	    //console.log('values'+values);
 	    for(var i = 0; i < values.length; i++) {
 	        n = n + weights[i]; 
 	        if(n >= num){
@@ -195,25 +244,92 @@ this.randomNumber = function(min, max) {
 	    return values[i]; 
 	}
 	
-	//roll die(dice) defaults to d6, 1 time, 0 modifier
-	this.roll = function(die, number, modifier) {
+	//wrapper for this.getWeightedRandom() and this.randomValue() that accepts an object or array
+	//if the elements are objects then it checks for a weight attribute
+	this.rollRandom = function(data) {
+		var values = [];
+		var weights = [];
+		//console.log(data);
+			
+		if ($.isArray(data)) {
+			if (typeof data[0] == 'string') {
+				return this.randomValue(data);
+			}
+			_.each(data, function(v,k,l){
+				//console.log(typeof v);
+				if (typeof v == 'object') {
+					if (typeof v.weight !== 'undefined') {
+						weights.push(v.weight);
+					} else {
+						weights.push(1);
+					}
+					values.push(v.label);
+				} else if (typeof v == 'string') {
+					//nothing
+				}
+			}, this);
+		} else if (typeof data == "object") {
+			_.each(data, function(v,k,l){
+				if (typeof v.weight !== 'undefined') {
+					weights.push(v.weight);
+				} else {
+					weights.push(1);
+				}
+				values.push(k);
+			}, this);
+		}
+		//console.log(values);
+		//console.log(weights);
+		return this.getWeightedRandom(values, weights);
+	}
+	
+	//roll die(dice) defaults to d6, 1 time, 0 modifier, + mod_op (modifier operation)
+	//!TODO adjust so it can handle modifiers for (+-*/) (default to + if just an integer)
+	this.roll = function(die, number, modifier, mod_op) {
 		//console.log(arguments);
 		if (typeof modifier == 'undefined') {
 			var modifier = 0;
+		} else {
+			modifier = parseInt(modifier);
 		}
 		if (typeof number == 'undefined') {
 			var number = 1;
+		} else {
+			number = parseInt(number);
 		}
 		if (typeof die == 'undefined') {
 			var die = 6;
+		} else {
+			die = parseInt(die);
+		}
+		if (typeof mod_op == 'undefined') {
+			var mod_op = '+';
 		}
 		
 		sum = 0;
 		for (var i=1; i<=number; i++) {
 			sum = sum + _.random(1, die);
 		}
-		sum = sum + modifier
-		return sum;
+		if (modifier == 0) {
+			return sum;
+		}
+		
+		switch (mod_op) {
+			case '*':
+				sum = sum * modifier;
+				break;
+			case '-':
+				sum = sum - modifier;
+				break;
+			case '/':
+				sum = sum / modifier;
+				break;	
+			case '+':
+			default:
+				sum = sum + modifier;
+				break;
+		} 
+		return  Math.round(sum);
 	}
 
 	//sum the values of an array
@@ -226,17 +342,20 @@ this.randomNumber = function(min, max) {
 		return total;
 	},
 	
-	
+	//convert a {{token}} into an value
+	//Tokens are {{table:SOMETABLE}} {{table:SOMETABLE:SUBTABLE}} {{table:SOMETABLE*3}} (roll that table 3 times)
+	// {{roll:1d6+2}} (etc)
 	this.convertToken = function(token) {
 		token = token.replace('{{', '').replace('}}', '');
 		string = '';
 		
 		parts = token.split(':');
 		if (parts.length == 0) { return ''; }
-		//console.log(parts);
 		
+				
 		switch (parts[0]) {
 			case "list":
+				//TODO remove this in favor of the table syntax
 				as = parts[1].split('.');
 				vlist = 'appdata';
 				for(i=0;i<as.length;i++) {
@@ -245,12 +364,38 @@ this.randomNumber = function(min, max) {
 				eval('list = '+vlist+';');
 				string = this.randomValue(list);
 				break;
-			case "roll":
-				as = parts[1].match(/([0-9]+)d([0-9]+)([\+-]{1}[0-9]+)?/);
-				//console.log(as);
-				if (as) {
-					string = app.randomizer.roll(parseInt(as[1]), parseInt(as[2]), parseInt(as[3]));	
+			case "table":
+				var multiplier = 1;
+				if (parts[1].indexOf('*') !== -1) {
+					var x = parts[1].split('*');
+					parts[1] = x[0];
+					multiplier = x[1];
 				}
+				var subtables = parts[1].split('.');
+				vlist = 'appdata';
+				for(i=0;i<subtables.length;i++) {
+					vlist += '.'+subtables[i];
+				}
+				eval('table = '+vlist+';');
+				var t = new RandomTable(table);
+				
+				if (typeof parts[2] !== 'undefined' && parts[2].indexOf('*') !== -1) {
+					var x = parts[2].split('*');
+					parts[2] = x[0];
+					multiplier = x[1];
+				}
+				subtable = (typeof parts[2] == 'undefined') ? '' : parts[2];
+				
+				for(var i=1; i<=multiplier; i++) {
+					t.generateResult(subtable);
+					string += t.niceString()+', ';
+				}
+				string = $.trim(string);
+				string = string.replace(/,$/, '');
+				
+				break;
+			case "roll":
+				string = app.randomizer.parseDiceNotation(parts[1]);
 				break;
 			default:
 				string = '';
@@ -258,10 +403,31 @@ this.randomNumber = function(min, max) {
 		return string;
 	},
 	
+	//Look for {{TOKEN}} tokens to perform replace action
 	this.findToken = function(string) {
-		regexp = new RegExp('(\{{2}.+?\}{2})');
+		//console.log('findToken');
+		regexp = new RegExp('(\{{2}.+?\}{2})', 'g');
 		newstring = string.replace(regexp, this.convertToken);
 		return newstring;
+	},
+	
+	//takes a string like '3d6+2', parses it, and puts it through this.roll()
+	this.parseDiceNotation = function(string) {
+		//
+		var m = string.match(/^([0-9]+)d([0-9]+)$/);
+		if (m) {
+			//console.log(m);
+			return this.roll(parseInt(m[2]), parseInt(m[1]));
+		}
+		
+		var m = string.match(/^([0-9]+)d([0-9]+)([\+\-\*\/])([0-9]+)$/);
+		if (m) {
+			//console.log(m);
+			return this.roll(parseInt(m[2]), parseInt(m[1]), parseInt(m[4]), m[3]);
+		}
+		
+		return '';
+		
 	}
 	
 		

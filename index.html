@@ -22,15 +22,30 @@
 	    
 	    
 	    <ul id="maintab" class="nav nav-tabs hidden-print">
-		  <li class="active"><a href="#npcs" data-toggle="tab">NPCs</a></li>
+	      <li class="active"><a href="#tables" data-toggle="tab">Random Tables</a></li>
+		  <li><a href="#npcs" data-toggle="tab">NPCs</a></li>
 		  <li><a href="#wilderness" data-toggle="tab">Wilderness</a></li>
+		  <li><a href="#dungeon" data-toggle="tab">Dungeon</a></li>
+		  <!-- <li><a href="#other" data-toggle="tab">t.b.d.</a></li> -->
 		  <li><a href="#settings" data-toggle="tab">Settings</a></li>
 		  <li><a href="#help" data-toggle="tab">Help</a></li>
 		  <li><a href="#credits" data-toggle="tab">Credits</a></li>
 		</ul>
 		
 		<div class="tab-content">
-			<div class="tab-pane active" id="npcs">
+			<div class="tab-pane active hidden-print" id="tables">
+				<div class="row">
+					<div class="col-sm-23">
+						<section id="rtable-section">
+							<div id="rtable-list">
+								<!-- table of tables loaded here -->
+							</div>
+						</section>
+					</div>					
+				</div>
+			</div>
+			
+			<div class="tab-pane" id="npcs">
 				<div class="row">
 					<div class="col-sm-6">
 						<section id="characters-new">
@@ -47,16 +62,42 @@
 							<!-- Character list here. -->
 						</div>
 					</div>
-	    	
-					
 				</div>
 			</div>
 			
 			<div class="tab-pane hidden-print" id="wilderness">
 				<!-- Some other generator here. -->
-				<div class="alert alert-info">Planning on adding some other generators soon.</div>
+				<div class="alert alert-info">The idea here is to generate a sheet of results pre-rolled from random tables, so that it can be ready for use as needed rather than rolling randomly during gameplay. This makes it easier to tweak results, customize them, and integrate them into the rest of the session/campaign. Right now it only works with hex dressing and encounters for swamps and roads (and they are not fully fleshed out yet). More soon.</div>
+				
+				<div id=wilderness-form></div>
+				<div id=wilderness-results></div>
+				<div id=wilderness-list></div>
 				
 			</div>
+			
+			<div class="tab-pane hidden-print" id="dungeon">
+				<div class="alert alert-info">This is pretty basic recreation of the random dungeon stocking process from Moldvay's Basic D&D. Nothing too fancy yet. Using Labyrinth Lord monsters and treasure tables, Courtney Campbell's Trap tables, and Roger S.G. Sorolla's Bag of Tricks. You're on your own for "Empty" for now.</div>
+				<div class="row">
+					<div class="col-sm-6">
+						<section id="dungeon-results">
+						</section>
+					</div>
+					
+					<div class="col-sm-6 hidden-print">
+						<section id="dungeon-form">
+							<!-- Dungeon creation form here. -->
+						</section>
+						<div id="dungeon-list">
+						</div>
+					</div>
+				</div>				
+			</div>
+			
+			<!--
+			<div class="tab-pane hidden-print" id="other">
+				<div class="alert alert-info">Planning on adding some other generators soon.</div>
+			</div>
+			-->
 			
 			<div class="tab-pane hidden-print" id="settings">
 				<!-- The global settings form goes here. -->
@@ -67,9 +108,18 @@
 					<h1>Help</h1>
 					<h2>General</h2>
 					<ul>
-						<li>Only tested in Chrome so far.</li>
+						<li>Online version at: <a href="http://derikb.github.io/osr-random-generator/">http://derikb.github.io/osr-random-generator/</a></li>
+						<li>Downloadable version at: <a href="https://github.com/derikb/osr-random-generator">https://github.com/derikb/osr-random-generator</a></li>
+						<li>Mobile app version soon, though this should work in tablets/phones via your browser.</li>
 						<li>Saved characters and settings are stored in your browser's local storage. Be careful when clearing your browser cache/data else you may delete what you've saved.</li>
 						<li>Printing from the NPC tab should only print the NPCs in the "Current Characters" list as 5" wide cards (going for 3"x5" cards but height is hard to maintain).</li>
+					</ul>
+					
+					<h3>Random Tables</h3>
+					<ul>
+						<li>Hopefully the usage is pretty obvious.</li>
+						<li>Instructions for adding your own tables, coming soon.</li>
+						<li>All tables converted by me.</li>
 					</ul>
 					
 					<h3>NPCs</h3>
@@ -82,6 +132,16 @@
 						<li>Gender only effects the random name generator.</li>
 						<li>Surnames are applied to non-Holmesian names 50% of the time.</li>
 						<li>Most 0-level humans are not given armor, but a few <em>are</em> based on their occupation.</li>
+					</ul>
+					
+					<h3>Wilderness</h3>
+					<ul>
+						<li>Pretty basic so far. Encounter tables are by me.</li>
+					</ul>
+					
+					<h3>Dungeon</h3>
+					<ul>
+						<li>Basic random stocking procedure from Moldvay's Basic D&D.</li>
 					</ul>
 					
 					<h3>Icons</h3>
@@ -101,16 +161,20 @@
 				<section>
 					<h3>Sources</h3>
 					<ul>
+						<li>For the most part, I am only using data that has an OGL license or is freely available online already. I have no plans to monetize this in any way, so please don't get mad.</li>
+						<li>All the tables in the Random Tables tab have source/author information (click the info icon in the main table list). The ones that don't are by me and are examples of the simple data format.</li>
 						<li><a href="http://www.lotfp.com/">Lamentations of the Flame Princess</a> rules by James Edward Raggi IV.</li>
 						<li><a href="http://www.goblinoidgames.com/labyrinthlord.html">Labyrinth Lord</a> rules by Daniel Proctor.</li>
 						<li>Occupations list adapted from <a href="http://thegruenextdoor.blogspot.com/2013/12/characters-in-flesh.html">Christopher Adams</a></li>
 						<li>Spell list as compiled by <a href="https://plus.google.com/u/0/102353265648840654058/about">Adam Taylor</a> by way of html from <a href="http://save.vs.totalpartykill.ca/grab-bag/">Ramanan Sivaranjan</a> (which I converted into JSON).</li>
-						<li>Appearance and Personality lists from <a href="http://www.lulu.com/shop/courtney-campbell/on-the-non-player-character/ebook/product-21094127.html">On the Non-Player Character</a> by <a href="http://hackslashmaster.blogspot.com/">Courtney Campbell</a>.</li>
+						<li>Appearance and Personality lists from <a href="http://www.lulu.com/shop/courtney-campbell/on-the-non-player-character/ebook/product-21094127.html">On the Non-Player Character</a>; random trap generation from <a href="http://hackslashmaster.blogspot.com/2011/02/on-tricks-empty-rooms-and-basic-trap.html">Tricks, Empty Rooms, & Basic Trap Design</a>; both by <a href="http://hackslashmaster.blogspot.com/">Courtney Campbell</a>.</li>
 						<li>Personality and Quirks lists from <a href="http://www.roleplayingtips.com/articles/npc-essentials.html">GM Mastery: NPC Essentials</a> by <a href="http://www.roleplayingtips.com/">Johnn Four</a></li>
 						<li>Holmesian Names are adapted from the <a href="http://zenopusarchives.blogspot.com/2013/07/random-names-one-sheet.html">Zenopus Archives' Holmesian Name Generator</a>.</li>
-						<li><a href="http://jrients.blogspot.com/2011/09/random-cornish-names.html">Cornish</a> and <a href="http://jrients.blogspot.com/2012/01/medieval-flemish-names.html">Flemish</a> first names taken from Jeff Rients.</li>
+						<li><a href="http://jrients.blogspot.com/2011/09/random-cornish-names.html">Cornish</a> and <a href="http://jrients.blogspot.com/2012/01/medieval-flemish-names.html">Flemish</a> first names taken from Jeff Rients. Other names I compiled from various lists online.</li>
 						<li><a href="http://www.swordsandwizardry.com/">Swords &amp; Wizardry</a> rules by Matthew J. Finch</a></li>
 						<li>Goals list primarily taken from <a href="http://blog.retroroleplaying.com/2013/03/tarnhelms-terrible-tome-house-rules-for.html">Tarnheim's Terrible Tome</a> by Randall S Stukey</li>
+						<li>Labyrinth Lord monster data adapted from <a href="http://www.wizardawn.com/rpg/tool_data.php">Wizardawn's Data files</a>.</li>
+						<li>Dungeon generator "special" results from: <a href=\"http://rolesrules.blogspot.com/2014/02/download-bag-of-tricks-2-now-easier.html\">Bag of Tricks 2</a> by Roger S.G. Sorolla</li>
 					</ul>
 				</section>
 				<section>
@@ -140,12 +204,6 @@
 				<div class="modal-body">
 					x
 				</div>
-				<!--<div class="modal-footer">
-					
-<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Save changes</button>
-
-				</div>-->
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
@@ -164,16 +222,25 @@
 	<script src="data/names.json"></script>
 	<script src="data/spells.json"></script>
 	<script src="data/occupations.json"></script>
+	<script src="data/wilderness.json"></script>
+	<script src="data/dungeon.json"></script>
+	<script src="data/monsters.json"></script>
+	<script src="data/randomtables.json"></script>
+	<script src="data/treasure.json"></script>
 	<script src="data/custom/index.json"></script>
 	
 	<script src="js/app/app.js"></script>
+	<script src="js/app/tables.js"></script>
 	<script src="js/app/npc.js"></script>
+	<script src="js/app/wilderness.js"></script>
+	<script src="js/app/dungeon.js"></script>
+	<script src="js/app/treasure.js"></script>
 	
 	<script>
 		jQuery(document).ready(function(){
 			window.app = new AppRouter();
 			Backbone.history.start();
-			
+			window.app.list();
 			// Javascript to enable link to tab
 			var hash = document.location.hash;
 			var prefix = "tab_";
@@ -182,8 +249,24 @@
 			} 
 			// Change hash for page-reload
 			$('.nav-tabs a').on('shown.bs.tab', function (e) {
-			    window.location.hash = e.target.hash.replace("#", "#" + prefix);;
+			    window.location.hash = e.target.hash.replace("#", "#" + prefix);
 			});
+			
+			
+/*
+			var newm = {};
+
+			_.each(appdata.monsters.labyrinthlord, function(v,k,l){
+				
+				v.terrain = v.terrain.split(' ');
+				
+				newm[k] = v;
+				
+			});
+
+			document.write(JSON.stringify(newm));
+*/
+			
 		});
 	</script>
 
