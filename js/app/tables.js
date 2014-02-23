@@ -1,9 +1,9 @@
 //For handling generic random tables
 
-
-
 //!RandomTable model
-var RandomTable = Backbone.Model.extend({
+var RandomTable = Backbone.Model.extend(
+	/** @lends RandomTable.prototype */
+	{
 	
 	localStorage: new Backbone.LocalStorage("osr-random-generator-table"),
 	
@@ -24,6 +24,22 @@ var RandomTable = Backbone.Model.extend({
 	
 	theaders: ['title', 'description', 'tags', 'actions'],
 	
+	/**
+	 * This is the model for Random Tables.
+	 *
+	 * @augments external:Backbone.Model
+	 * @constructs
+	 * @property {String} [title] title of the table
+	 * @property {String} [author=[unknown]] author of the table
+	 * @property {String} [description=[undefined]] description of the table
+	 * @property {String} [source=[unknown]] source of the table
+	 * @property {Array} [tags] subject tags
+	 * @property {String|Array} [start] tables to roll on. if array it can be an array of strings (table names) or objects (two properties table: the table to roll on and times: the number of times to roll)
+	 * @property {Array} [table] default table. array of strings (simple table) or objects (complex table)
+	 * @property {Object} [tables] a property for each subtables. if table property is not set then the first propery of this Object is used to start rolling 
+	 * @property {Boolean} [start=false] simple or complex table if simple we just roll on the table property
+	 * @property {Object} [result] current result
+	 */
 	initialize: function(){
 		this.setComplex();
 	},
@@ -36,8 +52,11 @@ var RandomTable = Backbone.Model.extend({
 		}		
 	},
 	
-	//start the process of rolling
-	//if start is set, roll on that subtable, else start on the default
+	/**
+	 * Start the process of rolling
+	 * @param {String} [start=''] - subtable to roll on
+	 * @returns {Boolean} success (always true right now)
+	 */
 	generateResult: function(start) {
 		if (typeof start == "undefined") {
 			start = '';
@@ -79,13 +98,16 @@ var RandomTable = Backbone.Model.extend({
 			this.set('result', result);
 		}
 		
+		return true;
 	},
 		
-	
-	//given a table, get a result, add it to to the result array
-	//check for subtables and roll on them or rerun this function for the subtable
-	//DANGER: you could theoretically put yourself in an endless loop if the data were poorly planned
-	//...but at worst that would just crash the users browser since there's no server processing involved.
+	/**
+	 * Get a result from a table/subtable
+	 * DANGER: you could theoretically put yourself in an endless loop if the data were poorly planned
+	 * ...but at worst that would just crash the users browser since there's no server processing involved.
+	 * @param {String} table - table to roll on
+	 * @returns {Array} array of object results { table: table that was rolled on, result: result string, desc: description string }
+	 */
 	selectFromTable: function(table) {
 		var o = [];
 		var t = this.get('tables')[table];
@@ -154,9 +176,12 @@ var RandomTable = Backbone.Model.extend({
 	},
 
 	
-	//show the results as a string
-	//!TODO make this nicer/clearer #23
-	//Alternate: write a template to use in the views?
+	/**
+	 * Show the results as a string
+	 * @todo make this nicer/clearer #23
+	 * Alternate: write a template to use in the views?
+	 * @returns {String} the results
+	 */
 	niceString: function() {
 		var r = this.get('result');
 		if (r == '') { return ''; }
@@ -171,7 +196,11 @@ var RandomTable = Backbone.Model.extend({
 		return o;
 	},
 	
-	//return as array the options for listing
+	/**
+	 * Show the table options as a list
+	 * @todo make this work for complex listing #24
+	 * @returns {Array} the options for iterating in a list
+	 */
 	niceList: function() {
 		
 		if (this.get('simple') === true) {
