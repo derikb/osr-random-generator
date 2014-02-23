@@ -141,7 +141,7 @@ appdata.treasure.labyrinthlord = {
 				"Wishes": { "weight": 3 },
 				"X-ray Vision": { "weight": 3 }
 			},
-			//!TODO work random spell selection in here #18
+			/** @todo work random spell selection in here #18 */
 			"scrolls": {
 				"Cursed": { "weight": 5 },
 				"Ward against Elementals": { "weight": 10 },

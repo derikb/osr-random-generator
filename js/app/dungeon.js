@@ -151,7 +151,7 @@ var DungeonDetails = Backbone.View.extend({
 		'click .save': 'saveDungeon',
 		'click .delete': 'deleteDungeon',
 		'click .remove': 'removeDungeon',
-		//!TODO reenable editing #19
+		/** @todo reenable editing #19 */
 		//'click *[data-field]': 'editField',
 		//'click *[data-room]': 'editRoom',
 	},

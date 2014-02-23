@@ -220,7 +220,7 @@ var RandomTable = Backbone.Model.extend(
 		}
 		
 		
-		//!TODO complex listing #24
+		/** @todo complex listing #24 */
 		return ['Sorry, haven\'t figured out how to best list these complex (sub)tables yet.'];
 		
 	}
@@ -486,7 +486,7 @@ var RTable_List = Backbone.View.extend({
 			$(this.el).append(new RandomTableShort({model:v}).render().el);
     	}, this);
 
-		//!TODO after render we could work in DataTables for sorting? #25
+		/** @todo after render we could work in DataTables for sorting? #25 */
         return this;
     }
 	
