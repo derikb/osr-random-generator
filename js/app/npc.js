@@ -1,16 +1,14 @@
-
-
-
-
-//!Character model
-var Character = Backbone.Model.extend({
+//! Character / NPC model
+var Character = Backbone.Model.extend(
+	/** @lends Character.prototype */
+	{
 	
 	localStorage: new Backbone.LocalStorage("osr-random-generator-npcs"),
 	
 	defaults: function() {
 		return {
 			rules_set: app.AppSettings.get('rules_set'),
-			name_type: 'none',
+			name_type: '',
 			name: '',
 			chargroup: '',
 			gender: '',
@@ -36,17 +34,48 @@ var Character = Backbone.Model.extend({
 		}
 	},
 		
-		
+	/**
+	 * This is the model for Characters/NPCs.
+	 *
+	 * @augments external:Backbone.Model
+	 * @constructs
+	 * @property {String} rules_set What rules to use
+	 * @property {String} name_type Name list to use
+	 * @property {String} name Character name
+	 * @property {String} chargroup Group name
+	 * @property {String} gender
+	 * @property {String} [race='human']
+	 * @property {Array} ability_scores array of ability objects { name, score, modifier }
+	 * @property {String} charclass character's class
+	 * @property {Boolean} spellcaster
+	 * @property {Number} [level=0]
+	 * @property {Number} hp Hit points
+	 * @property {Number} ac Armor class (based on rules_set it will vary
+	 * @property {Object} attack attack bonuses { base, melee, missile }
+	 * @property {Object} spells spell list { "Level 1": array of spells, etc. }
+	 * @property {Array} personality Personality traits
+	 * @property {Array} appearance Appearance traits
+	 * @property {String} goal Character Goal
+	 * @property {String} armor Armor Worn
+	 * @property {String} weapon Weapon carried
+	 * @property {Number} reaction_roll Default reaction
+	 */
 	initialize:  function() {
 		
 	},
 	
-	
+	/**
+	 * Retrieve rule data
+	 * @returns {Object} all the rule data
+	 */
 	getRules: function() {
 		return appdata.rules[this.get('rules_set')];
 	},
 
-			
+	/**
+	 * Are they a spellcaster? resets current setting. Used when class changes.
+	 * @returns {Boolean}
+	 */
 	checkSpellCaster: function() {
 		this.set({ spellcaster: false }, { silent: true });
 		if (this.getRules().classes[this.get('charclass')].spellcaster == true) {
@@ -56,6 +85,12 @@ var Character = Backbone.Model.extend({
 		return false;
 	},
 	
+	/**
+	 * Calculate ability modifier, defaults to "general" if there is not a specific mod for the ability
+	 * @param {String} att ability name
+	 * @param {Number} score ability score
+	 * @returns {Number} positive or negative modifier
+	 */
 	calcModifier: function(att, score) {
 		if (typeof this.getRules().ability_scores_mod[att] !== 'undefined') {
 			return this.getRules().ability_scores_mod[att][score];
@@ -63,41 +98,57 @@ var Character = Backbone.Model.extend({
 		return this.getRules().ability_scores_mod.general[score];
 	},
 	
+	/**
+	 * Retrieve the current score for the ability
+	 * @param {String} att Ability name
+	 * @returns {Number} Current score
+	 */
 	getAttScore: function(att){
 		a = _.findWhere(this.get('ability_scores'), { name: att});
 		return a.score;
 	},
 	
-	
+	/**
+	 * Retrieve current modifier for the ability
+	 * @param {String} att Ability name
+	 * @returns {Number} Currect modifier
+	 */
 	getAttMod: function(att){
 		a = _.findWhere(this.get('ability_scores'), { name: att});
 		return a.modifier;
 	},
 	
-	
+	/**
+	 * Generate a Holmes name
+	 * @param {String} gender Gender to user
+	 * @returns {String} name
+	 */
 	holmesname: function(gender) {
 		var name = '';
 		scount = app.randomizer.getWeightedRandom(appdata.name.holmesian_scount.values, appdata.name.holmesian_scount.weights);
 	
 		for (i=1; i<=scount; i++) {
-			name += app.randomizer.randomValue(appdata.name.holmesian_syllables);
+			name += app.randomizer.rollRandom(appdata.name.holmesian_syllables); //array
 			if (i<scount) {
 				name += app.randomizer.getWeightedRandom(['',' ','-'],[3,2,2]);
 			}
 		}
 		name = name.toLowerCase().capitalize();
-		name += ' '+app.randomizer.randomValue(appdata.name.holmesian_title);
+		name += ' '+app.randomizer.rollRandom(appdata.name.holmesian_title);
 		
 		name = app.randomizer.findToken(name);
 		
 		name = name.replace(/[\s\-]([a-z]{1})/g, function(match) {
-			//console.log(match);
 			return match.toUpperCase();
 		});
-		
 		return name;
 	},
 	
+	/**
+	 * Create a name
+	 * @param {String} name_type What name list/process to use
+	 * @returns {String} a name
+	 */
 	generateName: function(name_type) {
 		var gender = this.get('gender');
 		var name = '';
@@ -108,24 +159,26 @@ var Character = Backbone.Model.extend({
 			case "cornish":
 			case "flemish":
 			default:
-				
-				name = app.randomizer.randomValue(appdata.name[name_type][gender]);
-				
-				if (_.random(1, 20) > 10) {
-					name += ' '+app.randomizer.randomValue(appdata.name[name_type]['surname']);
+				name = app.randomizer.rollRandom(appdata.name[name_type][gender]);
+				if (typeof appdata.name[name_type]['surname'] !== 'undefined') {
+					name += ' '+app.randomizer.rollRandom(appdata.name[name_type]['surname']);
 				}
-				
 				name = app.randomizer.findToken(name);
-				
 				break;
 		}
 		return name;
 	},
 	
+	/**
+	 * Gender
+	 */
 	calcGender: function() {
-		this.set('gender', app.randomizer.randomValue(['male', 'female']));
+		this.set('gender', app.randomizer.rollRandom(['male', 'female']));
 	},
 	
+	/**
+	 * Rolls the ability scores and adds them to the ability_scores array
+	 */
 	rollAbilities: function() {
 		var ability_scores = [];
 		for (var att in this.getRules().ability_scores) {
@@ -148,30 +201,37 @@ var Character = Backbone.Model.extend({
 		this.set('ability_scores', ability_scores);
 	},
 	
+	/**
+	 * randomly select class or occupation
+	 */
 	selectClass: function() {
 		var cclass = this.get('charclass');
 		if (cclass == 'random') {
 			this.set('charclass', app.randomizer.getWeightedRandom(this.getRules().classes.random.options, this.getRules().classes.random.weight) );
 		} else if (cclass == 'none') {
-			this.selectOccupation();
+			var oc = new RandomTable(appdata.tables.medieval_occupations);
+			oc.generateResult();
+			this.set('occupation', oc.niceString());
 		}
 	},
-	
-	selectOccupation: function() {
-		var occ = app.randomizer.randomValue(appdata.occupations);
-		this.set('occupation', occ.name);
-	},
-	
+
+	/**
+	 * Select armor based on class/occupation
+	 */
 	selectArmor: function() {
 		var charclass = this.get('charclass');
 		if (charclass == 'none') {
-			var occ = _.findWhere(appdata.occupations, { name: this.get('occupation') });
+			/** @todo work this into the RandomTable class? */
+			var occ = _.findWhere(appdata.tables.medieval_occupations.table, { label: this.get('occupation') });
 			if (typeof occ.armor == 'undefined') { return ''; }
 			if (occ.armor == false) { return ''; }
 		}
-		return app.randomizer.randomValue(this.getRules().classes[charclass]['armor']);
+		return app.randomizer.rollRandom(this.getRules().classes[charclass]['armor']);
 	},
 	
+	/**
+	 * Set/select level
+	 */
 	setLevel:  function() {
 		var lvl = this.get('level');
 		var curclass = this.get('charclass');
@@ -185,7 +245,9 @@ var Character = Backbone.Model.extend({
 		this.set('level', lvl);
 	},
 	
-	//randomly choose spells
+	/**
+	 * Set/select spells and set them as spells object
+	 */
 	selectSpells: function() {
 		if (this.checkSpellCaster() == true) {
 			var charclass = this.get('charclass');
@@ -206,19 +268,17 @@ var Character = Backbone.Model.extend({
 		}
 	},
 	
-	
+	/**
+	 * Roll/set hit points
+	 */
 	rollHp: function() {
 		var hp = 0;
 		var conmod = this.getAttMod('con');
-		//console.log('conmod: '+conmod);
 		if (this.get('charclass') == 'none') {
 			hp = app.randomizer.roll(this.getRules().classes[this.get('charclass')].hd, 1, conmod);
-			//console.log('roll: '+hp);
 		} else {
 			for(i=1;i<=this.get('level');i++) {
 				var r = app.randomizer.roll(this.getRules().classes[this.get('charclass')].hd, 1, conmod);
-				//console.log('roll: '+r);
-				//r += conmod;
 				if (r < 1) { r = 1; }
 				hp += r;
 			}
@@ -227,6 +287,9 @@ var Character = Backbone.Model.extend({
 		this.set('hp', hp);
 	},
 	
+	/**
+	 * Set the attack object based on class, level, ability scores
+	 */
 	calcAttack: function() {
 		var attack = {};
 		attack.base = this.getRules().classes[this.get('charclass')].attack(this.get('level'));
@@ -243,6 +306,9 @@ var Character = Backbone.Model.extend({
 		this.set('attack', attack);		
 	},
 	
+	/**
+	 * Set armor class based on class, armor, dex, etc.
+	 */
 	calcAC: function() {
 		//accounting for monk basically...
 		if (typeof this.getRules().classes[this.get('charclass')]['ac'] !== 'undefined') {
@@ -277,27 +343,58 @@ var Character = Backbone.Model.extend({
 		this.set('ac', ac);
 	},
 	
-	
+	/**
+	 * Select/Set personality traits
+	 * @param {Number} ct Number of traits to set
+	 */
 	selectPersonality: function(ct) {
-		var personality = _.sample(appdata.personality[app.AppSettings.get('personality_type')], ct);
+		var personality = [];
+		eval('var ptable = appdata.tables.'+app.AppSettings.get('personality_type')+';');
+		var p = new RandomTable(ptable)
+		for(var i=1;i<=ct;i++){
+			p.generateResult();
+			personality.push(p.niceString());
+		}
 		this.set('personality', personality);
 	},
 	
+	/**
+	 * Select/Set appearance traits
+	 * @param {Number} ct Number of traits to set
+	 */
 	selectAppearance: function(ct) {
-		var appearance =  _.sample(appdata.appearance[app.AppSettings.get('appearance_type')], ct);
+		//var appearance =  _.sample(appdata.appearance[app.AppSettings.get('appearance_type')], ct);
+		var appearance = [];
+		eval('var atable = appdata.tables.'+app.AppSettings.get('appearance_type')+';');
+		var a = new RandomTable(atable)
+		for(var i=1;i<=ct;i++){
+			a.generateResult();
+			appearance.push(a.niceString());
+		}
 		this.set('appearance', appearance);
 	},
 	
+	/**
+	 * Select/Set goal traits
+	 */
 	selectGoal: function() {
-		return  _.sample(appdata.personality.goals);
+		var g = new RandomTable(appdata.tables.character_goals);
+		g.generateResult();
+		return  g.niceString();
 	},
 	
+	/**
+	 * Set Reaction Roll
+	 */
 	rollReaction: function() {
-		return app.randomizer.roll(6,2);
+		var t = new RandomTable(appdata.tables.reaction);
+		t.generateResult();
+		return t.niceString();
 	},
 	
-	//////////////////////////////////////////////////////////
-	//run all the various functions to generate the npc object
+	/**
+	 * run all the various functions to generate the npc object
+	 */
 	create: function() {
 				
 		this.rollAbilities();	
@@ -334,7 +431,9 @@ var Character = Backbone.Model.extend({
 
 
 //!CharacterBlock View for character data
-var CharacterBlock = Backbone.View.extend({
+var CharacterBlock = Backbone.View.extend(
+	/** @lends CharacterBlock.prototype */
+	{
 	
 	tagName: 'div',
 	className: 'character-block clearfix',
@@ -353,6 +452,12 @@ var CharacterBlock = Backbone.View.extend({
 		'click .spell': 'showSpell'
 	},
 	
+	/**
+	 * This is the view for Characters
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
 	initialize: function() {
     	this.listenTo(this.model, "change", this.render);
     	this.listenTo(this.model, "destroy", this.remove);
@@ -375,7 +480,6 @@ var CharacterBlock = Backbone.View.extend({
 		e.preventDefault();
 		this.model.destroy();
 		this.remove();
-		//return false;  
     },
     
     removeCharacter: function(e) {
@@ -474,20 +578,26 @@ var CharacterBlock = Backbone.View.extend({
     	//console.log('view render');
     	//console.trace();
     	this.$el.html(this.template(this.model.attributes));
-    	    	
 		return this;
-    	
 	}
 	
 });
 
 
 //!SpellView
-var SpellView = Backbone.View.extend({
+var SpellView = Backbone.View.extend(
+	/** @lends SpellView.prototype */
+	{
 	
 	tagName: 'div',
 	className: 'spell-details clearfix',
-	
+
+	/**
+	 * This is the view for Spells
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
 	initialize: function(options) {
 		//this.options = options || {};
 		this.spell = options.spell;
@@ -520,7 +630,9 @@ var SpellView = Backbone.View.extend({
 });
 
 //!CharacterEditView View for editing the fields
-var CharacterEditView = Backbone.View.extend({
+var CharacterEditView = Backbone.View.extend(
+	/** @lends CharacterEditView.prototype */
+	{
 	
 	tagName: 'div',
 	field: '',
@@ -530,6 +642,12 @@ var CharacterEditView = Backbone.View.extend({
 		'click .randomize': 'loadRandom',
 	},
 	
+	/**
+	 * This is the view for Characters being edited
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
 	initialize: function(options) {
 		//this.options = options || {};
 		this.field = options.field;
@@ -595,7 +713,7 @@ var CharacterEditView = Backbone.View.extend({
 		var list = $(e.target).attr('data-list');
 		
 		if (this.field == 'personality' || this.field == 'appearance') {
-			var newval = app.randomizer.randomValue(appdata[this.field][list]);
+			var newval = app.randomizer.rollRandom(appdata[this.field][list]);
 			$('#'+inputtarget).val(newval);
 		} else if (this.field == 'name') {
 			
@@ -658,9 +776,10 @@ var CharacterEditView = Backbone.View.extend({
 			
 			case 'occupation':
 				form += '<div class="form-group"><label for="occupation" class="control-label">Occupation</label><select class="form-control" id="occupation" name="occupation">';
-					_.each(appdata.occupations, function(v,k,l) {
-						var sel = (v.name == this.model.get(field)) ? 'selected=selected' : '';
-						form += '<option value="'+v.name+'" '+sel+'>'+v.name.capitalize()+'</option>';
+					/** @todo make this part of the RandomTable class outputs */
+					_.each(appdata.tables.medieval_occupations.table, function(v,k,l) {
+						var sel = (v.label == this.model.get(field)) ? 'selected=selected' : '';
+						form += '<option value="'+v.label+'" '+sel+'>'+v.label.capitalize()+'</option>';
 						
 					}, this)
 					form += '</select><div class="help-block"></div></div>';
@@ -800,7 +919,9 @@ var CharacterEditView = Backbone.View.extend({
 
 
 //!CharCollection
-var CharCollection = Backbone.Collection.extend({
+var CharCollection = Backbone.Collection.extend(
+	/** @lends CharCollection.prototype */
+	{
 
     model: Character,
 	localStorage: new Backbone.LocalStorage("osr-random-generator-npcs"), // Unique name within your app.
@@ -809,6 +930,12 @@ var CharCollection = Backbone.Collection.extend({
       return [char.get("group"), char.get("name")]
     },
 	
+	/**
+	 * This is a collection of Characters
+	 *
+	 * @augments external:Backbone.Collection
+	 * @constructs
+	 */
 	initialize: function(){
 		//this.listenTo(this.model, 'sync', this.addChar);
 	},
@@ -836,14 +963,21 @@ addChar: function(m,r,opt) {
 
 
 //!CharList
-//view for list of characters
-var CharList = Backbone.View.extend({
+var CharList = Backbone.View.extend(
+	/** @lends CharList.prototype */
+	{
 	
 	model: CharCollection,
 	
 	tagName:'section',
 	className: '',
- 
+
+	/**
+	 * This is the view for the Character Collection
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
     initialize:function () {
         this.listenTo(this.model, "add", this.render);
         this.listenTo(this.model, "destroy", this.render);
@@ -876,7 +1010,9 @@ var CharList = Backbone.View.extend({
 
 //!CharacterListItem
 //View for character data in brief list
-var CharacterListItem = Backbone.View.extend({
+var CharacterListItem = Backbone.View.extend(
+	/** @lends CharacterListItem.prototype */
+	{
 	
 	tagName: 'li',
 	className: 'character-list clearfix',
@@ -892,6 +1028,12 @@ var CharacterListItem = Backbone.View.extend({
 		'click .delete': 'deleteCharacter'
 	},
 	
+	/**
+	 * This is the view for Characters in shorted form
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
 	initialize: function() {
     	//this.listenTo(this.model, "change", this.render);
     	this.listenTo(this.model, "sync", this.render); //only change when character is saved.
@@ -930,7 +1072,9 @@ var CharacterListItem = Backbone.View.extend({
 
 
 //!CharForm character creation form
-var CharForm = Backbone.View.extend({
+var CharForm = Backbone.View.extend(
+	/** @lends CharForm.prototype */
+	{
  
 	tagName: 'form',
 	id: 'npc-form',
@@ -939,18 +1083,17 @@ var CharForm = Backbone.View.extend({
         "submit": "newChar",
         "change #chargroup": "addGroup"
     },
- 
+	
+	/**
+	 * This is the view for a character creation form
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
     initialize:function () {
         this.render();
         this.listenTo(this.model, 'change', this.render);
     },
-    
-/*
-    rerender: function() {
-	    formdata = $(e.target).serializeObject();
-	    this.render(formdata);
-    }
-*/
     
     render: function () {
     	var rules = appdata.rules[this.model.get('rules_set')];
@@ -1001,7 +1144,7 @@ var CharForm = Backbone.View.extend({
     	formdata = $(e.target).serializeObject();
     	var char = new Character(formdata);
     	char.create();
-    	$('#characters-new').append(new CharacterBlock({model:char}).render().el);
+    	$('#characters-new').prepend(new CharacterBlock({model:char}).render().el);
     },
     
     addGroup: function(e) {
@@ -1017,11 +1160,19 @@ var CharForm = Backbone.View.extend({
 
 
 //!CharGroup
-var CharGroupView = Backbone.View.extend({
+var CharGroupView = Backbone.View.extend(
+	/** @lends CharGroupView.prototype */
+	{
 	
 	tagName: 'form',
 	className: 'chargroup-add clearfix',
 	
+	/**
+	 * This is the view for Character Groups
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
 	initialize: function(options) {
 		//this.options = options || {};
 	},

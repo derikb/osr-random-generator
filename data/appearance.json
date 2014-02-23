@@ -1,10 +1,18 @@
 appdata = (typeof appdata == "undefined") ? {} : appdata;
-appdata.appearance = {
-	"options": [
-		{ option: "onthenpc", label: "from On the Non-Player Character" }
-	],
-	//from On the Non-Player Character by Courtney Campbell
-	"onthenpc": [
+appdata.tables = (typeof appdata.tables == "undefined") ? {} : appdata.tables;
+
+appdata.appearance_options = [
+	{ "option": "onthenpc_appearance", "label": "Short Appearance Traits" }
+];
+
+
+appdata.tables.onthenpc_appearance = {
+	"title": "Short Appearance Traits",
+	"author": "Courtney Campbell",
+	"source": "<a href=\"http://www.lulu.com/shop/courtney-campbell/on-the-non-player-character/ebook/product-21094127.html\">On the Non-Player Character</a> by Courtney Campbell",
+	"description": "",
+	"tags": ['npcs', 'appearance'],
+	"table": [
 		"Filthy",
 		"unkempt hair",
 		"Facial twitch",
@@ -378,4 +386,4 @@ appdata.appearance = {
 		"Has wings",
 		"Child’s body"
 	]
-}
+};

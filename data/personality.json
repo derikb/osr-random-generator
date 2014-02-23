@@ -1,12 +1,20 @@
 appdata = (typeof appdata == "undefined") ? {} : appdata;
-appdata.personality = {
-	"options": [
-		{ option: 'onewordtraits', label: 'single words from On the Non-Player Character' },
-		{ option: 'npcessentials', label: 'single words from GM Mastery NPC Essentials' },
-		{ option: 'quirks', label: 'quirks from GM Mastery NPC Essentials' },
-	],
-	//from On the Non-Player Character by Courtney Campbell
-	"onewordtraits": [
+appdata.tables = (typeof appdata.tables == "undefined") ? {} : appdata.tables;
+
+appdata.personality_options = [
+	{ "option": "onewordtraits", "label": "Single Word Personality Traits" },
+	{ "option": "npcessentials", "label": "Single Word Personality Traits 2" },
+	{ "option": "npcquirks", "label": "NPC quirks" },
+];
+
+
+appdata.tables.onewordtraits = {
+	"title": "Single Word Personality Traits",
+	"author": "Courtney Campbell",
+	"source": "<a href=\"http://www.lulu.com/shop/courtney-campbell/on-the-non-player-character/ebook/product-21094127.html\">On the Non-Player Character</a> by Courtney Campbell",
+	"description": "Single word personality traits.",
+	"tags": ['npcs', 'personality'],
+	"table": [
 		"Accusative",
 		"Active",
 		"Adventurous",
@@ -404,9 +412,17 @@ appdata.personality = {
 		"Wistful",
 		"Witty",
 		"Zealous"
-	],
-	//from GM Mastery NPC Essentials by Johnn Four
-	"npcessentials": [
+	]
+};
+
+
+appdata.tables.npcessentials = {
+	"title": "Single Word Personality Traits 2",
+	"author": "Johnn Four",
+	"source": "<a href=\"http://www.roleplayingtips.com/articles/npc-essentials.html\">GM Mastery NPC Essentials</a> by Johnn Four",
+	"description": "Single word personality traits.",
+	"tags": ['npcs', 'personality'],
+	"table": [
 		"Absorbed",
 		"Accepting",
 		"Affectionate",
@@ -740,9 +756,17 @@ appdata.personality = {
 		"Whiny",
 		"Wise",
 		"Worried"
-	],
-	//from GM Mastery NPC Essentials by Johnn Four
-	"quirks": [
+	]
+};
+
+
+appdata.tables.npcquirks = {
+	"title": "NPC quirks",
+	"author": "Johnn Four",
+	"source": "<a href=\"http://www.roleplayingtips.com/articles/npc-essentials.html\">GM Mastery NPC Essentials</a> by Johnn Four",
+	"description": "",
+	"tags": ['npcs', 'personality'],
+	"table": [
 		"Absently calls people by different names when speaking with them",
 		"Absent minded",
 		"Always adds a bit of powder to their beverages (and claims it is a health tonic)",
@@ -943,10 +967,17 @@ appdata.personality = {
 		"Wears ankle bells that jangle whenever they move",
 		"Whines and complains a lot",
 		"Wrings their hands"
-	],
-	//From Tarnheim's Terrible Tome by Randall S Stukey
-	//with a few added/edited by Derik
-	"goals": [
+	]
+};
+
+
+appdata.tables.character_goals = {
+	"title": "Character Goals",
+	"author": " Randall S Stukey",
+	"source": "<a href=\"http://blog.retroroleplaying.com/2013/03/tarnhelms-terrible-tome-house-rules-for.html\">Tarnheim's Terrible Tome</a> by Randall S Stukey; with a few additions by Derik Badman",
+	"description": "Short character goals",
+	"tags": ['npcs', 'personality'],
+	"table": [
 		"Furtherance of Scholarly Studies",
 		"Furtherance of Art",
 		"Furtherance of Science",
@@ -989,4 +1020,4 @@ appdata.personality = {
 		"Curiosity",
 		"Revenge"
 	]
-}
+};

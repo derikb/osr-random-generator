@@ -1,14 +1,21 @@
 //main app classes
 
-
 //! App Router
-var AppRouter = Backbone.Router.extend({
+var AppRouter = Backbone.Router.extend(
+	/** @lends AppRouter.prototype */
+	{
  
     routes:{
         "":"list",
 		//"list/:id":"someFunction"
     },
- 
+ 	
+	/**
+	 * This is the App Controller
+	 *
+	 * @augments external:Backbone.Router
+	 * @constructs
+	 */
     initialize: function () {
 		this.randomizer = new AppRandomizer();
 		//this.loadCustomData();
@@ -25,6 +32,9 @@ var AppRouter = Backbone.Router.extend({
 		
     },
 	
+	/**
+	 * Retrieve saved data and list out all RandomTables
+	 */
     list: function () {
        	this.charlist = new CharCollection();
         this.charlistview = new CharList({model:this.charlist});
@@ -60,7 +70,11 @@ var AppRouter = Backbone.Router.extend({
 
     },
 	
-	
+	/**
+	 * Modal utility
+	 * @param {String} title Header for the modal
+	 * @param {String} body Body of the modal
+	 */
 	showModal: function(title, body) {
 		$('#editmodal .modal-title').html(title);
 		$('#editmodal .modal-body').html(body);
@@ -82,7 +96,9 @@ loadCustomData: function(){
 
 
 //! AppSettings - for storing settings
-var AppSettings = Backbone.Model.extend({
+var AppSettings = Backbone.Model.extend(
+	/** @lends AppSettings.prototype */
+	{
 	
 	localStorage: new Backbone.LocalStorage("osr-random-generator-settings"), // Unique name within your app.
 	
@@ -103,10 +119,22 @@ var AppSettings = Backbone.Model.extend({
 		}	
 	},
 	
+	/**
+	 * This is the model for the App Settings
+	 *
+	 * @augments external:Backbone.Model
+	 * @constructs
+	 */
+	initialize: function() {
+		
+	}
+	
 });
 
-//!AppSettingsView - form to edit settings
-var AppSettingsView = Backbone.View.extend({
+//! AppSettingsView - form to edit settings
+var AppSettingsView = Backbone.View.extend(
+	/** @lends AppSettingsView.prototype */
+	{
 	
 	tagName: 'form',
 	
@@ -120,6 +148,19 @@ var AppSettingsView = Backbone.View.extend({
 		'submit': 'editSettings',
 	},
 	
+	/**
+	 * This is the view for the App Settings
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
+	initialize: function() {
+		
+	},
+	
+	/**
+	 * Save the settings
+	 */
 	editSettings: function(e) {
 		e.preventDefault();
 		formdata = $(e.target).serializeObject();		
@@ -129,6 +170,9 @@ var AppSettingsView = Backbone.View.extend({
 		$alert.delay(3 * 1000).fadeOut()
 	},
 	
+	/**
+	 * Show the settings form
+	 */
 	render: function() {
 		var form = '';
 		form += '<div class="alert alert-info">Settings will be saved to your local browser storage for re-use.</div>';
@@ -166,7 +210,7 @@ var AppSettingsView = Backbone.View.extend({
 			form += '</div></fieldset>';
 		
 		form += '<div class="row"><div class="form-group col-sm-9"><label for="personality_type" class="control-label">Personality List</label><select class="form-control" id="personality_type" name="personality_type">';
-    		_.each(appdata.personality.options, function(v){
+    		_.each(appdata.personality_options, function(v){
     			var sel = (v.option == this.model.get('personality_type')) ? 'selected=selected' : '';
 	    		form += '<option value="'+v.option+'" '+sel+'>'+v.label+'</option>';
     		}, this);
@@ -180,7 +224,7 @@ var AppSettingsView = Backbone.View.extend({
 		form += '</select><div class="help-block"></div></div></div>';
 		
 		form += '<div class="row"><div class="form-group col-sm-9"><label for="appearance_type" class="control-label">Appearance List</label><select class="form-control" id="appearance_type" name="appearance_type">';
-    		_.each(appdata.appearance.options, function(v){
+    		_.each(appdata.appearance_options, function(v){
     			var sel = (v.option == this.model.get('appearance_type')) ? 'selected=selected' : '';
 	    		form += '<option value="'+v.option+'" '+sel+'>'+v.label+'</option>';
     		}, this);
@@ -206,30 +250,18 @@ var AppSettingsView = Backbone.View.extend({
 });
 
 
-
-//!AppRandomizer - for various randomization functions
+/**
+ * //! AppRandomizer - handles app randomization functions
+ * @constructor
+ */
 var AppRandomizer = function() {
 	
-	//random value from an array/object (returns string, object, array... whatever the array is of)
-	//arrays return the element
-	//objects return the key
-	this.randomValue = function(arr) {
-		if (typeof arr == 'undefined') { return ''; }
-		if (typeof arr == 'string') { return arr; }
-		if (typeof arr == 'integer') { return arr; }
-		if ($.isArray(arr)) {
-			x = _.random(0, arr.length-1);
-			return arr[x];
-		} else {
-			k = _.keys(arr);
-			x = _.random(0, k.length-1);
-			return k[x];
-		}
-	}
-	
-	//random value from an arr(values) weighted by an arr(weights)
-	//values is an array of possible output
-	//weights is an array of weighted integer for each output (ie they have to be in the same order as the values)
+	/**
+	 * Random value selection
+	 * @param {Array} values an array of strings from which to choose
+	 * @param {Array} weights a matching array of integers to weight the values (i.e. values and weights are in the same order)
+	 * @returns {String} the randomly selected Array element from values param
+	 */
 	this.getWeightedRandom = function (values, weights){ 
 	    n = 0; 
 	    num = _.random(1, this.arraySum(weights));
@@ -244,17 +276,18 @@ var AppRandomizer = function() {
 	    return values[i]; 
 	}
 	
-	//wrapper for this.getWeightedRandom() and this.randomValue() that accepts an object or array
-	//if the elements are objects then it checks for a weight attribute
+	
+	/**
+	 * Random value selection, wrapper for getWeightedRandom that processes the data into values/weights arrays
+	 * @param {Object|Array} data An object or array of data 
+	 * @returns {String} the randomly selected Object property name, Array element, or value of the "label" property
+	 */
 	this.rollRandom = function(data) {
 		var values = [];
 		var weights = [];
 		//console.log(data);
 			
 		if ($.isArray(data)) {
-			if (typeof data[0] == 'string') {
-				return this.randomValue(data);
-			}
 			_.each(data, function(v,k,l){
 				//console.log(typeof v);
 				if (typeof v == 'object') {
@@ -266,6 +299,8 @@ var AppRandomizer = function() {
 					values.push(v.label);
 				} else if (typeof v == 'string') {
 					//nothing
+					weights.push(1);
+					values.push(v);
 				}
 			}, this);
 		} else if (typeof data == "object") {
@@ -283,7 +318,14 @@ var AppRandomizer = function() {
 		return this.getWeightedRandom(values, weights);
 	}
 	
-	//roll die(dice) defaults to d6, 1 time, 0 modifier, + mod_op (modifier operation)
+	/**
+	 * Dice rolling simulator
+	 * @param {Number} [die=6] Die type
+	 * @param {Number} [number=1] Number of times to roll the die
+	 * @param {Number} [modifier=0] Numeric modifier to dice total
+	 * @param {String} [mod_op=+] Operator for the modifier (+,-,/,*)
+	 * @returns {Number} Number rolled (die*number [mod_op][modifier])
+	 */
 	this.roll = function(die, number, modifier, mod_op) {
 		//console.log(arguments);
 		if (typeof modifier == 'undefined') {
@@ -330,7 +372,12 @@ var AppRandomizer = function() {
 		} 
 		return  Math.round(sum);
 	}
-
+	
+	/**
+	 * Sum an array
+	 * @param {Array} arr an array of numbers
+	 * @returns {Number} Total value of numbers in array
+	 */
 	//sum the values of an array
 	this.arraySum = function(arr) {
 		total = 0;
@@ -341,9 +388,11 @@ var AppRandomizer = function() {
 		return total;
 	},
 	
-	//convert a {{token}} into an value
-	//Tokens are {{table:SOMETABLE}} {{table:SOMETABLE:SUBTABLE}} {{table:SOMETABLE*3}} (roll that table 3 times)
-	// {{roll:1d6+2}} (etc)
+	/**
+	 * Perform token replacement.  Only table and roll actions are accepted
+	 * @param {String} token A value passed from {@link AppRandomizer#findToken} containing a token(s) {{SOME OPERATION}} Tokens are {{table:SOMETABLE}} {{table:SOMETABLE:SUBTABLE}} {{table:SOMETABLE*3}} (roll that table 3 times) {{roll:1d6+2}} (etc)
+	 * @returns {String} The value with the token(s) replaced by the operation
+	 */
 	this.convertToken = function(token) {
 		token = token.replace('{{', '').replace('}}', '');
 		string = '';
@@ -351,18 +400,8 @@ var AppRandomizer = function() {
 		parts = token.split(':');
 		if (parts.length == 0) { return ''; }
 		
-				
+		//Only table and roll actions are accepted
 		switch (parts[0]) {
-			case "list":
-				//TODO remove this in favor of the table syntax
-				as = parts[1].split('.');
-				vlist = 'appdata';
-				for(i=0;i<as.length;i++) {
-					vlist += '.'+as[i];
-				}
-				eval('list = '+vlist+';');
-				string = this.randomValue(list);
-				break;
 			case "table":
 				var multiplier = 1;
 				if (parts[1].indexOf('*') !== -1) {
@@ -402,7 +441,11 @@ var AppRandomizer = function() {
 		return string;
 	},
 	
-	//Look for {{TOKEN}} tokens to perform replace action
+	/**
+	 * Look for tokens to perform replace action in {@link AppRandomizer#convertToken}
+	 * @param {String} string usually a result from a RandomTable
+	 * @returns {String} String with tokens replaced (if applicable)
+	 */
 	this.findToken = function(string) {
 		//console.log('findToken');
 		regexp = new RegExp('(\{{2}.+?\}{2})', 'g');
@@ -410,7 +453,11 @@ var AppRandomizer = function() {
 		return newstring;
 	},
 	
-	//takes a string like '3d6+2', parses it, and puts it through this.roll()
+	/**
+	 * takes a string like '3d6+2', parses it, and puts it through {@link AppRandomizer#roll}
+	 * @params {String} string a die roll notation
+	 * @returns {Number} the result of the roll
+	 */
 	this.parseDiceNotation = function(string) {
 		//
 		var m = string.match(/^([0-9]+)d([0-9]+)$/);
@@ -439,13 +486,19 @@ var AppRandomizer = function() {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-//capitalize first letter
+/**
+ * capitalize first letter
+ * @returns {String} string with first letter capitalized.
+ */
 String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
 
-//serialize a form
+/**
+ * serialize a form
+ * @returns {String} form data as object
+ */
 $.fn.serializeObject = function()
 {
     var o = {};
