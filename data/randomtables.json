@@ -32,6 +32,10 @@ appdata.tables.NAME = {
 }
 
 
+//table formats
+
+
+
 bell curve 2d6: 1, 9, 16, 9, 1 (reaction roll)
 1,2,3,4,5,6,5,4,3,2,1 (2 through 12)
 

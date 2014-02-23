@@ -284,7 +284,6 @@ var AppRandomizer = function() {
 	}
 	
 	//roll die(dice) defaults to d6, 1 time, 0 modifier, + mod_op (modifier operation)
-	//!TODO adjust so it can handle modifiers for (+-*/) (default to + if just an integer)
 	this.roll = function(die, number, modifier, mod_op) {
 		//console.log(arguments);
 		if (typeof modifier == 'undefined') {
