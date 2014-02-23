@@ -41,15 +41,15 @@ var RandomTable = Backbone.Model.extend(
 	 * @property {Object} [result] current result
 	 */
 	initialize: function(){
-		this.setComplex();
-	},
-	
-
-	//is it simple (just 1 table) or complex (subtables)
-	setComplex: function(){
-		if (this.get('table').length > 0) {
-			this.set('simple', true);
-		}		
+		
+		//take a simple table format and normalize it
+		if (_.isEmpty(this.get('tables'))) {
+			var tables = {
+				"default": this.get('table')
+			};			
+			this.set('tables', tables);	
+		}
+		
 	},
 	
 	/**
@@ -61,16 +61,7 @@ var RandomTable = Backbone.Model.extend(
 		if (typeof start == "undefined") {
 			start = '';
 		}
-		//if simple just random result
-		if (this.get('simple') == true) {
-			var result = app.randomizer.rollRandom(this.get('table'));
-			//console.log(result);
-			t_result = app.randomizer.findToken(result);
-			this.set('result', t_result);
-			return;
-		}
-		
-		//if complex
+
 		//we look in the start table for what to roll if the start wasn't explicitly set in the call
 		start = (start == '') ? this.get('start') : start;
 		if (start == '') {
@@ -112,20 +103,28 @@ var RandomTable = Backbone.Model.extend(
 		var o = [];
 		var t = this.get('tables')[table];
 		var result = app.randomizer.rollRandom(t);
-
-		//if print==false we suppress the output from this table (good for top-level tables)
+		
 		if (_.isUndefined(t[result])) {
+			//table is an array
 			var r = _.findWhere(t, { label: result });
+			if (_.isUndefined(r)) {
+				//it's just an array of strings so we can stop here
+				o.push({ table: table, result: result, desc: '' });
+				return o
+			}
+			//console.log(r);
 			var result_print = (typeof r['print'] == 'undefined') ? true : r['print'];
 		} else {
+			var r = t[result];
 			var result_print = (typeof t[result]['print'] == 'undefined') ? true : t[result]['print'];
 		}
+		//r is now the result object
 		
 		//console.log(t[result]);
-		//console.log(result_print);
+		//if print==false we suppress the output from this table (good for top-level tables)
 		if (result_print === true) {
 			//add the description if there is one
-			var desc = (_.isString(t[result]['description'])) ? t[result]['description'] : '';
+			var desc = (_.isString(r['description'])) ? r['description'] : '';
 			
 			t_result = app.randomizer.findToken(result);
 			
@@ -134,7 +133,8 @@ var RandomTable = Backbone.Model.extend(
 		//console.log(result);
 		
 		//are there subtables to roll on?
-		var subtable = this.get('tables')[table][result].subtable;
+		//var subtable = this.get('tables')[table][result].subtable;
+		var subtable = r.subtable;
 		//console.log(subtable);
 		if (typeof subtable == 'undefined') {
 			//no subtables
@@ -189,7 +189,11 @@ var RandomTable = Backbone.Model.extend(
 		if (_.isString(r)) { return r; }
 		var o = '';
 		_.each(r, function (v){
-			o += v.table.capitalize()+': '+v.result.capitalize()+'<br/>';
+			if (v.table == 'default') {
+				o += v.result.capitalize()+'<br/>';
+			} else {
+				o += v.table.capitalize()+': '+v.result.capitalize()+'<br/>';
+			}
 			if (v.desc !== '') { o += v.desc+'<br/>'; }
 		}, this);
 		o = o.replace(/<br\/>$/, '');
