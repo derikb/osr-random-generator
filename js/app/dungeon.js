@@ -393,13 +393,7 @@ var DungeonEditView = Backbone.View.extend({
 		var inputtarget = $(e.target).attr('data-targetfield');
 		var list = $(e.target).attr('data-list');
 		
-		if (this.field == 'personality' || this.field == 'appearance') {
-			var newval = app.randomizer.randomValue(appdata[this.field][list]);
-			$('#'+inputtarget).val(newval);
-		} else if (this.field == 'hexdressing') {
-			var newval = _.sample(appdata.wilderness.hexdressing);
-			$('#'+inputtarget).val(newval);
-		} else if (this.field == 'rooms') {
+		if (this.field == 'rooms') {
 			newroom = this.model.generateRoom(this.roomnumber);
 			//console.log(newroom);
 			$('#editcontent').val(newroom.content);

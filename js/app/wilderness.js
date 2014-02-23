@@ -219,7 +219,7 @@ var WildernessEditView = Backbone.View.extend({
 			var newval = this.model.getHexDressing(1);
 			$('#'+inputtarget).val(newval[0]);
 		} else if (this.field == 'terrain') {
-			var newval = app.randomizer.randomValue(appdata.wilderness.terrain);
+			var newval = app.randomizer.rollRandom(appdata.wilderness.terrain);
 			$('#'+inputtarget).val(newval);
 		}
 		
