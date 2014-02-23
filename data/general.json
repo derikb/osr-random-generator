@@ -1,39 +1,55 @@
+//! general simple tables
+
 appdata = (typeof appdata == "undefined") ? {} : appdata;
 
 appdata.general = {
-	"direction": [
-		"North",
-		"South",
-		"East",
-		"West"
-	],
-	"color": [
-		"Black",
-		"White",
-		"Grey",
-		"Blue",
-		"Red",
-		"Yellow",
-		"Gold",
-		"Silver",
-		"Crimson",
-		"Azure",
-		"Green",
-		"Orange",
-		"Violet"
-	],
-	"ordinal": [
-		"First",
-		"Second",
-		"Third",
-		"Fourth",
-		"Fifth",
-		"Sixth",
-		"Seventh",
-		"Eighth",
-		"Ninth",
-		"Tenth",
-		"Last"
-	]
+	"direction": {
+		"table": [
+			"North",
+			"South",
+			"East",
+			"West"
+		]
+	},
+	"color": {
+		"table": [
+			"Black",
+			"White",
+			"Grey",
+			"Blue",
+			"Red",
+			"Yellow",
+			"Gold",
+			"Silver",
+			"Crimson",
+			"Azure",
+			"Green",
+			"Orange",
+			"Violet"
+		]
+	},
+	"ordinal": {
+		"table": [
+			"First",
+			"Second",
+			"Third",
+			"Fourth",
+			"Fifth",
+			"Sixth",
+			"Seventh",
+			"Eighth",
+			"Ninth",
+			"Tenth",
+			"Last"
+		]
+	},
+	"season": {
+		"table": [
+			"Winter",
+			"Spring",
+			"Summer",
+			"Autumn"
+		]
+	}
 	
 }
