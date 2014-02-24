@@ -1,6 +1,7 @@
-
-//!Dungeon model
-var Dungeon = Backbone.Model.extend({
+//!Dungeon
+var Dungeon = Backbone.Model.extend(
+	/** @lends Dungeon.prototype */
+	{
 	
 	localStorage: new Backbone.LocalStorage("osr-random-generator-dungeon"),
 	
@@ -13,15 +14,31 @@ var Dungeon = Backbone.Model.extend({
 		}
 	},
 	
-			
+	/**
+	 * Dungeon objects
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 * @property {String} [title=[Untitled]] Title of the dungeon level
+	 * @property {Number} [level=1] dungeon level number (used for monster and treasure generation)
+	 * @property {Number} [room_count=10] number of rooms on the level
+	 * @property {Array} rooms array of room objects
+	 */	
 	initialize:  function() {
 		
 	},
 	
+	/**
+	 * create all the rooms to start
+	 */
 	create: function() {
 		this.set('rooms', this.generateRooms(this.get('room_count')));
 	},
 	
+	/**
+	 * for each room generate it
+	 * @returns {Array} an array of room objects
+	 */
 	generateRooms: function(ct) {
 		var rooms = [];
 
@@ -32,7 +49,11 @@ var Dungeon = Backbone.Model.extend({
 		return rooms;	
 	},
 	
-	//roll a single room
+	/**
+	 * roll a single room
+	 * @param {Number} roomnumber which room are we generating
+	 * @returns {Object} a room object
+	 */
 	generateRoom: function(roomnumber) {
 		var room = { number: roomnumber, content: 'Empty', monster_type: '', trap_type: '', special_type: '', treasure_type: '' };
 		room.content = app.randomizer.rollRandom(appdata.dungeon.rooms.content);
@@ -58,6 +79,10 @@ var Dungeon = Backbone.Model.extend({
 		return room;
 	},
 	
+	/**
+	 * create monster list for level
+	 * @returns {Object} keyed to monster name with stats as property value
+	 */
 	generateMonsterList: function() {
 		if (typeof this.get('monsters') !== 'undefined') { return this.get('monsters'); }
 		var m = appdata.monsters.labyrinthlord;
@@ -71,14 +96,20 @@ var Dungeon = Backbone.Model.extend({
 		return monsters;
 	},
 	
-	
+	/**
+	 * roll on the trap table
+	 * @returns {String} trap description
+	 */	
 	generateTrap: function() {
 		var traptable = new RandomTable(appdata.tables.traps_campbell);
 		traptable.generateResult();
 		return traptable.niceString();
 	},
 	
-	
+	/**
+	 * roll on the special table
+	 * @returns {String} special description
+	 */	
 	generateSpecial: function() {
 		//?
 		var specialtable = new RandomTable(appdata.tables.bag_tricks_2);
@@ -86,7 +117,10 @@ var Dungeon = Backbone.Model.extend({
 		return specialtable.niceString();
 	},
 
-	//room object passed
+	/**
+	 * roll on treasure table(s)
+	 * @returns {String} treasure list
+	 */
 	generateTreasure: function(room) {
 		var t = new Treasure();
 		var o = '';
@@ -123,11 +157,19 @@ var Dungeon = Backbone.Model.extend({
 
 
 //!DungeonCollection
-var DungeonCollection = Backbone.Collection.extend({
+var DungeonCollection = Backbone.Collection.extend(
+	/** @lends DungeonCollection.prototype */
+	{
 	
 	model: Dungeon,
 	localStorage: new Backbone.LocalStorage("osr-random-generator-dungeon"), // Unique name within your app.
-		
+	
+	/**
+	 * Collection of Dungeon objects
+	 *
+	 * @augments external:Backbone.Collection
+	 * @constructs
+	 */	
 	initialize: function(){
 		//this.listenTo(this.model, 'sync', this.addChar);
 	},
@@ -135,7 +177,9 @@ var DungeonCollection = Backbone.Collection.extend({
 
 
 //!DungeonDetails
-var DungeonDetails = Backbone.View.extend({
+var DungeonDetails = Backbone.View.extend(
+	/** @lends DungeonDetails.prototype */
+	{
 	
 	tagName: 'div',
 	className: 'dungeon-details clearfix',
@@ -156,6 +200,12 @@ var DungeonDetails = Backbone.View.extend({
 		//'click *[data-room]': 'editRoom',
 	},
 	
+	/**
+	 * Full Dungeon view
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
 	initialize: function() {
     	this.listenTo(this.model, 'change', this.render);
     },
@@ -243,11 +293,10 @@ var DungeonDetails = Backbone.View.extend({
 });
 
 
-
-
-
-//!DungeonList - view for individual dungeon models
-var DungeonList = Backbone.View.extend({
+//!DungeonList
+var DungeonList = Backbone.View.extend(
+	/** @lends DungeonList.prototype */
+	{
 	
 	model: DungeonCollection,
 	tagName:'section',
@@ -259,6 +308,12 @@ var DungeonList = Backbone.View.extend({
 		};
 	},
 	
+	/**
+	 * List of Dungeons in DungeonListItem format
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
     initialize:function () {
         this.listenTo(this.model, "add", this.render);
         this.listenTo(this.model, "destroy", this.render);
@@ -283,8 +338,9 @@ var DungeonList = Backbone.View.extend({
 
 
 //!DungeonListItem
-//View for dungeon data in brief list
-var DungeonListItem = Backbone.View.extend({
+var DungeonListItem = Backbone.View.extend(
+	/** @lends DungeonListItem.prototype */
+	{
 	
 	tagName: 'li',
 	className: 'dungeon-list',
@@ -300,6 +356,12 @@ var DungeonListItem = Backbone.View.extend({
 		'click .delete': 'delete'
 	},
 	
+	/**
+	 * Brief Dungeon listing
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
 	initialize: function() {
     	//this.listenTo(this.model, "change", this.render);
     	this.listenTo(this.model, "sync", this.render); //only change when character is saved.
@@ -337,8 +399,10 @@ var DungeonListItem = Backbone.View.extend({
 });
 
 
-//!DungeonEditView View for editing the fields
-var DungeonEditView = Backbone.View.extend({
+//!DungeonEditView
+var DungeonEditView = Backbone.View.extend(
+	/** @lends DungeonEditView.prototype */
+	{
 	
 	tagName: 'div',
 	field: '',
@@ -348,6 +412,12 @@ var DungeonEditView = Backbone.View.extend({
 		'click .randomize': 'loadRandom',
 	},
 	
+	/**
+	 * Edit form for Dungeon objects
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
 	initialize: function(options) {
 		//this.options = options || {};
 		this.field = options.field;
@@ -483,7 +553,9 @@ var DungeonEditView = Backbone.View.extend({
 
 
 //!DungeonForm
-var DungeonForm = Backbone.View.extend({
+var DungeonForm = Backbone.View.extend(
+	/** @lends DungeonForm.prototype */
+	{
 	
 	tagName: 'form',
 	className: 'dungeon-form clearfix',
@@ -498,6 +570,12 @@ var DungeonForm = Backbone.View.extend({
 		'submit': 'createDungeon',
 	},
 	
+	/**
+	 * Form for generating Dungeon objects
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
 	initialize: function() {
     	this.render();
         this.listenTo(this.model, 'change', this.render);
