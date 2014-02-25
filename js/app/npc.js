@@ -211,7 +211,7 @@ var Character = Backbone.Model.extend(
 		} else if (cclass == 'none') {
 			var oc = new RandomTable(appdata.tables.medieval_occupations);
 			oc.generateResult();
-			this.set('occupation', oc.niceString());
+			this.set('occupation', oc.get('result')[0]['result']);
 		}
 	},
 
@@ -221,7 +221,6 @@ var Character = Backbone.Model.extend(
 	selectArmor: function() {
 		var charclass = this.get('charclass');
 		if (charclass == 'none') {
-			/** @todo work this into the RandomTable class? */
 			var occ = _.findWhere(appdata.tables.medieval_occupations.table, { label: this.get('occupation') });
 			if (typeof occ.armor == 'undefined') { return ''; }
 			if (occ.armor == false) { return ''; }
