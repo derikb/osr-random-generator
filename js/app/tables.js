@@ -202,25 +202,73 @@ var RandomTable = Backbone.Model.extend(
 	
 	/**
 	 * Show the table options as a list
-	 * @todo make this work for complex listing #24
 	 * @returns {Array} the options for iterating in a list
 	 */
 	niceList: function() {
-		
-		if (this.get('simple') === true) {
-			var options = [];
-			_.each(this.get('table'), function (v,k,l) {
-				if (typeof v == 'string') {
-					options.push(v);
+		//iterature through each table
+		var o = '<div class="rtable_select">';
+		_.each(this.get('tables'), function(v,k,l){
+			if (k !== 'default') {
+				o += '<header>'+k.capitalize()+'</header>';
+			}
+			o += '<ol class="list-unstyled">';
+			var tweight1 = 0, tweight0 = 0;
+			_.each(v, function(vx,kx,lx){
+				tweight0 = tweight1 + 1;
+				var weight1 = (typeof vx.weight !== 'undefined') ? vx.weight : 1;
+				tweight1 = tweight1 + weight1;
+				var num = (tweight0 == tweight1) ? tweight0 : tweight0+'-'+tweight1;
+				
+				if (_.isArray(lx) && _.isString(vx)) {
+					//its an Array of strings
+					o += '<li>'+num+'. '+vx.capitalize();
+				} else if (_.isString(kx)) {
+					
+					o += '<li>'+num+'. '+kx.capitalize();
+					//vx is an object
+					if (typeof vx.description !== 'undefined') {
+						o += ' - '+vx.description;
+					}
+					if (typeof vx.subtable !== 'undefined') {
+						if (_.isArray(vx.subtable)){
+							o += '<div class="subtable_roll">Roll on: '+vx.subtable.flatten()+'</div>';
+						} else if (_.isString(vx.subtable)) {
+							o += '<div class="subtable_roll">Roll on: '+vx.subtable.capitalize()+'</div>';
+						} else {
+							_.each(vx.subtable, function(vz,kv){
+								o += '<div class="subtable_roll">Roll '+kv.capitalize()+':<ol class="list-inline">';
+								var t2weight0 = 0, t2weight1 = 0;
+								_.each(vz, function(q,w,qw){
+									t2weight0 = t2weight1 + 1;
+									var weight2 = (typeof q.weight !== 'undefined') ? q.weight : 1;
+									t2weight1 = t2weight1 + weight2;
+									var num2 = (t2weight0 == t2weight1) ? t2weight0 : t2weight0+'-'+t2weight1;
+									if (_.isArray(qw) && _.isString(q)) {
+										o += '<li>'+num2+'. '+q.capitalize()+'</li>';
+									} else if (_.isString(w)) {
+										o += '<li>'+num2+'. '+w.capitalize()+'</li>';
+									} else {
+										o += '<li>'+num2+'. '+q.label.capitalize()+'</li>';
+									}
+								}, this);
+								o += '</ol></div>';								
+							}, this);
+						}
+					}
 				} else {
-					options.push(v.label);
+					o += '<li>'+num+'. '+vx.label;
+					if (typeof vx.description !== 'undefined') {
+						o += ' - '+vx.description;
+					}
+					
 				}
+				o += '</li>';
 			}, this);
-			return options;
-		}
+			o += '</ol>';
+		}, this);
 		
-		return ['Sorry, haven\'t figured out how to best list these complex (sub)tables yet.'];
-		
+		o += '</div>';
+		return o;		
 	}
 	
 });
@@ -453,16 +501,19 @@ RandomTablePicker = Backbone.View.extend(
     },
     
     template: function(data) {
-		var temp = '';
-		var opts = this.model.niceList();
+		//var temp = '';
+		//var opts = this.model.niceList();
+		return this.model.niceList();
 		//console.log(opts);
-		data.opts = opts;
+		/*
+data.opts = opts;
 		if (data.simple == true) {
 			temp = '<ol><% _.each(opts, function(v,k,l){ %><li><%= v %></li><% }) %></ol>';
 		} else {
 			temp = '<ol><% _.each(opts, function(v,k,l){ %><li><%= v %></li><% }) %></ol>';
 		}		
 		return _.template(temp, data);
+*/
 	},
 
 });

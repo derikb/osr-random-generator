@@ -494,6 +494,19 @@ String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
+/**
+ * Flatten an array into a string
+ * @returns {String} a comma separate, capitalized string of the array
+ */
+Array.prototype.flatten = function(){
+	var o = '';
+	_.each(this, function(v){
+		o += v.capitalize()+', ';
+	}, this);
+	o = $.trim(o);
+	o = o.replace(/,$/, '');
+	return o;
+}
 
 /**
  * serialize a form
