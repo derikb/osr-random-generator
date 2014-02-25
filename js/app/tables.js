@@ -219,8 +219,6 @@ var RandomTable = Backbone.Model.extend(
 			return options;
 		}
 		
-		
-		/** @todo complex listing #24 */
 		return ['Sorry, haven\'t figured out how to best list these complex (sub)tables yet.'];
 		
 	}
@@ -228,13 +226,17 @@ var RandomTable = Backbone.Model.extend(
 });
 
 
-//!RandomTableShort - table row of metadata on the random table for display/filtering/actions
-var RandomTableShort = Backbone.View.extend({
+//!RandomTableShort
+var RandomTableShort = Backbone.View.extend(
+	/** @lends RandomTableShort.prototype */
+	{
 	
 	model: RandomTable,
 	tagName:'tr',
 	
-	//add tags as classes for filtering
+	/**
+	 * add tags as classes for filtering
+	 */
 	className: function(){
 		var o='tag_all ';
 		_.each(this.model.get('tags'), function(v) {
@@ -249,7 +251,13 @@ var RandomTableShort = Backbone.View.extend({
 		'click .info': 'info',
 		'click .tag-filter': 'filter_tag'
 	},
- 
+	
+	/**
+	 * Table row of metdata for RandomTable
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
     initialize:function () {
         this.tcells = this.model.shortdisplay;
     },
@@ -270,7 +278,9 @@ var RandomTableShort = Backbone.View.extend({
 				$(this.el).append('<td>'+tags+'</td>');
 				return;
 			} else if (v == 'description') {
-				$(this.el).append('<td>'+this.model.get(v)+'<br/>Source: '+this.model.get('source')+'</td>');
+				var desc = this.model.get(v);
+				if (desc !== '') { desc += '<br/>'; }
+				$(this.el).append('<td>'+desc+'Source: '+this.model.get('source')+'</td>');
 				
 				return;	
 			}
@@ -281,26 +291,34 @@ var RandomTableShort = Backbone.View.extend({
         return this;
     },
     
-    //Roll on the table, generate a result, show in a modal
+    /**
+     * Roll on the table, generate a result, show in a modal
+     */
     roll: function() {
     	editv = new RandomTableRoller({ model: this.model });
     	app.showModal('Table Result: '+editv.model.get('title'), editv.render().el);
     },
     
-    //Show all the options in a modal so user can pick(?)
+    /**
+     * Show all the options in a modal so user can pick(?)
+     */
     pick: function() {
 	    editv = new RandomTablePicker({ model: this.model });
 	    app.showModal('Table Options: '+editv.model.get('title'), editv.render().el);		
     },
     
-    //Metadata about the table in a modal
+    /**
+     * Metadata about the table in a modal
+     */
     info: function() {
     	editv = new RandomTableInfo({ model: this.model });
 	    app.showModal('Table Info: '+editv.model.get('title'), editv.render().el);		
     },
 	
-	//only show the tables with the clicked tag
-	//an event is also triggered in RTable_List
+	/**
+	 * only show the tables with the clicked tag
+	 * an event is also triggered in {@link RTable_List}
+	 */
 	filter_tag: function(e) {
 		e.preventDefault();
 		var tag = $(e.target).data('tag');
@@ -312,11 +330,21 @@ var RandomTableShort = Backbone.View.extend({
 });
 
 
-//!RandomTableInfo info modal data
-RandomTableInfo = Backbone.View.extend({
+//!RandomTableInfo
+RandomTableInfo = Backbone.View.extend(
+	/** @lends RandomTableInfo.prototype */
+	{
 	
 	model: RandomTable,
 	tagName:'div',
+	
+	/**
+	 * Info modal for RandomTable
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
+	initialize: function(){},
 	
 	render: function () {
 		this.$el.html(this.template(this.model.attributes));
@@ -331,8 +359,10 @@ RandomTableInfo = Backbone.View.extend({
 });
 
 
-//!RandomTableRoller - roll on the table, display in a modal
-RandomTableRoller = Backbone.View.extend({
+//!RandomTableRoller
+RandomTableRoller = Backbone.View.extend(
+	/** @lends RandomTableRoller.prototype */
+	{
 	
 	model: RandomTable,
 	tagName:'div',
@@ -342,6 +372,12 @@ RandomTableRoller = Backbone.View.extend({
 		'click .rollagain': 'rollagain',
 	},
 	
+	/**
+	 * Modal for random table results
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
 	initialize: function() {
 		this.model.generateResult();
 		this.num_results = 1;
@@ -352,13 +388,17 @@ RandomTableRoller = Backbone.View.extend({
         return this;
     },
     
-    //template for individual result
+    /**
+     * template for individual result
+     */
     result_template: function(num) {
 	  	  var temp = '<div id="res'+num+'" class="well clearfix"><button type="button" class="btn btn-default reroll pull-right"><span class="glyphicon glyphicon-refresh"></span></button><div class="results"><%= result %></div></div>';	  
 	  	  return temp;
     },
     
-    //template for new modal
+    /**
+     * template for new modal
+     */
     template: function() {
     	var data = this.model.attributes;
     	data.result = this.model.niceString();
@@ -367,15 +407,18 @@ RandomTableRoller = Backbone.View.extend({
 		return _.template(temp, data);
 	},
 	
-	//reroll an existing result
+	/**
+	 * reroll an existing result
+	 */
 	reroll: function(e) {
 		var id = jQuery(e.target).parents('.well').attr('id');
 		this.model.generateResult();
 		this.$el.find('#'+id+' .results').html(this.model.niceString());
 	},
 	
-	//roll another result on this table
-	//add it to the modal
+	/**
+	 * roll another result on this table
+	 */
 	rollagain: function(e) {
 		this.model.generateResult();
 		this.num_results++;
@@ -388,11 +431,21 @@ RandomTableRoller = Backbone.View.extend({
 });
 
 
-//!RandomTablePicker - show table options
-RandomTablePicker = Backbone.View.extend({
+//!RandomTablePicker
+RandomTablePicker = Backbone.View.extend(
+	/** @lends RandomTablePicker.prototype */
+	{
 	
 	model: RandomTable,
 	tagName:'div',
+	
+	/**
+	 * A modal for Picking Table options
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
+	initialize: function() {},
 	
 	render: function () {
 		this.$el.html(this.template(this.model.attributes));
@@ -416,15 +469,20 @@ RandomTablePicker = Backbone.View.extend({
 
 
 
-//!RTable_Collection collection of all RandomTable models
-/*
-	Tables are added via appdata.tables (converted to an array of objects in AppRouter)
-*/
-// doesn't really do anything, yet?
-var RTable_Collection = Backbone.Collection.extend({
+//!RTable_Collection
+var RTable_Collection = Backbone.Collection.extend(
+	/** @lends RTable_Collection.prototype */
+	{
 	
 	model: RandomTable,
-
+	
+	/**
+	 * A collection of RandomTables
+	 * Tables are added via appdata.tables (converted to an array of objects in AppRouter)
+	 *
+	 * @augments external:Backbone.Collection
+	 * @constructs
+	 */
 	initialize: function(){
 
 	},
@@ -432,8 +490,10 @@ var RTable_Collection = Backbone.Collection.extend({
 });
 
 
-//!RTable_List Table display of the RTable_Collection
-var RTable_List = Backbone.View.extend({
+//!RTable_List
+var RTable_List = Backbone.View.extend(
+	/** @lends RTable_List.prototype */
+	{
 	
 	model: RTable_Collection,
 	
@@ -446,12 +506,20 @@ var RTable_List = Backbone.View.extend({
 		'click .clear-tag-filter': 'clear_filter'
 	},
 	
+	/**
+	 * This is the view for the RTable_Collection (a table)
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
     initialize:function () {
 
     },
     
-    //when a filter is clicked in RandomTableShort view
-    //update the table caption
+    /**
+     * when a filter is clicked in RandomTableShort view
+     * update the table caption
+     */
     filter_tag: function(e) {
 	  	e.preventDefault();
 	  	var tag = $(e.target).data('tag');
@@ -466,7 +534,9 @@ var RTable_List = Backbone.View.extend({
 	  	$(this.el).find('caption').html(caption);
     },
     
-    //clear the filter, show all tables, remove caption
+    /**
+     * clear the filter, show all tables, remove caption
+     */
     clear_filter: function(e) {
 	    e.preventDefault();
 	  	var tag = $(e.target).parent().data('tag');
