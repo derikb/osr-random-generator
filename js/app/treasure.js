@@ -1,8 +1,7 @@
-//Generate treasure
-
-
 //!Treasure model
-var Treasure = Backbone.Model.extend({
+var Treasure = Backbone.Model.extend(
+	/** @lends Treasure.prototype */
+	{
 	
 	//localStorage: new Backbone.LocalStorage("osr-random-generator-treasure"),
 	
@@ -12,7 +11,12 @@ var Treasure = Backbone.Model.extend({
 		}
 	},
 	
-			
+	/**
+	 * Treasure model
+	 *
+	 * @augments external:Backbone.Model
+	 * @constructs
+	 */	
 	initialize:  function() {
 		this.set('gems_t', new RandomTable(appdata.treasure.labyrinthlord.gems));
 		this.set('jewelry_t', new RandomTable(appdata.treasure.labyrinthlord.jewelry));
@@ -24,7 +28,11 @@ var Treasure = Backbone.Model.extend({
 	},
 	
 	
-	///pass in a hoard type or a dungeon level
+	/**
+	 * Generate the treasure randomly
+	 * @param {String} type a treasure/hoard type or a dungeon level
+	 * @returns {String} a description of the treasure
+	 */
 	generateHoard: function(type) {
 		
 		var hoard_data = appdata.treasure.labyrinthlord.hoards[type];
@@ -56,8 +64,11 @@ var Treasure = Backbone.Model.extend({
 		return this.niceString(treasure);
 	},
 	
-	//get gems from the gem table
-	//return as string
+	/** 
+	 * get gems from the gem table
+	 * @param {Number} number how many gems to select
+	 * @returns {String} gem description
+	 */
 	chooseGems: function (number) {
 		var o = '';
 		var gems = [];
@@ -74,8 +85,11 @@ var Treasure = Backbone.Model.extend({
 		return o;
 	},
 	
-	//get jewelry from the jewelry table
-	//return as string
+	/** 
+	 * get jewelry from the jewelry table
+	 * @param {Number} number how many jewelry to select
+	 * @returns {String} jewelry description
+	 */
 	chooseJewelry: function(number) {
 		var o = '';
 		var jewels = [];
@@ -92,8 +106,11 @@ var Treasure = Backbone.Model.extend({
 		return o;
 	},
 	
-	//pass in an object with attributes = to magic item types and values of those attributes the number to roll
-	//return array
+	/** 
+	 * get jewelry from the jewelry table
+	 * @param {Object} data which item tables to use and how many to select { type: number }
+	 * @returns {Array} magic item descriptions
+	 */
 	chooseMagic: function(data) {
 		//console.log(data);
 		var o = [];
@@ -109,7 +126,11 @@ var Treasure = Backbone.Model.extend({
 		return o;
 	},
 	
-	
+	/** 
+	 * a string of all the treasures
+	 * @param {Object|Array|String} treasure array/object/string of treasure descriptions
+	 * @returns {String} treasure description as a string
+	 */
 	niceString: function(treasure) {
 		if (treasure == '') { return ''; }
 		//console.log(r);

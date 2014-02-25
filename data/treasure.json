@@ -33,10 +33,12 @@ appdata.treasure.labyrinthlord = {
 		"XX": { "cp": { "chance": "25", "amount": "1d12*1000" }, "sp": { "chance": "30", "amount": "1d6*1000" }, "ep": { "chance": "15", "amount": "1d6*1000" }, "gems": { "chance": "20", "amount": "1d6" }, "jewelry": { "chance": "20", "amount": "1d6" }, "magic": { "chance": "12", "type": { "any": "2" } } },
 		"XXI": { "cp": { "chance": "45", "amount": "1d10*1000" }, "sp": { "chance": "25", "amount": "1d4*1000" }, "ep": { "chance": "30", "amount": "1d4*1000" }, "gp": { "chance": "20", "amount": "1d4*1000" }, "gems": { "chance": "30", "amount": "1d8" }, "jewelry": { "chance": "20", "amount": "1d4" }, "magic": { "chance": "12", "type": { "armor||sword||weapon": "1" } } },
 		"XXII": { "cp": { "chance": "30", "amount": "1d8*1000" }, "sp": { "chance": "20", "amount": "1d4*1000" }, "ep": { "chance": "25", "amount": "1d6*1000" }, "gp": { "chance": "40", "amount": "1d12*1000" }, "pp": { "chance": "20", "amount": "1d4*100" }, "gems": { "chance": "55", "amount": "5d8" }, "jewelry": { "chance": "45", "amount": "5d8" }, "magic": { "chance": "25", "type": { "any": "3" } } },
-		"test": {
+		/*
+"test": {
 			"jewelry": { "chance": "100", "amount": "1d8" },
 			"magic": { "chance": "100", "type": { "scrolls": "10" } }
 		},
+*/
 		//These are for dungeon level when there is no monster in the room
 		"1": { "sp": { "chance": "100", "amount": "2d4*100" }, "gp": { "chance": "50", "amount": "1d4*10" }, "gems": { "chance": "7", "amount": "1d4" }, "jewelry": { "chance": "5", "amount": "1d4" }, "magic": { "chance": "3", "type": { "any": "1" } } },
 		"2": { "sp": { "chance": "100", "amount": "2d6*100" }, "gp": { "chance": "50", "amount": "1d6*100" }, "gems": { "chance": "13", "amount": "1d6" }, "jewelry": { "chance": "8", "amount": "1d6" }, "magic": { "chance": "5", "type": { "any": "1" } } },
