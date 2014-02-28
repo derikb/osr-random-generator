@@ -53,7 +53,7 @@ appdata.tables.moldvay_stocking = {
 		"content": { 
 			"monster": { "weight": 2, "subtable": { "Treasure": [{ "label": "Treasure", "weight": 3 }, { "label": "no treasure", "weight": 3 }] } },
 			"trap": { "weight": 1, "subtable": { "Treasure": [{ "label": "Treasure", "weight": 2 }, { "label": "no treasure", "weight": 4 }] } },
-			"special": { "weight": 1, "subtable": { "Treasure": [{ "label": "Treasure", "weight": 0 }, { "label": "no treasure", "weight": 6 }] } },
+			"special": { "weight": 1, "subtable": { "Treasure": [{ "label": "no treasure", "weight": 6 }] } },
 			"empty": { "weight": 2, "subtable": { "Treasure": [{ "label": "Treasure", "weight": 1 }, { "label": "no treasure", "weight": 5 }] } }
 		}
 	}
