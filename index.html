@@ -27,6 +27,7 @@
 		  <li><a href="#wilderness" data-toggle="tab">Wilderness</a></li>
 		  <li><a href="#dungeon" data-toggle="tab">Dungeon</a></li>
 		  <!-- <li><a href="#other" data-toggle="tab">t.b.d.</a></li> -->
+		  <li><a href="#import" data-toggle="tab">Import Tables</a></li>
 		  <li><a href="#settings" data-toggle="tab">Settings</a></li>
 		  <li><a href="#help" data-toggle="tab">Help</a></li>
 		  <li><a href="#credits" data-toggle="tab">Credits</a></li>
@@ -97,6 +98,27 @@
 				<div class="alert alert-info">Planning on adding some other generators soon.</div>
 			</div>
 			-->
+			
+			<div class="tab-pane hidden-print" id="import">
+				<!-- Form for importing tables -->
+				<div class="row">
+					<div class="col-sm-6">
+						<section id="import-form">
+						</section>
+					</div>
+					
+					<div class="col-sm-6 hidden-print">
+						<section id="import-preview">
+							<table class="table table-striped">
+								<caption>Test your table before saving.</caption>
+								<tr><td></td></tr>
+							</table>
+							<h2>Import/Export Code</h2>
+							<pre></pre>
+						</section>
+					</div>
+				</div>
+			</div>
 			
 			<div class="tab-pane hidden-print" id="settings">
 				<!-- The global settings form goes here. -->
@@ -234,6 +256,7 @@
 	<script src="js/app/wilderness.js"></script>
 	<script src="js/app/dungeon.js"></script>
 	<script src="js/app/treasure.js"></script>
+	<script src="js/app/import.js"></script>
 	
 	<script>
 		jQuery(document).ready(function(){

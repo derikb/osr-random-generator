@@ -10,14 +10,12 @@ var RandomTable = Backbone.Model.extend(
 	defaults: function() {
 		return {
 			title: '',
-			author: '[unknown]',
-			description: '[undefined]',
-			source: '[unknown]',
+			author: '',
+			description: '',
+			source: '',
 			tags: [],
 			start: '', //where to start rolling
-			table: [],
 			tables: {}, //subtables
-			simple: false, //simple tables only have 1 list to randomize
 			result: {},
 		}
 	},
@@ -30,26 +28,29 @@ var RandomTable = Backbone.Model.extend(
 	 * @augments external:Backbone.Model
 	 * @constructs
 	 * @property {String} [title] title of the table
-	 * @property {String} [author=[unknown]] author of the table
-	 * @property {String} [description=[undefined]] description of the table
-	 * @property {String} [source=[unknown]] source of the table
+	 * @property {String} [author] author of the table
+	 * @property {String} [description] description of the table
+	 * @property {String} [source] source of the table
 	 * @property {Array} [tags] subject tags
 	 * @property {String|Array} [start] tables to roll on. if array it can be an array of strings (table names) or objects (two properties table: the table to roll on and times: the number of times to roll)
-	 * @property {Array} [table] default table. array of strings (simple table) or objects (complex table)
+	 * @property {Array} [table] default table. array of strings or objects. removed after initialization.
 	 * @property {Object} [tables] a property for each subtables. if table property is not set then the first propery of this Object is used to start rolling 
-	 * @property {Boolean} [start=false] simple or complex table if simple we just roll on the table property
 	 * @property {Object} [result] current result
 	 */
 	initialize: function(){
-		
-		//take a simple table format and normalize it
-		if (_.isEmpty(this.get('tables'))) {
-			var tables = {
-				"default": this.get('table')
-			};			
-			this.set('tables', tables);	
+		this.normalize();
+	},
+	
+	/**
+	 * Normalize data - mostly move "table" to "table.default"
+	 */
+	normalize: function() {
+		if (!_.isEmpty(this.get('table'))) {
+			var tables = this.get('tables');
+			tables.default = this.get('table');
+			this.set('tables', tables);
+			this.unset('table');
 		}
-		
 	},
 	
 	/**
@@ -61,15 +62,20 @@ var RandomTable = Backbone.Model.extend(
 		if (typeof start == "undefined") {
 			start = '';
 		}
-
 		//we look in the start table for what to roll if the start wasn't explicitly set in the call
 		start = (start == '') ? this.get('start') : start;
 		if (start == '') {
-			//if no start attribute, select first item from tables
-			var k = _.keys(this.get('tables'));
-			this.set('result', this.selectFromTable(k[0]));
+			//if no start attribute
+			//try for "default" table
+			if (typeof this.get('tables')['default'] !== 'undefined') {
+				this.set('result', this.selectFromTable('default'), { silent: true });
+			} else {
+				//select first item from tables
+				var k = _.keys(this.get('tables'));
+				this.set('result', this.selectFromTable(k[0]), { silent: true });
+			}
 		} else if (typeof start == 'string') {
-			this.set('result', this.selectFromTable(start));
+			this.set('result', this.selectFromTable(start), { silent: true });
 		} else {
 			result = [];
 			_.each(start, function(v){
@@ -86,7 +92,7 @@ var RandomTable = Backbone.Model.extend(
 				}
 			}, this);
 			//console.log(result);
-			this.set('result', result);
+			this.set('result', result, { silent: true });
 		}
 		
 		return true;
@@ -100,6 +106,10 @@ var RandomTable = Backbone.Model.extend(
 	 * @returns {Array} array of object results { table: table that was rolled on, result: result string, desc: description string }
 	 */
 	selectFromTable: function(table) {
+		if (typeof table == 'undefined') {
+			return [{ table: "Error", result: "No table found to roll on.", desc: "" }];
+		}
+		//console.log(table);
 		var o = [];
 		var t = this.get('tables')[table];
 		var result = app.randomizer.rollRandom(t);
@@ -202,6 +212,7 @@ var RandomTable = Backbone.Model.extend(
 	
 	/**
 	 * Show the table options as a list
+	 * @todo have long lists display in columns
 	 * @returns {Array} the options for iterating in a list
 	 */
 	niceList: function() {
@@ -269,6 +280,22 @@ var RandomTable = Backbone.Model.extend(
 		
 		o += '</div>';
 		return o;		
+	},
+	
+	/**
+	 * outputs the json data for the table (import/export)
+	 * strips out empty attributes
+	 * @returns {String} table attributes in JSON
+	 */
+	outputCode: function() {
+		var att = _.clone(this.attributes);
+		_.each(att, function(v,k,l){
+			if (_.isEmpty(v)) {
+				delete l[k];
+			}
+		}, this);
+		delete att.id;
+		return JSON.stringify(att, null, 5);
 	}
 	
 });
@@ -308,10 +335,13 @@ var RandomTableShort = Backbone.View.extend(
 	 */
     initialize:function () {
         this.tcells = this.model.shortdisplay;
+        this.listenTo(this.model, "change", this.render);
+        this.listenTo(this.model, "destroy", this.remove);
     },
      
     render: function () {
 		
+		$(this.el).empty();
 		_.each(this.model.theaders, function(v) {
 			if (v == 'actions') {
 				$(this.el).append('<td><button title="Info" class="btn btn-default info"><span class="glyphicon glyphicon-info-sign"></span></button> <button title="Pick" class="btn btn-default pick"><span class="glyphicon glyphicon-eye-open"></span></button> <button title="Roll" class="btn btn-default roll"><span class="glyphicon glyphicon-random"></span></button></td>');
@@ -328,7 +358,11 @@ var RandomTableShort = Backbone.View.extend(
 			} else if (v == 'description') {
 				var desc = this.model.get(v);
 				if (desc !== '') { desc += '<br/>'; }
-				$(this.el).append('<td>'+desc+'Source: '+this.model.get('source')+'</td>');
+				var src = this.model.get('source');
+				if (src !== '') {
+					desc += 'Source: '+src; 
+				}
+				$(this.el).append('<td>'+desc+'</td>');
 				
 				return;	
 			}
@@ -386,6 +420,11 @@ RandomTableInfo = Backbone.View.extend(
 	model: RandomTable,
 	tagName:'div',
 	
+	events: {
+		'click .delete': 'delete',
+		'click .edit': 'edit'
+	},
+	
 	/**
 	 * Info modal for RandomTable
 	 *
@@ -400,9 +439,43 @@ RandomTableInfo = Backbone.View.extend(
     },
     
     template: function(data) {
-		var temp = '<dl><dt data-field="title">Title</dt><dd data-field="title"><%= title %></dd><dt data-field="author">Author</dt><dd data-field="author"><%= author %></dd><dt data-field="source">Source</dt><dd data-field="source"><%= source %></dd><dt>Tags</dt><% _.each(tags, function(v,k,l){ %><dd><%= v %></dd><% }) %><dt data-field="description">Description</dt><dd data-field="description"><%= description %></dd></dl>';	
+
+		var temp = '<dl><dt data-field="title">Title</dt><dd data-field="title"><%= title %></dd><dt data-field="author">Author</dt><dd data-field="author"><% if (author == "") { %>[unknown]<% } else { %><%= author %><% } %></dd><dt data-field="source">Source</dt><dd data-field="source"><% if (source == "") { %>[unknown]<% } else { %><%= source %><% } %></dd><dt>Tags</dt><% _.each(tags, function(v,k,l){ %><dd><%= v %></dd><% }) %><dt data-field="description">Description</dt><dd data-field="description"><%= description %></dd></dl>';
+		
+		if (typeof data.id !== 'undefined') {
+			temp += '<button title="Edit" class="btn btn-default edit"><span class="glyphicon glyphicon-edit"></span></button> <button title="Delete" class="btn btn-default delete"><span class="glyphicon glyphicon-remove"></span></button>';
+		}
+		
 		return _.template(temp, data);
 	},
+	
+	/**
+	 * Delete the user imported table
+	 */
+	delete: function(e) {
+		e.preventDefault();
+		this.model.destroy();
+		this.remove();
+		$('#editmodal').modal('hide');
+	},
+	
+	/**
+	 * Edit the user imported table
+	 */
+	edit: function(e) {
+		e.preventDefault();
+		
+		//close modal
+		$('#editmodal').modal('hide');
+		
+		//trigger import tab
+		$('#maintab a[href="#import"]').tab('show');
+		
+		//load import form with this.model
+		app.importer.resetImporter(this.model);
+		
+	}
+	
 
 });
 
@@ -504,16 +577,6 @@ RandomTablePicker = Backbone.View.extend(
 		//var temp = '';
 		//var opts = this.model.niceList();
 		return this.model.niceList();
-		//console.log(opts);
-		/*
-data.opts = opts;
-		if (data.simple == true) {
-			temp = '<ol><% _.each(opts, function(v,k,l){ %><li><%= v %></li><% }) %></ol>';
-		} else {
-			temp = '<ol><% _.each(opts, function(v,k,l){ %><li><%= v %></li><% }) %></ol>';
-		}		
-		return _.template(temp, data);
-*/
 	},
 
 });
@@ -526,6 +589,7 @@ var RTable_Collection = Backbone.Collection.extend(
 	{
 	
 	model: RandomTable,
+	localStorage: new Backbone.LocalStorage("osr-random-generator-table"),
 	
 	/**
 	 * A collection of RandomTables
@@ -535,8 +599,25 @@ var RTable_Collection = Backbone.Collection.extend(
 	 * @constructs
 	 */
 	initialize: function(){
-
+		
 	},
+	
+	/**
+	 * Add a RandomTable to the collection, trigger refresh so view updates
+	 * @param {Object} [model] A RandomTable model to add to the collection
+	 */
+	import: function (model) {
+		this.add(model);
+		this.trigger('refresh');
+	},
+	
+	/**
+	 * trigger a refresh on the collection
+	 */
+	refresh: function() {
+		this.trigger('refresh')
+	}
+
 	
 });
 
@@ -559,12 +640,13 @@ var RTable_List = Backbone.View.extend(
 	
 	/**
 	 * This is the view for the RTable_Collection (a table)
+	 * list for RTable_Collection refresh event to refresh table
 	 *
 	 * @augments external:Backbone.View
 	 * @constructs
 	 */
     initialize:function () {
-
+		this.listenTo(this.model, 'refresh', this.render);
     },
     
     /**
@@ -597,6 +679,7 @@ var RTable_List = Backbone.View.extend(
     },
     
     render: function () {
+    	$(this.el).empty();
     	$(this.el).append('<caption></caption>');
 		$th_row = $('<tr>');
 		_.each(this.theaders, function(v) {

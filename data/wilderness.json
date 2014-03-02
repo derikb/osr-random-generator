@@ -11,7 +11,7 @@ appdata.wilderness = {
 		"swamp": { "label": "Swamp" },
 		//"forest": { "label": "Forest" },
 				//"mountains": { "label": "Mountains" },
-		//"sea": { "label": "Sea" },
+		"sea": { "label": "Sea" },
 	},
 	"weather": {
 		"season": {
@@ -275,5 +275,75 @@ appdata.encounters.road = {
 		 	"Major Weather event": { "description": "Hurricane, tornado, blizzard, flood, etc." }
 	 	}
  	},
-		
+	
+};
+
+appdata.encounters.sea = {
+	"title": "Sea Encounters",
+	"author": "Derik Badman",
+	"source": "",
+	"description": "For when travelling on water (sea, ocean) (in progress)",
+	"tags": ["sea", "water"],
+	"start": 'general',	
+ 	"tables": {
+	 	"general": {
+	 		"Land": { "subtable": "land", "print": false, "weight": 1 },
+	 		"Ship": { "subtable": "ship","print": false, "weight": 3 },
+	 		"Animal/Monster": { "subtable": "monster", "print": false, "weight": 2 },
+	 		"Natural": { "subtable": "natural", "print": false, "weight": 2 },
+	 		//"Special": { "subtable": "special", "print": false, "weight": 1 }
+	 	},
+	 	"land": {
+		 	"Tiny Island": {},
+		 	"Small Island": {},
+		 	"Large Island": {},
+		 	"Reef": {},
+		 	"Island Group": {},
+	 	},
+	 	"ship": {
+		 	"Merchants": {},
+		 	"Military": {},
+		 	"Pirates": {},
+		 	"Fishers": {},
+		 	"Raiders": {},
+		 	"Explorers": {},
+		 	"Pilgrims": {},
+		 	"Wreck": {},
+		 	"Ghost Ship": {},
+	 	},
+	 	"monster": {
+		 	"Sharks": {},
+		 	"Whales": {},
+		 	"Dolphins": {},
+		 	"Turtles": {},
+		 	"Fish": {},
+		 	"Dragon Turtle": {},
+		 	"Sea Monster": {},
+	 	},
+	 	"natural": {
+		 	"Heavy winds": {},
+		 	"Storm": {},
+		 	"Whirlpool": {},
+		 	"No wind": {},
+		 	"Rain": {},
+		 	"Fog": {},
+		 	"Choppy Sea": {},
+		 	"Hurricane": {},
+	 	}
+	 }
+};
+
+appdata.tables.hexdressing_sea = {
+	"title": "Hex Dressing: Sea",
+	
+	"tables": {
+		"general": [
+			"Large group of crabs swarming the beach",
+			"Large group of turtles on the beach",
+			"A school of dolphins surface off the bow",
+			"A sail in the distance",
+			"The smell of rotting fish",
+			"",
+		]
+	}	
 };

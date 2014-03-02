@@ -42,6 +42,12 @@ Usage
 * Use the Settings tab to set some parameters and defaults. These will be saved in your browser, so will "stick" as long as you don't clear your browser data.
 * Use the Random Tables tab to roll results on tables or to choose from the tables.
 ** Click on tags to filter the list. Click on the x icon next to the current filter to show all tables again.
+* The Import Tables tab let's you save your own tables.
+** The simplest format (put in the table data field) is to use:
+*** One random entry per line.
+*** To weight a random chance, prefix the entry with a number and two pound signs (i.e. "2##This entry will be twice as likely", "4##This entry is four times as likely").
+** It will also accept a JSON string of data.
+*** I still need to document this (and make sure the format is all working right), but if you look in data/randomtables.json you can see some examples.
 * Use the NPCs tab to create new characters. You can click on most fields to edit them (some fields that are generated exclusively from other fields cannot be edited, i.e. Attack Bonus, AC). Click the icons to save/remove/delete.
 ** Assign characters to groups for sorting purposes on the "Saved Characters" list. From that list you can open the full character details (the character card will appear in the right column) or delete the character.
 ** Try printing. You should only get a print-out of the characters displayed in the right column, they should be set up as 5" wide cards (it's hard to limit it to 3" height, but I was going for a 3x5 card output, maybe I can improve this later on).

@@ -656,7 +656,7 @@ appdata.tables.pickpocket = {
 appdata.tables.reaction = {
 	"title": "Encounter Reaction",
 	"source": "Specific language from Lamentations of the Flame Princess Rules & Magic book, but based on D&D.",
-	"tags": ['encounters', 'monsters'],
+	"tags": ["encounters", "monsters"],
 	"description": "See how monsters react.",
 	"table":
 	[
@@ -664,7 +664,7 @@ appdata.tables.reaction = {
 		{ "label": "Unfriendly", "weight": 9 },
 		{ "label": "Indifferent", "weight": 16 },
 		{ "label": "Talkative", "weight": 9 },
-		{ "label": "Helpful", "weight": 1 },
+		{ "label": "Helpful", "weight": 1 }
 	]
 };
 

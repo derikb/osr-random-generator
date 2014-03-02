@@ -30,6 +30,9 @@ var AppRouter = Backbone.Router.extend(
 		
 		$('#dungeon-form').append(new DungeonForm({ model: this.AppSettings }).render().el);
 		
+		this.importer = new Importer();
+		//$('#import-form').append(new ImportForm().render().el);
+		
     },
 	
 	/**
@@ -50,8 +53,10 @@ var AppRouter = Backbone.Router.extend(
         this.dungeonlistview = new DungeonList({model:this.dungeonlist});
 		this.dungeonlist.fetch({silent: true});
         $('#dungeon-list').html(this.dungeonlistview.render().el);
-
+	
+		//load up random tables, first saved ones then hardcoded ones
 		this.rtables = new RTable_Collection();
+		this.rtables.fetch({silent: true});
         this.rtablelist = new RTable_List({model:this.rtables});
 		var load_tables = [];
 		_.each(appdata.tables, function(v, k){
@@ -63,9 +68,8 @@ var AppRouter = Backbone.Router.extend(
 				v = newv;
 			}
 			load_tables.push(v);
-		});
-		//console.log(load_tables);
-		this.rtables.reset(load_tables);
+		}, this);
+		this.rtables.add(load_tables);
         $('#rtable-list').html(this.rtablelist.render().el);
 
     },
