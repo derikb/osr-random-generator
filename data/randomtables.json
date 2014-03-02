@@ -667,21 +667,3 @@ appdata.tables.reaction = {
 		{ "label": "Helpful", "weight": 1 }
 	]
 };
-
-appdata.tables.building_defenses = [
-	"None",
-	"Hidden room",
-	"Basement",
-	"Palisade",
-	"Stone Fortifications"
-];
-
-appdata.tables.building_material = {
-	"table": [
-		"wattle & daub",
-		"logs",
-		"boards",
-		"stone",
-		"brick",
-	]
-};

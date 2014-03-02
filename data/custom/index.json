@@ -109,24 +109,3 @@ add
 
 */
 
-
-appdata.tables.belfel = {
-	"title": "Castle of Fen-Bel wandering monsters",
-	"tables": {
-		"check": [
-			{ "label": "None", "weight": 4 },
-			{ "label": "Encounter", "weight": 2, "print": false, "subtable": "monster" },
-		],
-		"monster": [
-			{ "label": "Rackham", "desc": "Wandered off from #2", "weight": 1 },
-			
-			{ "label": "Pirates (1-2)", "desc": "Wandered or set off from the group, looking for loot, if they detect the party first, they will go for reinforcements or if cornered hide and try to surprise then run for it", "weight": 9 },
-			{ "label": "Tiny zombie creature (crab, lobster, lamprey)", "desc": "Harmless except it will alert its master to the party's location", "weight": 16 },
-			{ "label": "Sahuagin zombie", "desc": "They have clearly been \"killed\" before, some may be missing an arm, or have large wounds, missing facial features, etc. If they have met the pirates they may be missing a leg, crawling on the ground.", "weight": 9 },
-			{ "label": "Giant crab", "desc": "non-zombie, but will become one if it dies) snuck in before the castle rose and then got trapped. Wandered off from the Kitchen (#3)", "weight": 1 },
-		]
-		
-	}
-	
-	
-}
