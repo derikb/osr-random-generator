@@ -75,7 +75,7 @@ var ImportForm = Backbone.View.extend(
     
     /**
      * Make the form
-     * @todo edit this to handle complex tables. Perhaps put each table in a different textarea with an appropriate heading field
+     * @todo edit this to handle complex tables. Perhaps put each table in a different textarea with an appropriate heading field #26
      */
     render: function () {
     	var form = '<p>You can add your own Random Tables through this form. All fields are optional, though you at least need to put in some table data, and a title is recommended if you want to add more than one table.</p><p>You have a lot of options for formatting your data from the very simple to the complex: for now the easiest method is:</p><ul><li>One entry per line.</li><li>To weight a random chance, prefix the entry with a number and two pound signs (i.e. "2##This entry will be twice as likely", "4##This entry is four times as likely").</li></ul><p>You can test the table at right before saving. The Import/export code area shows you the table as converted to JSON (which we can use later for importing/exporting/sharing).</p>';
@@ -111,7 +111,7 @@ var ImportForm = Backbone.View.extend(
 		
 		form += '<div class="form-group"><label for="description" class="control-label">Description</label><input type="text" class="form-control" name="description" id="description" value="'+this.model.get('description')+'" /></div>';
 		
-		form += '<div class="clearfix"><button type=button class="btn btn-default pull-right cancel">Cancel</button><button type="submit" class="btn btn-primary">Preview</button> <button class="btn btn-success save" type="button">Save</button></div>';
+		form += '<div class="row"><div class="col-xs-8"><button type="submit" class="btn btn-primary">Preview</button> <button class="btn btn-success save" type="button">Save</button></div><div class="col-xs-4 text-right"><button type=button class="btn btn-default cancel">Cancel</button></div></div><hr/>';
     
     	$(this.el).html(form);
         return this;
@@ -119,6 +119,7 @@ var ImportForm = Backbone.View.extend(
 
     /**
      * Process the form data and preview
+     * @todo edit this to handle complex tables. Perhaps put each table in a different textarea with an appropriate heading field #26
      */
 	previewTable: function(e) {
 		e.preventDefault();
