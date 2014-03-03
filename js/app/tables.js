@@ -462,12 +462,7 @@ RandomTableInfo = Backbone.View.extend(
 	},
 	
 	confirmDelete: function(e) {
-		console.log(e.target.nodeName);
-		if (e.target.nodeName == 'BUTTON') {
-			$button = $(e.target);
-		} else {
-			$button = $(e.target).parent('button');
-		}
+		$button = $(e.currentTarget);
 		$button.html('Are you sure?');
 		$button.removeClass('conf-delete btn-default').addClass('btn-danger delete');
 	},
@@ -604,6 +599,9 @@ var RTable_Collection = Backbone.Collection.extend(
 	model: RandomTable,
 	localStorage: new Backbone.LocalStorage("osr-random-generator-table"),
 	
+	sortAttribute: "title",
+	sortDirection: 1,
+	
 	/**
 	 * A collection of RandomTables
 	 * Tables are added via appdata.tables (converted to an array of objects in AppRouter)
@@ -629,8 +627,33 @@ var RTable_Collection = Backbone.Collection.extend(
 	 */
 	refresh: function() {
 		this.trigger('refresh')
+	},
+	
+	/**
+	 * Sort the collection's Tables
+	 * @param {String} attr The field to sort by
+	 */
+	sortTables: function (attr) {
+		this.sortAttribute = attr;
+		this.sort();
+	},
+	
+	/**
+	 * Comparator function for sorting
+	 */
+	comparator: function(a, b) {
+		var a = a.get(this.sortAttribute),
+		b = b.get(this.sortAttribute);
+		
+		if (a == b) return 0;
+		
+		//1 is ascending
+		if (this.sortDirection == 1) {
+			return a > b ? 1 : -1;
+		} else {
+			return a < b ? 1 : -1;
+		}
 	}
-
 	
 });
 
@@ -648,7 +671,8 @@ var RTable_List = Backbone.View.extend(
 	
 	events: {
 		'click .tag-filter': 'filter_tag',
-		'click .clear-tag-filter': 'clear_filter'
+		'click .clear-tag-filter': 'clear_filter',
+		"click th": "headerClick"
 	},
 	
 	/**
@@ -660,6 +684,7 @@ var RTable_List = Backbone.View.extend(
 	 */
     initialize:function () {
 		this.listenTo(this.model, 'refresh', this.render);
+		this.listenTo(this.model, 'sort', this.render);
     },
     
     /**
@@ -689,12 +714,40 @@ var RTable_List = Backbone.View.extend(
 		$(this.el).find('caption').html('');
     },
     
+	// Now the part that actually changes the sort order
+	headerClick: function(e) {
+		
+		var $el = $(e.currentTarget),
+		ns = $el.data('column'),
+		cs = this.model.sortAttribute;
+		
+		// Toggle sort if the current column is sorted
+		if (ns == cs) {
+			this.model.sortDirection *= -1;
+		} else {
+			this.model.sortDirection = 1;
+		}
+		
+		// Adjust the indicators.  Reset everything to hide the indicator
+		$el.find('th span.sorter').removeClass('glyphicon-chevron-up glyphicon-chevron-down');
+		
+		// Now show the correct icon on the correct column
+		if (this.model.sortDirection == 1) {
+			$el.find('span[data-column="'+ns+'"]').addClass('glyphicon-chevron-up');
+		} else {
+			$el.find('span[data-column="'+ns+'"]').addClass('glyphicon-chevron-down');
+		}
+		
+		// Now sort the collection
+		this.model.sortTables(ns);
+	},
+    
     render: function () {
     	$(this.el).empty();
     	$(this.el).append('<caption></caption>');
 		$th_row = $('<tr>');
 		_.each(this.theaders, function(v) {
-			$th_row.append('<th>'+v+'</th>');
+			$th_row.append('<th data-column="'+v.toLowerCase()+'">'+v+' <span class="sorter glyphicon"></span></th>');
 		});
 		$(this.el).append($th_row);
 		_.each(this.model.models, function(v,k,l){
