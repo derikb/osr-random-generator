@@ -422,6 +422,7 @@ RandomTableInfo = Backbone.View.extend(
 	
 	events: {
 		'click .delete': 'delete',
+		'click .conf-delete': 'confirmDelete',
 		'click .edit': 'edit'
 	},
 	
@@ -443,7 +444,7 @@ RandomTableInfo = Backbone.View.extend(
 		var temp = '<dl><dt data-field="title">Title</dt><dd data-field="title"><%= title %></dd><dt data-field="author">Author</dt><dd data-field="author"><% if (author == "") { %>[unknown]<% } else { %><%= author %><% } %></dd><dt data-field="source">Source</dt><dd data-field="source"><% if (source == "") { %>[unknown]<% } else { %><%= source %><% } %></dd><dt>Tags</dt><% _.each(tags, function(v,k,l){ %><dd><%= v %></dd><% }) %><dt data-field="description">Description</dt><dd data-field="description"><%= description %></dd></dl>';
 		
 		if (typeof data.id !== 'undefined') {
-			temp += '<button title="Edit" class="btn btn-default edit"><span class="glyphicon glyphicon-edit"></span></button> <button title="Delete" class="btn btn-default delete"><span class="glyphicon glyphicon-remove"></span></button>';
+			temp += '<button title="Edit" class="btn btn-default edit"><span class="glyphicon glyphicon-edit"></span></button> <button title="Delete" class="btn btn-default conf-delete"><span class="glyphicon glyphicon-remove"></span></button>';
 		}
 		
 		return _.template(temp, data);
@@ -454,9 +455,21 @@ RandomTableInfo = Backbone.View.extend(
 	 */
 	delete: function(e) {
 		e.preventDefault();
+		
 		this.model.destroy();
 		this.remove();
 		$('#editmodal').modal('hide');
+	},
+	
+	confirmDelete: function(e) {
+		console.log(e.target.nodeName);
+		if (e.target.nodeName == 'BUTTON') {
+			$button = $(e.target);
+		} else {
+			$button = $(e.target).parent('button');
+		}
+		$button.html('Are you sure?');
+		$button.removeClass('conf-delete btn-default').addClass('btn-danger delete');
 	},
 	
 	/**
@@ -672,10 +685,8 @@ var RTable_List = Backbone.View.extend(
      */
     clear_filter: function(e) {
 	    e.preventDefault();
-	  	var tag = $(e.target).parent().data('tag');
-	  	var caption = '';
 		$('#rtable-list table tr.tag_all').removeClass('hidden');
-		$(this.el).find('caption').html(caption);
+		$(this.el).find('caption').html('');
     },
     
     render: function () {
