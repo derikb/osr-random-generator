@@ -78,10 +78,15 @@ var AppRouter = Backbone.Router.extend(
 	 * Modal utility
 	 * @param {String} title Header for the modal
 	 * @param {String} body Body of the modal
+	 * @param {String} [size] Size class for modal (modal-lg or modal-sm)
 	 */
-	showModal: function(title, body) {
+	showModal: function(title, body, size) {
 		$('#editmodal .modal-title').html(title);
 		$('#editmodal .modal-body').html(body);
+		$('#editmodal .modal-dialog').removeClass('modal-lg modal-sm');
+		if (typeof size !== undefined) {
+			$('#editmodal .modal-dialog').addClass(size);
+		}
 		$('#editmodal').modal({});
 		$('#editmodal').on('shown.bs.modal', function(e) {
 			$(e.target).find('input[type="text"]:first').focus();
