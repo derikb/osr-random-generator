@@ -213,29 +213,71 @@ var RandomTable = Backbone.Model.extend(
 	/**
 	 * Show the table options as a list
 	 * @todo have long lists display in columns
-	 * @returns {Array} the options for iterating in a list
+	 * @returns {String} the table as html lists
 	 */
 	niceList: function() {
 		//iterature through each table
-		var o = '<div class="rtable_select">';
+		
+		//count the number of entries so we can columnize if necessary
+		var t_length = 0, t_tables = 0;
 		_.each(this.get('tables'), function(v,k,l){
+			t_length++;
+			t_tables++;
+			if (_.isArray(v)) {
+				t_length = t_length + v.length;
+			} else {
+				for (key in v) {
+					if (v.hasOwnProperty(key)) { t_length++; }
+				}
+			}
+		}, this);
+		
+		use_columns = false;
+		if (t_length > 50) {
+			use_columns = true;
+			var breakpoint = Math.ceil(t_length/2);
+		}
+		
+		var ct = 0;
+		
+		var o = '<div class="rtable_select">';
+		
+		if (use_columns) {
+			o += '<div class="row">';
+			o += '<div class="col-sm-6">';
+		}
+		
+		_.each(this.get('tables'), function(v,k,l){
+			
+			//most of the time we break in between tables (except single long tables, see below)
+			if (use_columns && breakpoint) {
+				if (ct >= breakpoint) {
+					o += '</div><div class="col-sm-6">';
+					breakpoint = false;
+				}
+			}
+			
 			if (k !== 'default') {
 				o += '<header>'+k.capitalize()+'</header>';
+				ct++;
 			}
 			o += '<ol class="list-unstyled">';
+
 			var tweight1 = 0, tweight0 = 0;
 			_.each(v, function(vx,kx,lx){
 				tweight0 = tweight1 + 1;
 				var weight1 = (typeof vx.weight !== 'undefined') ? vx.weight : 1;
 				tweight1 = tweight1 + weight1;
 				var num = (tweight0 == tweight1) ? tweight0 : tweight0+'-'+tweight1;
-				
+								
 				if (_.isArray(lx) && _.isString(vx)) {
 					//its an Array of strings
 					o += '<li>'+num+'. '+vx.capitalize();
+					ct++;
 				} else if (_.isString(kx)) {
 					
 					o += '<li>'+num+'. '+kx.capitalize();
+					ct++;
 					//vx is an object
 					if (typeof vx.description !== 'undefined') {
 						o += ' - '+vx.description;
@@ -268,15 +310,29 @@ var RandomTable = Backbone.Model.extend(
 					}
 				} else {
 					o += '<li>'+num+'. '+vx.label;
+					ct++;
 					if (typeof vx.description !== 'undefined') {
 						o += ' - '+vx.description;
 					}
 					
 				}
 				o += '</li>';
+				
+				//for single long tables we'll break in the list itself
+				if (use_columns && breakpoint && t_tables == 1) {
+					if (ct >= breakpoint) {
+						o += '</ol></div><div class="col-sm-6"><ol class="list-unstyled">';
+						breakpoint = false;
+					}
+				}
+				
 			}, this);
 			o += '</ol>';
 		}, this);
+		
+		if (use_columns) {
+			o += '</div></div>';
+		}
 		
 		o += '</div>';
 		return o;		
@@ -385,7 +441,7 @@ var RandomTableShort = Backbone.View.extend(
      */
     pick: function() {
 	    editv = new RandomTablePicker({ model: this.model });
-	    app.showModal('Table Options: '+editv.model.get('title'), editv.render().el);		
+	    app.showModal('Table Options: '+editv.model.get('title'), editv.render().el, 'modal-lg');		
     },
     
     /**
