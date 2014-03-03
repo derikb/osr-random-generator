@@ -323,8 +323,7 @@ var RandomTableShort = Backbone.View.extend(
 	events: {
 		'click .roll': 'roll',
 		'click .pick': 'pick',
-		'click .info': 'info',
-		'click .tag-filter': 'filter_tag'
+		'click .info': 'info'
 	},
 	
 	/**
@@ -397,17 +396,6 @@ var RandomTableShort = Backbone.View.extend(
 	    app.showModal('Table Info: '+editv.model.get('title'), editv.render().el);		
     },
 	
-	/**
-	 * only show the tables with the clicked tag
-	 * an event is also triggered in {@link RTable_List}
-	 */
-	filter_tag: function(e) {
-		e.preventDefault();
-		var tag = $(e.target).data('tag');
-		if (tag == '') { tag = 'all'; }
-		$('#rtable-list table tr.tag_all').addClass('hidden');
-		$('#rtable-list table tr.tag_'+tag).removeClass('hidden');
-	}
 	
 });
 
@@ -668,6 +656,7 @@ var RTable_List = Backbone.View.extend(
 	tagName:'table',
 	className: 'table table-striped',
 	theaders: ['Title', 'Description', 'Tags', 'Actions'],
+	tagFilters: [],
 	
 	events: {
 		'click .tag-filter': 'filter_tag',
@@ -688,38 +677,88 @@ var RTable_List = Backbone.View.extend(
     },
     
     /**
-     * when a filter is clicked in RandomTableShort view
-     * update the table caption
+     * when a tag filter is clicked in RandomTableShort view
+     * adds tag to filter list
      */
     filter_tag: function(e) {
 	  	e.preventDefault();
 	  	var tag = $(e.target).data('tag');
+	  	if (_.contains(this.tagFilters, tag)) {
+		  	return;
+	  	}
 
-	  	if (tag == 'all') {
-		  	var caption = '';
-		  	$('#rtable-list table tr.tag_all').removeClass('hidden');
+	  	if (tag == 'all' || tag == '') {
+		  	this.tagFilters = [];
 	  	} else {
-		  	var caption = 'Viewing tables tagged: <span class="badge">'+tag+'</span> <a href="" class="clear-tag-filter" data-tag="all"><span class="glyphicon glyphicon-remove-circle"></span></a>';
+	  		this.tagFilters.push(tag);
 	  	}
 	  	
-	  	$(this.el).find('caption').html(caption);
+	  	this.filter_rows();
+	  	this.filter_caption();
     },
     
     /**
-     * clear the filter, show all tables, remove caption
+     * clear one or all tag filters
      */
     clear_filter: function(e) {
 	    e.preventDefault();
-		$('#rtable-list table tr.tag_all').removeClass('hidden');
-		$(this.el).find('caption').html('');
+	    var $badge = $(e.currentTarget);
+	    var cur_tag = $badge.attr('data-tag');
+	    if (cur_tag == 'all' || cur_tag == '') {
+			this.tagFilters = [];
+		} else {
+			this.tagFilters = _.filter(this.tagFilters, function(tag){ return tag !== cur_tag; }, this);
+			
+		}
+		
+		this.filter_rows();
+		this.filter_caption();
     },
     
-	// Now the part that actually changes the sort order
+    /**
+     * Adjust the caption based on tag filters
+     */
+    filter_caption: function() {
+		if (this.tagFilters.length == 0) {
+			$(this.el).find('caption').empty();
+			return;
+		}
+		
+		var caption = 'Viewing tables tagged: ';
+		_.each(this.tagFilters, function(v){
+			caption += '<span class="badge clear-tag-filter" data-tag="'+v+'">'+v+' <span class="glyphicon glyphicon-remove-circle"></span></span> ';
+		}, this);
+		caption += ' <a href="" class="clear-tag-filter" data-tag="all"><span class="glyphicon glyphicon-remove-circle"></span></a>';
+		
+		$(this.el).find('caption').html(caption);  
+    },
+    
+    /**
+     * Uses the tag filters to show/hide rows
+     */
+    filter_rows: function(){
+		if (this.tagFilters.length == 0) {
+			$('#rtable-list table tr.tag_all').removeClass('hidden');
+			return;
+		}
+				  
+		$(this.el).find('tr.tag_all').addClass('hidden');
+  		var classes = this.tagFilters.join('.tag_');
+  		classes.replace(/\.tag_$/, '');
+  		if (classes !== '') { classes = '.tag_'+classes; }
+  		$(this.el).find('tr'+classes).removeClass('hidden');		  
+    },
+    
+	/**
+	 * event for clicking on th to sort table
+	 */
 	headerClick: function(e) {
 		
 		var $el = $(e.currentTarget),
 		ns = $el.data('column'),
 		cs = this.model.sortAttribute;
+		
+		if (ns == 'actions') { return; }
 		
 		// Toggle sort if the current column is sorted
 		if (ns == cs) {
@@ -728,33 +767,35 @@ var RTable_List = Backbone.View.extend(
 			this.model.sortDirection = 1;
 		}
 		
-		// Adjust the indicators.  Reset everything to hide the indicator
-		$el.find('th span.sorter').removeClass('glyphicon-chevron-up glyphicon-chevron-down');
-		
-		// Now show the correct icon on the correct column
+		$(this.el).find('th span.sorter').removeClass('glyphicon-chevron-up glyphicon-chevron-down');
 		if (this.model.sortDirection == 1) {
-			$el.find('span[data-column="'+ns+'"]').addClass('glyphicon-chevron-up');
+			$el.find('span').addClass('glyphicon-chevron-up');
 		} else {
-			$el.find('span[data-column="'+ns+'"]').addClass('glyphicon-chevron-down');
+			$el.find('span').addClass('glyphicon-chevron-down');
 		}
 		
-		// Now sort the collection
 		this.model.sortTables(ns);
 	},
     
+    /**
+     * Build/show the table, filter as appropriate (for rerender actions)
+     */
     render: function () {
     	$(this.el).empty();
     	$(this.el).append('<caption></caption>');
 		$th_row = $('<tr>');
 		_.each(this.theaders, function(v) {
-			$th_row.append('<th data-column="'+v.toLowerCase()+'">'+v+' <span class="sorter glyphicon"></span></th>');
-		});
+			var icon = (this.model.sortAttribute == v.toLowerCase()) ? (this.model.sortDirection == 1) ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down' : '';
+			$th_row.append('<th data-column="'+v.toLowerCase()+'">'+v+' <span class="sorter glyphicon '+icon+'"></span></th>');
+		}, this);
 		$(this.el).append($th_row);
 		_.each(this.model.models, function(v,k,l){
 			$(this.el).append(new RandomTableShort({model:v}).render().el);
     	}, this);
+    	
+    	this.filter_rows();
+	  	this.filter_caption();
 
-		/** @todo after render we could work in DataTables for sorting? #25 */
         return this;
     }
 	
