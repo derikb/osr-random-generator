@@ -67,6 +67,7 @@ var AppRouter = Backbone.Router.extend(
 				var newv = { title: k, table: v };
 				v = newv;
 			}
+			v.key = k;
 			load_tables.push(v);
 		}, this);
 		this.rtables.add(load_tables);
@@ -117,6 +118,8 @@ var AppSettings = Backbone.Model.extend(
 			rules_set: 'lotfp',
 			personality_type: 'onewordtraits',
 			appearance_type: 'onthenpc',
+			goals_type: 'character_goals',
+			occupation_type: 'medieval_occupations',
 			personality_count: 2,
 			appearance_count: 2,
 			chargroup: [],

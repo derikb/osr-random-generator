@@ -27,6 +27,8 @@ var RandomTable = Backbone.Model.extend(
 	 *
 	 * @augments external:Backbone.Model
 	 * @constructs
+	 * @property {String} key identifier for the table
+	 * @property {String} id id for the table if it is locally saved
 	 * @property {String} [title] title of the table
 	 * @property {String} [author] author of the table
 	 * @property {String} [description] description of the table
@@ -190,13 +192,18 @@ var RandomTable = Backbone.Model.extend(
 	 * Show the results as a string
 	 * @todo make this nicer/clearer #23
 	 * Alternate: write a template to use in the views?
+	 * @param {Boolean} [simple=false] if true only output the first result label
 	 * @returns {String} the results
 	 */
-	niceString: function() {
+	niceString: function(simple) {
+		if (typeof simple == 'undefined') {
+			simple = false;
+		}
 		var r = this.get('result');
 		if (r == '') { return ''; }
 		//console.log(r);
 		if (_.isString(r)) { return r; }
+		if (simple) { return r[0]['result']; }
 		var o = '';
 		_.each(r, function (v){
 			if (v.table == 'default') {
@@ -735,6 +742,48 @@ var RTable_Collection = Backbone.Collection.extend(
 		} else {
 			return a < b ? 1 : -1;
 		}
+	},
+	
+	/**
+	 * Return a table from the collection
+	 * @Param {String} title which random table to get
+	 * @returns {Object} the randomtable model
+	 */
+	getTable: function(title) {
+		if (typeof title == 'undefined' || title == '') {
+			return {};
+		}
+		console.log(title);
+		console.log(this.findWhere({ key: title }));
+		
+		var t = this.findWhere({ key: title });
+		if (typeof t == 'undefined') {
+			t = this.findWhere({ title: title });
+		}
+		if (typeof t == 'undefined') {
+			return {};
+		}
+		return t; 
+	},
+	
+	/**
+	 * Return an array of tables from the collection
+	 * @Param {String} tag a tag to search on
+	 * @returns {Array} of randomtable models
+	 */
+	getTables: function(tag) {
+		if (typeof tag == 'undefined' || tag == '') {
+			return [];
+		}
+		//console.log(tag);
+		var t = this.filter(function(model){
+			return ( _.indexOf(model.get('tags'), tag) >= 0 );
+		});
+		//console.log(t);
+		if (typeof t == 'undefined') {
+			return [];
+		}
+		return t; 
 	}
 	
 });

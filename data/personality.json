@@ -976,7 +976,7 @@ appdata.tables.character_goals = {
 	"author": " Randall S Stukey",
 	"source": "<a href=\"http://blog.retroroleplaying.com/2013/03/tarnhelms-terrible-tome-house-rules-for.html\">Tarnheim's Terrible Tome</a> by Randall S Stukey; with a few additions by Derik Badman",
 	"description": "Short character goals",
-	"tags": ['npcs', 'personality'],
+	"tags": ['npcs', 'personality', 'goals'],
 	"table": [
 		"Furtherance of Scholarly Studies",
 		"Furtherance of Art",

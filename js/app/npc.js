@@ -27,7 +27,7 @@ var Character = Backbone.Model.extend(
 			spells: {},
 			personality: [],
 			appearance: [],
-			goal: '',
+			goals: '',
 			armor: '',
 			weapon: '',
 			reaction_roll: 0
@@ -55,7 +55,7 @@ var Character = Backbone.Model.extend(
 	 * @property {Object} spells spell list { "Level 1": array of spells, etc. }
 	 * @property {Array} personality Personality traits
 	 * @property {Array} appearance Appearance traits
-	 * @property {String} goal Character Goal
+	 * @property {String} goals Character Goals
 	 * @property {String} armor Armor Worn
 	 * @property {String} weapon Weapon carried
 	 * @property {Number} reaction_roll Default reaction
@@ -209,9 +209,9 @@ var Character = Backbone.Model.extend(
 		if (cclass == 'random') {
 			this.set('charclass', app.randomizer.getWeightedRandom(this.getRules().classes.random.options, this.getRules().classes.random.weight) );
 		} else if (cclass == 'none') {
-			var oc = new RandomTable(appdata.tables.medieval_occupations);
+			var oc = app.rtables.getTable(app.AppSettings.get('occupation_type')); 
 			oc.generateResult();
-			this.set('occupation', oc.get('result')[0]['result']);
+			this.set('occupation', oc.niceString(true));
 		}
 	},
 
@@ -221,7 +221,7 @@ var Character = Backbone.Model.extend(
 	selectArmor: function() {
 		var charclass = this.get('charclass');
 		if (charclass == 'none') {
-			var t = new RandomTable(appdata.tables.medieval_occupations);
+			var t = app.rtables.getTable(app.AppSettings.get('occupation_type'));
 			var occ = t.findObject(this.get('occupation'));
 			if (typeof occ.armor == 'undefined') { return ''; }
 			if (occ.armor == false) { return ''; }
@@ -349,11 +349,10 @@ var Character = Backbone.Model.extend(
 	 */
 	selectPersonality: function(ct) {
 		var personality = [];
-		eval('var ptable = appdata.tables.'+app.AppSettings.get('personality_type')+';');
-		var p = new RandomTable(ptable)
+		var ptable = app.rtables.getTable(app.AppSettings.get('personality_type')); 
 		for(var i=1;i<=ct;i++){
-			p.generateResult();
-			personality.push(p.niceString());
+			ptable.generateResult();
+			personality.push(ptable.niceString());
 		}
 		this.set('personality', personality);
 	},
@@ -363,22 +362,20 @@ var Character = Backbone.Model.extend(
 	 * @param {Number} ct Number of traits to set
 	 */
 	selectAppearance: function(ct) {
-		//var appearance =  _.sample(appdata.appearance[app.AppSettings.get('appearance_type')], ct);
 		var appearance = [];
-		eval('var atable = appdata.tables.'+app.AppSettings.get('appearance_type')+';');
-		var a = new RandomTable(atable)
+		var atable = app.rtables.getTable(app.AppSettings.get('appearance_type'));
 		for(var i=1;i<=ct;i++){
-			a.generateResult();
-			appearance.push(a.niceString());
+			atable.generateResult();
+			appearance.push(atable.niceString());
 		}
 		this.set('appearance', appearance);
 	},
 	
 	/**
-	 * Select/Set goal traits
+	 * Select/Set goals traits
 	 */
-	selectGoal: function() {
-		var g = new RandomTable(appdata.tables.character_goals);
+	selectGoals: function() {
+		var g = app.rtables.getTable('character_goals');
 		g.generateResult();
 		return  g.niceString();
 	},
@@ -387,7 +384,7 @@ var Character = Backbone.Model.extend(
 	 * Set Reaction Roll
 	 */
 	rollReaction: function() {
-		var t = new RandomTable(appdata.tables.reaction);
+		var t = app.rtables.getTable('reaction');
 		t.generateResult();
 		return t.niceString();
 	},
@@ -405,7 +402,7 @@ var Character = Backbone.Model.extend(
 		this.calcAttack();
 		this.selectPersonality(app.AppSettings.get('personality_count'));
 		this.selectAppearance(app.AppSettings.get('appearance_count'));
-		this.set('goal', this.selectGoal());
+		this.set('goals', this.selectGoals());
 		this.set('armor', this.selectArmor());
 		this.calcAC();
 		this.set('reaction_roll', this.rollReaction());
@@ -532,7 +529,7 @@ var CharacterBlock = Backbone.View.extend(
 	    	
 	    	char_full += '</div><div class="col-xs-6">';
     	
-			char_full += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goal">Goal</dt><dd><span data-field="goal"><%= goal %></span></dd></dl>';
+			char_full += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goals">Goals</dt><dd><span data-field="goals"><%= goals %></span></dd></dl>';
 			
     	} else {
     	
@@ -552,7 +549,7 @@ var CharacterBlock = Backbone.View.extend(
     	
     		char_full += '<dl class="dl-horizontal clearfix"><dt data-field="chargroup">Group</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
     	
-    		char_full += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goal">Goal</dt><dd><span data-field="goal"><%= goal %></span></dd></dl>';
+    		char_full += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goals">Goals</dt><dd><span data-field="goals"><%= goals %></span></dd></dl>';
     	
     		char_full += '<% if (spellcaster == true) { %><section><h4 data-field="spells">Spells</h4><dl class=""><% _.each(spells, function(v,k) { %><dt data-field="spells"><%= k %></dt><% _.each(v, function(y,x) { %><dd class="spell" data-spell="<%= y %>"><%= y %> <span class="glyphicon glyphicon-info-sign"></span></dd><% }); }); %></dl></section><% } %>'; //spells
 		
@@ -712,9 +709,10 @@ var CharacterEditView = Backbone.View.extend(
 		var inputtarget = $(e.target).attr('data-targetfield');
 		var list = $(e.target).attr('data-list');
 		
-		if (this.field == 'personality' || this.field == 'appearance') {
-			var newval = app.randomizer.rollRandom(appdata[this.field][list]);
-			$('#'+inputtarget).val(newval);
+		if (this.field == 'personality' || this.field == 'appearance' || this.field == 'goals') {
+			var t = app.rtables.getTable(list);
+			t.generateResult();
+			$('#'+inputtarget).val(t.niceString());
 		} else if (this.field == 'name') {
 			
 			var newval = this.model.generateName(list);
@@ -726,9 +724,6 @@ var CharacterEditView = Backbone.View.extend(
 			var charclass = this.model.get('charclass');
 			var spelllist = this.model.getRules().classes[charclass].spelllist;		
 			var newval = _.sample(appdata.spells.bylevel[spelllist][list]);
-			$('#'+inputtarget).val(newval);
-		} else if (this.field == 'goal') {
-			var newval = _.sample(appdata.personality.goals);
 			$('#'+inputtarget).val(newval);
 		}
 		
@@ -776,7 +771,7 @@ var CharacterEditView = Backbone.View.extend(
 			
 			case 'occupation':
 				form += '<div class="form-group"><label for="occupation" class="control-label">Occupation</label><select class="form-control" id="occupation" name="occupation">';
-					var t = new RandomTable(appdata.tables.medieval_occupations);
+					var t = app.rtables.getTable(app.AppSettings.get('occupation_type'));
 					_.each(t.selectList('default'), function(v) {
 						var sel = (v.label == this.model.get(field)) ? 'selected=selected' : '';
 						form += '<option value="'+v.label+'" '+sel+'>'+v.label.capitalize()+'</option>';
@@ -788,31 +783,28 @@ var CharacterEditView = Backbone.View.extend(
 			
 			case 'personality':
 			case 'appearance':
+			case 'goals':
 				
 				var cur = this.model.get(field);
+				if (typeof cur == 'string') {
+					cur = [cur];
+				}
 				
 				for(var i=0; i<cur.length; i++) {
 					var num = i+1;
 					form += '<div class="form-group"><label class="control-label" for="edit'+field+'_'+i+'">'+field.capitalize()+' '+num+'</label><div class="input-group"><input type=text class="form-control" id="edit'+field+'_'+i+'" name="'+field+'" value="'+cur[i]+'" />';
 					
 					form += '<div class="input-group-btn"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Randomly Replace from... <span class="caret"></span></button><ul class="dropdown-menu pull-right">';
-						_.each(appdata[field]['options'], function(v,k){
-							form += '<li><a class="randomize" href="#" data-targetfield="edit'+field+'_'+i+'" data-list="'+v.option+'">'+v.label+'</a></li>';
+						var options = app.rtables.getTables(field);
+						_.each(options, function(v,k){
+							form += '<li><a class="randomize" href="#" data-targetfield="edit'+field+'_'+i+'" data-list="'+v.get('key')+'">'+v.get('title')+'</a></li>';
 						});			
 					form += '</ul></div></div></div>';
 					
 				}
 			
 				break;
-			
-			case 'goal':
-				
-				form += '<div class="form-group"><label class="control-label" for="edit'+field+'_'+i+'">'+field.capitalize()+'</label><div class="input-group"><input type=text class="form-control" id="edit'+field+'_'+i+'" name="'+field+'" value="<%= '+field+' %>" />';
-					
-					form += '<div class="input-group-btn"><button type="button" class="btn btn-default randomize" data-targetfield="edit'+field+'_'+i+'" data-list="goals">Randomly Replace</button></div></div></div>';
-				
-				break;
-				
+							
 			case 'gender':
 			
 				form += '<div class="form-group">';

@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+v0.4 - 2014-xx-xx
+-----------------
+
+* Improved tag filtering on Random Tables (you can use multiple tags at a time now and clear them individually) and added column sorting (though it's mostly only useful for title sort as sorting by tags or description seems useless).
+* Long/large Random Tables will break into two columns when viewing the full tables (also increased width of that modal for easier reading).
+* Fixes to some broken NPC elements caused by the last update. Moved more of the process into RandomTable models/methods and the related collection. This should increase flexibility further along for adding and using custom tables for personality/appearance/goals/occupation of NPCs.
 
 v0.3 - 2014-03-02
 -----------------
