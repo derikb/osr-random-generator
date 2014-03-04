@@ -396,6 +396,19 @@ var RandomTable = Backbone.Model.extend(
 			 return _.findWhere(t, { label: label });
 		 }
 		 return t[label];
+	 },
+	 
+	 /**
+	  * find the result element for a specific table
+	  * @param {String} table The table to look for
+	  * @returns {Object} result element for specified table (or empty)
+	  */
+	 findResultElem: function(table) {
+	 	if (typeof table == 'undefined' || table == '') {
+		 	table = 'default';
+	 	}
+	 	//console.log(_.findWhere(this.get('result'), { table: table }));
+		return _.findWhere(this.get('result'), { table: table });		 
 	 }
 	
 	

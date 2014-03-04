@@ -126,6 +126,13 @@ var AppSettings = Backbone.Model.extend(
 			character_display: 'full',
 			ability_display: 'full',
 			
+			dungeon: {
+				stocking_table: 'moldvay_stocking',
+				trap_table: 'traps_campbell',
+				special_table: 'bag_tricks_2',
+				monster_table: 'labyrinthlord',	
+			},
+			
 			hexdressing_count: 3,
 			encounter_count: 5,
 		}	
@@ -504,6 +511,23 @@ var AppRandomizer = function() {
  */
 String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
+
+/**
+ * conver <br> tags to new lines
+ * @returns {String} string with new lines instead of br tags
+ */
+String.prototype.br2nl = function() {
+    return this.replace(/<br\s*\/?>/mg,"\n");
+}
+
+/**
+ * conver <br> tags to new lines
+ * @returns {String} string with new lines instead of br tags
+ */
+String.prototype.nl2br = function() {
+    return this.replace(/([\n\r]+)/mg, "<br/>");
 }
 
 /**

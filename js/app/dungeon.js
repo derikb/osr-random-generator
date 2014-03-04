@@ -56,8 +56,17 @@ var Dungeon = Backbone.Model.extend(
 	 */
 	generateRoom: function(roomnumber) {
 		var room = { number: roomnumber, content: 'Empty', monster_type: '', trap_type: '', special_type: '', treasure_type: '' };
-		room.content = app.randomizer.rollRandom(appdata.dungeon.rooms.content);
-		room.treasure = app.randomizer.rollRandom(appdata.dungeon.rooms.content[room.content].treasure);
+		//room.content = app.randomizer.rollRandom(appdata.dungeon.rooms.content);
+		//room.treasure = app.randomizer.rollRandom(appdata.dungeon.rooms.content[room.content].treasure);
+		
+		var ctable = app.rtables.getTable(app.AppSettings.get('dungeon').stocking_table);
+		ctable.generateResult();
+		console.log(ctable.get('result'));
+		
+		room.content = ctable.findResultElem('content').result;
+		room.treasure = ctable.findResultElem('treasure').result;
+		
+		console.log(room);
 		
 		if (room.content == 'monster') {
 			var mon = app.randomizer.rollRandom(this.generateMonsterList());
@@ -101,9 +110,9 @@ var Dungeon = Backbone.Model.extend(
 	 * @returns {String} trap description
 	 */	
 	generateTrap: function() {
-		var traptable = new RandomTable(appdata.tables.traps_campbell);
-		traptable.generateResult();
-		return traptable.niceString();
+		var t = app.rtables.getTable(app.AppSettings.get('dungeon').trap_table);
+		t.generateResult();
+		return t.niceString();
 	},
 	
 	/**
@@ -111,10 +120,9 @@ var Dungeon = Backbone.Model.extend(
 	 * @returns {String} special description
 	 */	
 	generateSpecial: function() {
-		//?
-		var specialtable = new RandomTable(appdata.tables.bag_tricks_2);
-		specialtable.generateResult();
-		return specialtable.niceString();
+		var t = app.rtables.getTable(app.AppSettings.get('dungeon').special_table);
+		t.generateResult();
+		return t.niceString();
 	},
 
 	/**
@@ -196,8 +204,8 @@ var DungeonDetails = Backbone.View.extend(
 		'click .delete': 'deleteDungeon',
 		'click .remove': 'removeDungeon',
 		/** @todo reenable editing #19 */
-		//'click *[data-field]': 'editField',
-		//'click *[data-room]': 'editRoom',
+		'click *[data-field]': 'editField',
+		'click *[data-room]': 'editRoom',
 	},
 	
 	/**
@@ -445,6 +453,10 @@ var DungeonEditView = Backbone.View.extend(
 			formdata.number = parseInt(formdata.number);
 			var index = formdata.number - 1;
 			
+			formdata.trap_type = formdata.trap_type.nl2br();
+			formdata.treasure_type = formdata.treasure_type.nl2br();
+			formdata.special_type = formdata.special_type.nl2br();
+			
 			rooms[index] = formdata;
 			
 			this.model.set('rooms', rooms);
@@ -468,8 +480,10 @@ var DungeonEditView = Backbone.View.extend(
 			//console.log(newroom);
 			$('#editcontent').val(newroom.content);
 			$('#editmonster_type').val(newroom.monster_type);
-			$('#edittrap_type').val(newroom.trap_type);
+			$('#edittrap_type').val(newroom.trap_type.br2nl());
+			$('#editspecial_type').val(newroom.special_type.br2nl());
 			$('#edittreasure').val(newroom.treasure);
+			$('#edittreasure_type').val(newroom.treasure_type.br2nl());
 		}
 		
 	},
@@ -484,21 +498,7 @@ var DungeonEditView = Backbone.View.extend(
 		//console.log(this);
 		var form = '<form>';
 		switch (field) {
-						
-			case 'hexdressing':
-				
-				var cur = this.model.get(field);
-				
-				for(var i=0; i<cur.length; i++) {
-					var num = i+1;
-					form += '<div class="form-group"><label class="control-label" for="edit'+field+'_'+i+'">'+field.capitalize()+' '+num+'</label><div class="input-group"><input type=text class="form-control" id="edit'+field+'_'+i+'" name="'+field+'" value="'+cur[i]+'" />';
-					
-					form += '<div class="input-group-btn"><button type="button" class="btn btn-default randomize" data-targetfield="edit'+field+'_'+i+'" data-list="'+field+'">Randomly Replace</button></div></div></div>';
-					
-				}
-			
-				break;
-			
+									
 			case 'rooms':
 
 				var rooms = this.model.get('rooms');
@@ -509,9 +509,10 @@ var DungeonEditView = Backbone.View.extend(
 				form += '<input type=hidden id=room_number name=number value="'+this.roomnumber+'" />';
 
 				form += '<div class="form-group"><label class="control-label" for="editcontent">Content</label><select class="form-control" id="editcontent" name="content">';
-					_.each(appdata.dungeon.rooms.content, function(v,k,l){
-						var sel = (room.content == k) ? 'selected=selected' : '';
-						form += '<option value="'+k+'" '+sel+'>'+k.capitalize()+'</option>';
+					var stable = app.rtables.getTable(app.AppSettings.get('dungeon').stocking_table);
+					_.each(stable.selectList('content'), function(v,k,l){
+						var sel = (room.content == v.label) ? 'selected=selected' : '';
+						form += '<option value="'+v.label+'" '+sel+'>'+v.label.capitalize()+'</option>';
 					}, this);
 					
 				form += '</select></div>';
@@ -520,12 +521,14 @@ var DungeonEditView = Backbone.View.extend(
 				form += '<div class="form-group"><label class="control-label" for="editmonster_type">Monster</label><input type=text class="form-control" id="editmonster_type" name="monster_type" value="'+room.monster_type+'" /><span class="help-block"></span></div>';
 				
 				//trap
-				form += '<div class="form-group"><label class="control-label" for="edittrap_type">Trap</label><input type=text class="form-control" id="edittrap_type" name="trap_type" value="'+room.trap_type+'" /><span class="help-block"></span></div>';
+				form += '<div class="form-group"><label class="control-label" for="edittrap_type">Trap</label><textarea class="form-control" id="edittrap_type" name="trap_type" rows="6">'+room.trap_type.br2nl()+'</textarea><span class="help-block"></span></div>';
 				
 				//special
+				form += '<div class="form-group"><label class="control-label" for="editspecial_type">Special</label><textarea class="form-control" id="editspecial_type" name="special_type" rows="6">'+room.special_type.br2nl()+'</textarea><span class="help-block"></span></div>';
 				
 				//treasure
-				form += '<div class="form-group"><label class="control-label" for="edittreasure">Treasure</label><input type=text class="form-control" id="edittreasure" name="treasure" value="'+room.treasure+'" /><span class="help-block"></span></div>';
+				form += '<input type=hidden id=treasure name=treasure value="'+room.treasure+'" />';
+				form += '<div class="form-group"><label class="control-label" for="edittreasure_type">Treasure</label><textarea class="form-control" id="edittreasure_type" name="treasure_type" rows="6">'+room.treasure_type.br2nl()+'</textarea><span class="help-block"></span></div>';
 				
 				//reroll room
 				form += '<div class="form-group"><button type="button" class="btn btn-warning randomize" data-targetfield="rooms">Reroll Room</button></div>';
