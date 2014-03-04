@@ -212,7 +212,6 @@ var RandomTable = Backbone.Model.extend(
 	
 	/**
 	 * Show the table options as a list
-	 * @todo have long lists display in columns
 	 * @returns {String} the table as html lists
 	 */
 	niceList: function() {
@@ -352,7 +351,46 @@ var RandomTable = Backbone.Model.extend(
 		}, this);
 		delete att.id;
 		return JSON.stringify(att, null, 5);
-	}
+	},
+	
+	/**
+	 * Show the table options as an array suitable for iteration
+	 * @param {String} table the table to list
+	 * @returns {Array} array of objects to iterate over, normalized to label...?
+	 */
+	selectList: function(table) {
+		var table = this.get('tables')[table];
+		var o = [];
+		_.each(table, function(v,k){
+			var e = {};
+			if (_.isString(k)) {
+				e.label = k;
+			} else {
+				e.label = v.label;
+			}
+			o.push(e);
+		}, this);
+		return o;
+	},
+	
+	
+	/**
+	 * Get an object result in case we only have the label and need other data from it
+	 * @param {String} label The item we are looking for
+	 * @param {String} [table=default] the table to search
+	 * @returns {Object} the object associated with the label
+	 */
+	 findObject: function(label, table) {
+		 if (typeof table == 'undefined') {
+			 table = 'default';
+		 }
+		 var t = this.get('tables')[table];
+		 if (typeof t[label] == 'undefined') {
+			 return _.findWhere(t, { label: label });
+		 }
+		 return t[label];
+	 }
+	
 	
 });
 

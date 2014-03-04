@@ -221,7 +221,8 @@ var Character = Backbone.Model.extend(
 	selectArmor: function() {
 		var charclass = this.get('charclass');
 		if (charclass == 'none') {
-			var occ = _.findWhere(appdata.tables.medieval_occupations.table, { label: this.get('occupation') });
+			var t = new RandomTable(appdata.tables.medieval_occupations);
+			var occ = t.findObject(this.get('occupation'));
 			if (typeof occ.armor == 'undefined') { return ''; }
 			if (occ.armor == false) { return ''; }
 		}
@@ -775,8 +776,8 @@ var CharacterEditView = Backbone.View.extend(
 			
 			case 'occupation':
 				form += '<div class="form-group"><label for="occupation" class="control-label">Occupation</label><select class="form-control" id="occupation" name="occupation">';
-					/** @todo make this part of the RandomTable class outputs */
-					_.each(appdata.tables.medieval_occupations.table, function(v,k,l) {
+					var t = new RandomTable(appdata.tables.medieval_occupations);
+					_.each(t.selectList('default'), function(v) {
 						var sel = (v.label == this.model.get(field)) ? 'selected=selected' : '';
 						form += '<option value="'+v.label+'" '+sel+'>'+v.label.capitalize()+'</option>';
 						
