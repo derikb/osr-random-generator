@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-v0.4 - 2014-xx-xx
+v0.4 - 2014-03-04
 -----------------
 
 * Improved tag filtering on Random Tables (you can use multiple tags at a time now and clear them individually) and added column sorting (though it's mostly only useful for title sort as sorting by tags or description seems useless).
