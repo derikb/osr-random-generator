@@ -563,6 +563,9 @@ RandomTableInfo = Backbone.View.extend(
 		$('#editmodal').modal('hide');
 	},
 	
+    /**
+     * Updates the delete button to make you click it twice to delete
+     */
 	confirmDelete: function(e) {
 		$button = $(e.currentTarget);
 		$button.html('Are you sure?');

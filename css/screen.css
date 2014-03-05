@@ -6,8 +6,8 @@ caption {
 }
 
 section h1 {
-	margin-top: 10px;
-	font-size: 25px;
+	margin-top: 5px;
+	font-size: 24px;
 	margin-bottom: 20px;
 	border-bottom: 1px solid #eee;
 	padding-bottom: 5px;
@@ -40,8 +40,10 @@ dd { margin-left: 10px; }
 	margin-bottom: 10px;
 }
 
-.delete, .conf-delete { color: rgb(169, 68, 66); margin-left: 10px; }
-.edit { margin-left: 10px; }
+.dungeon-form button { margin-top: 25px; }
+
+.delete .glyphicon, .conf-delete .glyphicon { color: rgb(169, 68, 66); }
+.delete, .conf-delete, .edit { margin-left: 10px; }
 .character-block .delete { margin-left: 50px; }
 
 .character-block, .wilderness-details, .dungeon-details {
@@ -50,6 +52,24 @@ dd { margin-left: 10px; }
 	border-radius: 5px;
 	margin-bottom: 10px;
 	background-color: aliceblue;
+}
+
+.dungeon-room {
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 5px;
+	margin-bottom: 5px;
+}
+.dungeon-room h3 {
+	font-size: 16px;
+	margin-top: 0px;
+}
+.dungeon-room dl {
+	margin-bottom: 0px;
+}
+.dungeon-room dt {
+	float: left;
+	margin-right: 10px;
 }
 
 li.character-list, li.chargroup-list, li.wilderness-list, li.dungeon-list {
@@ -87,5 +107,8 @@ fieldset fieldset legend {
 	.modal-header .close { font-size: 30px; }
 	.badge { font-size: 14px; margin: 5px; }
 	caption a { font-size: 20px; }
+	
+	.dungeon-form button { margin-top: 0px; }
+
 
 }

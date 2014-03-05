@@ -170,7 +170,7 @@ var DungeonCollection = Backbone.Collection.extend(
 	{
 	
 	model: Dungeon,
-	localStorage: new Backbone.LocalStorage("osr-random-generator-dungeon"), // Unique name within your app.
+	localStorage: new Backbone.LocalStorage("osr-random-generator-dungeon"),
 	
 	/**
 	 * Collection of Dungeon objects
@@ -179,7 +179,7 @@ var DungeonCollection = Backbone.Collection.extend(
 	 * @constructs
 	 */	
 	initialize: function(){
-		//this.listenTo(this.model, 'sync', this.addChar);
+		
 	},
 });
 
@@ -193,17 +193,11 @@ var DungeonDetails = Backbone.View.extend(
 	className: 'dungeon-details clearfix',
 	model: Dungeon,
 	
-	attributes : function () {
-		return {
-			//id: 'character_'+this.model.get('id')
-		};
-	},
-	
 	events: {
 		'click .save': 'saveDungeon',
 		'click .delete': 'deleteDungeon',
+		'click .conf-delete': 'confirmDelete',
 		'click .remove': 'removeDungeon',
-		/** @todo reenable editing #19 */
 		'click *[data-field]': 'editField',
 		'click *[data-room]': 'editRoom',
 	},
@@ -218,8 +212,10 @@ var DungeonDetails = Backbone.View.extend(
     	this.listenTo(this.model, 'change', this.render);
     },
 	
+	/**
+	 * Save the dungeon
+	 */
 	saveDungeon: function() {
-		//do something
 		if (this.model.isNew()) {
 			this.model.save();
 			app.dungeonlist.add(this.model);
@@ -230,49 +226,66 @@ var DungeonDetails = Backbone.View.extend(
 		return false;
     },
     
+    /**
+	 * Delete the dungeon
+	 */
     deleteDungeon: function(e) {
 		e.preventDefault();
 		this.model.destroy();
 		this.remove();
-		//return false;  
     },
     
+    /**
+     * Updates the delete button to make you click it twice to delete
+     */
+    confirmDelete: function(e) {
+		$button = $(e.currentTarget);
+		$button.html('Are you sure?');
+		$button.removeClass('conf-delete btn-default').addClass('btn-danger delete');
+	},
+    
+    /**
+     * Prompts to removes unsaved dungeons
+     */
     removeDungeon: function(e) {
 	    e.preventDefault();
-	    //console.log(this.model.changedAttributes());
+	    $button = $(e.currentTarget);
+
 	    if (this.model.isNew()) {
-		    if (!confirm('You have not saved this dungeon. Are you sure you with to delete it?')) {
-			    return false;
-		    }
+	    	var msg = 'Are you sure?';
 	    } else if (this.model.changedAttributes()) {
-		    if (!confirm('You have unsaved changes that will be lost. Are you sure?')) {
-			    return false;
-		    }
+	   		var msg = 'Unsaved changes will be lost.';
+	    } else {
+		    this.remove();
+		    return;
 	    }
-	    this.remove();
+	    $button.html(msg);
+	    $button.removeClass('remove btn-default').addClass('btn-danger delete');
     },
     
+    /**
+     * Opens modal for editing fields (title and level only so far)
+     */
     editField: function(e) {
-	    var field = $(e.target).attr('data-field');
+	    var field = $(e.currentTarget).attr('data-field');
 	    //console.log(field);
-	    var room = $(e.target).parent('dl').attr('data-room');
-	    
-	    var editv = new DungeonEditView({model: this.model, field: field, room: room});
+	    var editv = new DungeonEditView({model: this.model, field: field });
 	    app.showModal('Edit Field: '+field.capitalize(), editv.render().el);
     },
 
+    /**
+     * Opens modal for editing a room
+     */
 	editRoom: function(e) {
-		var roomnumber = $(e.target).parent('dl').attr('data-room');
+		var roomnumber = $(e.currentTarget).attr('data-room');
 		var editv = new DungeonEditView({model: this.model, field: '', roomnumber: roomnumber});
 		app.showModal('Edit Room: '+roomnumber, editv.render().el);
 	},
 	
 	template: function(data) {
 		var temp = '';
-		
-		//console.log(data);
-		
-		temp = '<section><h1 data-field="title"><% if (title == "") { %>[untitled]<% } else { %><%= title %><% } %></h1><dl><dt data-field="level">Level</dt><dd data-field="level"><%= level %></dd></dl><h2>Rooms</h2><% _.each(rooms, function(v,k,l){ %><h3>Room <%= v.number %></h3><dl data-room="<%= v.number %>"><dt>Content:</dt><dd><%= v.content.capitalize() %></dd><% if (v.content == "trap") { %><dt>Trap:</dt><dd><%= v.trap_type %></dd><% } else if (v.content == "monster") { %><dt>Monster:</dt><dd><%= v.monster_type %></dd><% } else if (v.content == "special") { %><dt>Special:</dt><dd><%= v.special_type %></dd><% } %><dt>Treasure:</dt><dd><%= v.treasure_type %></dd></dl><% }); %></section>';
+				
+		temp = '<section><h1 data-field="title"><% if (title == "") { %>[untitled]<% } else { %><%= title %><% } %></h1><dl><dt data-field="level">Level</dt><dd data-field="level"><%= level %></dd></dl><h2>Rooms</h2><% _.each(rooms, function(v,k,l){ %><section class="dungeon-room"><h3>Room <%= v.number %></h3><dl data-room="<%= v.number %>"><dt>Content:</dt><dd><%= v.content.capitalize() %></dd><% if (v.trap_type !== "") { %><dt>Trap:</dt><dd><%= v.trap_type %></dd><% } if (v.monster_type !== "") { %><dt>Monster:</dt><dd><%= v.monster_type %></dd><% } if (v.special_type !== "") { %><dt>Special:</dt><dd><%= v.special_type %></dd><% } %><dt>Treasure:</dt><dd><%= v.treasure_type %></dd></dl></section><% }); %></section>';
 		
 		temp += '<div class="pull-right hidden-print">';
 		
@@ -282,19 +295,15 @@ var DungeonDetails = Backbone.View.extend(
 		
 		temp += ' <button title="Close" class="btn btn-default btn-xs remove"><span class="glyphicon glyphicon-eye-close"></span></button>';
 		
-		temp += '<% if (typeof id !== "undefined"){ %> <button title="Delete" class="btn btn-default btn-xs delete"><span class="glyphicon glyphicon-remove"></span></button><% } else { %><%} %></div>';
+		temp += '<% if (typeof id !== "undefined"){ %> <button title="Delete" class="btn btn-default btn-xs conf-delete"><span class="glyphicon glyphicon-remove"></span></button><% } else { %><%} %></div>';
 		
 		var html = _.template(temp, data);
 		return html;
 	},
 	
 	render: function() {
-    	//console.log('view render');
-    	//console.trace();
-    	this.$el.html(this.template(this.model.attributes));
-    	    	
+    	this.$el.html(this.template(this.model.attributes));    	    	
 		return this;
-    	
 	}
 	
 	
@@ -352,16 +361,11 @@ var DungeonListItem = Backbone.View.extend(
 	
 	tagName: 'li',
 	className: 'dungeon-list',
-	
-	attributes : function () {
-		return {
-			//id: 'character_'+this.model.get('id')
-		};
-	},
-	
+
 	events: {
 		'click .view': 'view',
-		'click .delete': 'delete'
+		'click .delete': 'deleteDungeon',
+		'click .conf-delete': 'confirmDelete'
 	},
 	
 	/**
@@ -371,27 +375,40 @@ var DungeonListItem = Backbone.View.extend(
 	 * @constructs
 	 */
 	initialize: function() {
-    	//this.listenTo(this.model, "change", this.render);
     	this.listenTo(this.model, "sync", this.render); //only change when character is saved.
     },
 
+	/**
+	 * open the details view in the main column
+	 */
     view: function(e) {
 		e.preventDefault();
 		$('#dungeon-results').append(new DungeonDetails({model:this.model}).render().el)
 	},
     
-    delete: function(e) {
+    /**
+     * delete!
+     */
+    deleteDungeon: function(e) {
 		e.preventDefault();
-		if (!confirm('Are you sure you want to delete this dungeon?')) { return; }
 		this.model.destroy();
     },
+    
+    /**
+     * Updates the delete button to make you click it twice to delete
+     */
+    confirmDelete: function(e) {
+		$button = $(e.currentTarget);
+		$button.html('Are you sure?');
+		$button.removeClass('conf-delete btn-default').addClass('btn-danger delete');
+	},
    
     template: function(data){
     	var list = '';
     	
  		list += '<div class="pull-right"><button title="View" class="btn btn-default btn-xs view"><span class="glyphicon glyphicon-eye-open"></span></button>';
 		
-		list+= '<% if (typeof id !== "undefined"){ %> <button title="Delete" class="btn btn-default btn-xs delete"><span class="glyphicon glyphicon-remove"></span></button><% } else { %><%} %></div>';
+		list+= '<% if (typeof id !== "undefined"){ %> <button title="Delete" class="btn btn-default btn-xs conf-delete"><span class="glyphicon glyphicon-remove"></span></button><% } else { %><%} %></div>';
 		
 		list += '<% if (title == "") { %>[untitled]<% } else { %><%= title %><% } %> <%= level %>';
 				
@@ -441,6 +458,9 @@ var DungeonEditView = Backbone.View.extend(
 		}
 	},
 	
+	/**
+	 * save changes
+	 */
 	commitEdit: function(e) {
 		formdata = $(e.target).serializeObject();
 		//console.log(formdata);
@@ -469,9 +489,11 @@ var DungeonEditView = Backbone.View.extend(
 		return false;
 	},
 	
+	/**
+	 * load random result into the modal form
+	 */
 	loadRandom: function(e) {
 		
-		//console.log(e);
 		var inputtarget = $(e.target).attr('data-targetfield');
 		var list = $(e.target).attr('data-list');
 		
@@ -493,9 +515,6 @@ var DungeonEditView = Backbone.View.extend(
 		var field = this.field;
 		var subfield = this.subfield;
 		
-		//console.log(field);
-		
-		//console.log(this);
 		var form = '<form>';
 		switch (field) {
 									
@@ -521,27 +540,27 @@ var DungeonEditView = Backbone.View.extend(
 				form += '<div class="form-group"><label class="control-label" for="editmonster_type">Monster</label><input type=text class="form-control" id="editmonster_type" name="monster_type" value="'+room.monster_type+'" /><span class="help-block"></span></div>';
 				
 				//trap
-				form += '<div class="form-group"><label class="control-label" for="edittrap_type">Trap</label><textarea class="form-control" id="edittrap_type" name="trap_type" rows="6">'+room.trap_type.br2nl()+'</textarea><span class="help-block"></span></div>';
+				form += '<div class="form-group"><label class="control-label" for="edittrap_type">Trap</label><textarea class="form-control" id="edittrap_type" name="trap_type" rows="5">'+room.trap_type.br2nl()+'</textarea><span class="help-block"></span></div>';
 				
 				//special
-				form += '<div class="form-group"><label class="control-label" for="editspecial_type">Special</label><textarea class="form-control" id="editspecial_type" name="special_type" rows="6">'+room.special_type.br2nl()+'</textarea><span class="help-block"></span></div>';
+				form += '<div class="form-group"><label class="control-label" for="editspecial_type">Special</label><textarea class="form-control" id="editspecial_type" name="special_type" rows="5">'+room.special_type.br2nl()+'</textarea><span class="help-block"></span></div>';
 				
 				//treasure
 				form += '<input type=hidden id=treasure name=treasure value="'+room.treasure+'" />';
-				form += '<div class="form-group"><label class="control-label" for="edittreasure_type">Treasure</label><textarea class="form-control" id="edittreasure_type" name="treasure_type" rows="6">'+room.treasure_type.br2nl()+'</textarea><span class="help-block"></span></div>';
+				form += '<div class="form-group"><label class="control-label" for="edittreasure_type">Treasure</label><textarea class="form-control" id="edittreasure_type" name="treasure_type" rows="5">'+room.treasure_type.br2nl()+'</textarea><span class="help-block"></span></div>';
 				
 				//reroll room
-				form += '<div class="form-group"><button type="button" class="btn btn-warning randomize" data-targetfield="rooms">Reroll Room</button></div>';
+				form += '<div class="form-group"><button type=submit class="btn btn-primary">Update</button> &nbsp; <button type="button" class="btn btn-warning randomize" data-targetfield="rooms">Reroll Room</button></div>';
 				
 				break;
 							
 			default:
-				form += '<div class="form-group"><label class="control-label" for="edit'+field+'">'+field+'</label><input type=text class="form-control" id="edit'+field+'" name="'+field+'" value="<%= '+field+' %>" /><span class="help-block"></span></div>';
+				form += '<div class="form-group"><label class="control-label" for="edit'+field+'">'+field+'</label><input type=text class="form-control" id="edit'+field+'" name="'+field+'" value="<%= '+field+' %>" /><span class="help-block"></span></div><div class="form-group"><button type=submit class="btn btn-primary">Update</button></div>';
 				break;
 
 		}
 		
-		form += '<div class="form-group"><button type=submit class="btn btn-primary">Update</button></div></form>';
+		form += '</form>';
 
 		var html = _.template(form, data);
 		return html;
@@ -563,12 +582,6 @@ var DungeonForm = Backbone.View.extend(
 	tagName: 'form',
 	className: 'dungeon-form clearfix',
 	
-	attributes : function () {
-		return {
-			//id: 'character_'+this.model.get('id')
-		};
-	},
-	
 	events: {
 		'submit': 'createDungeon',
 	},
@@ -584,7 +597,9 @@ var DungeonForm = Backbone.View.extend(
         this.listenTo(this.model, 'change', this.render);
     },
 	
-	
+	/**
+	 * Form submission, dungeon generation
+	 */
 	createDungeon: function(e) {
 		e.preventDefault();
 		formdata = $(e.target).serializeObject();
@@ -601,29 +616,29 @@ var DungeonForm = Backbone.View.extend(
 	template: function(data) {
 		var html = '';
 		
-		html += '<div class="form-group"><label for=title class="control-label">Title</label><input type="text" class="form-control" name="title" id="title" value=""/><div class="help-block">Just a way to identify it later.</div></div>';	
+		html += '<div class="row">';
 		
-		html += '<div class="row"><div class="col-sm-6"><div class="form-group"><label for=level class="control-label">Level</label><select class="form-control" name="level" id="level">';
+		html += '<div class="col-sm-6"><div class="form-group"><label for=title class="control-label">Title</label><input type="text" class="form-control" name="title" id="title" value=""/><div class="help-block">Identify it later.</div></div></div>';	
+		
+		html += '<div class="col-sm-6"><div class="form-group"><label for=level class="control-label">Level</label><select class="form-control" name="level" id="level">';
 			for(var i=1; i <= 10; i++) {
 				html += '<option value="'+i+'">'+i+'</option>';
 			}
-		html += '</select><div class="help-block">Will effect monster/treasure results.</div></div></div>';
+		html += '</select><div class="help-block">Effects monsters/treasure.</div></div></div>';
 		
-		html += '<div class="col-sm-6"><div class="form-group"><label for=room_count class="control-label"># of Rooms</label><input type="text" class="form-control" name="room_count" id="room_count" value="20"/><div class="help-block">Obvious I hope.</div></div></div></div>';	
+		html += '</div><div class="row">';
 		
-		html += '<div class="form-group"><button type=submit class="btn btn-primary">Generate</button></div>';
+		html += '<div class="col-sm-6"><div class="form-group"><label for=room_count class="control-label"># of Rooms</label><input type="text" class="form-control" name="room_count" id="room_count" value="20"/><div class="help-block">Obvious I hope.</div></div></div>';	
 		
+		html += '<div class="col-sm-6"><div class="form-group"><button type=submit class="btn btn-primary">Generate</button></div></div>';
+		html += '</div>';
 		return html;
 			
 	},
 	
 	render: function() {
-    	//console.log('view render');
-    	//console.trace();
     	this.$el.html(this.template(this.model.attributes));
-    	    	
 		return this;
-    	
 	}
 	
 	

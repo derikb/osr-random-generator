@@ -4,7 +4,7 @@ Change Log
 v0.5 - 2014-xx-xx
 -----------------
 
-* 
+* Updated Dungeon generator to better use RandomTables, improve editing, and use appsettings for which tables to use.
 
 v0.4 - 2014-03-04
 -----------------
