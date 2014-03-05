@@ -254,12 +254,20 @@ var Character = Backbone.Model.extend(
 			var spelllist = this.getRules().classes[charclass].spelllist;
 			var spelluse = this.getRules().classes[charclass].spells[this.get('level') - 1];
 			var selected = {};
+			var spelltable = app.rtables.getTable(spelllist);
 			for(var i=0; i < spelluse.length; i++) {
 				var level = i+1;
 				lvl = 'lvl'+level;
 				var sp = [];
 				for (j=0; j < spelluse[i]; j++) {
-					sp.push( _.sample(appdata.spells.bylevel[spelllist][lvl]) );
+					spelltable.generateResult(lvl);
+					var spell = spelltable.niceString(true);
+					//avoid duplicates
+					if (_.indexOf(sp, spell) >= 0) {
+						j--;
+					} else {
+						sp.push( spelltable.niceString(true) );
+					}
 				}
 				selected['Level '+level] = sp;
 			}
@@ -502,12 +510,9 @@ var CharacterBlock = Backbone.View.extend(
 	    }
 	    var charclass = this.model.get('charclass');
 	    var spelllist = this.model.getRules().classes[charclass].spelllist;
-	    spell = _.findWhere(appdata.spells[spelllist], { title: title });
-	    
-	    //console.log(spell);
+	    spell = _.findWhere(appdata.spells.descriptions[spelllist], { title: title });
 	    
 	    var spellv = new SpellView({spell: spell});
-	    //console.log(spellv);
 	    app.showModal('Spell Details: '+spell.title.capitalize(), spellv.render().el);	    
     },
     
@@ -606,13 +611,9 @@ var SpellView = Backbone.View.extend(
 		var html = '';
 		
 		html += '<dl class="dl-horizontal">';
-		
 		_.each(data, function(v,k,l){
-			
 			html += '<dt>'+k.capitalize()+'</dt><dd>'+v+'</dd>';
-			
 		});
-		
 		html += '</dl>';
 		
 		return html;
@@ -723,8 +724,10 @@ var CharacterEditView = Backbone.View.extend(
 			//list = lvl1
 			var charclass = this.model.get('charclass');
 			var spelllist = this.model.getRules().classes[charclass].spelllist;		
-			var newval = _.sample(appdata.spells.bylevel[spelllist][list]);
-			$('#'+inputtarget).val(newval);
+			var spelltable = app.rtables.getTable(spelllist);
+			spelltable.generateResult(list);
+			//var newval = _.sample(appdata.spells.bylevel[spelllist][list]);
+			$('#'+inputtarget).val(spelltable.niceString(true));
 		}
 		
 	},

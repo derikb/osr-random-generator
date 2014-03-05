@@ -178,6 +178,7 @@ var RandomTable = Backbone.Model.extend(
 				} else {
 					desc = (_.isString(subtable[kx][result]['description'])) ? subtable[kx][result]['description'] : '';
 				}
+				result = app.randomizer.findToken(result);
 				o.push({ table: kx, result: result, desc: desc });
 				
 			}, this);
@@ -769,8 +770,8 @@ var RTable_Collection = Backbone.Collection.extend(
 		if (typeof title == 'undefined' || title == '') {
 			return {};
 		}
-		console.log(title);
-		console.log(this.findWhere({ key: title }));
+		//console.log(title);
+		//console.log(this.findWhere({ key: title }));
 		
 		var t = this.findWhere({ key: title });
 		if (typeof t == 'undefined') {
