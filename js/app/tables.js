@@ -725,7 +725,6 @@ var RTable_Collection = Backbone.Collection.extend(
 	 */
 	import: function (model) {
 		this.add(model);
-		console.log('refresh trigger on rtables table');
 		this.trigger('refresh');
 	},
 	
