@@ -61,12 +61,12 @@ var Dungeon = Backbone.Model.extend(
 		
 		var ctable = app.rtables.getTable(app.AppSettings.get('dungeon').stocking_table);
 		ctable.generateResult();
-		console.log(ctable.get('result'));
+		//console.log(ctable.get('result'));
 		
 		room.content = ctable.findResultElem('content').result;
 		room.treasure = ctable.findResultElem('treasure').result;
 		
-		console.log(room);
+		//console.log(room);
 		
 		if (room.content == 'monster') {
 			var mon = app.randomizer.rollRandom(this.generateMonsterList());

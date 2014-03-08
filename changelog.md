@@ -1,10 +1,12 @@
 Change Log
 ==========
 
-v0.5 - 2014-xx-xx
+v0.5 - 2014-03-08
 -----------------
 
 * Updated Dungeon generator to better use RandomTables, improve editing, and use appsettings for which tables to use.
+* Updated spell list to use RandomTables. Treasure now uses random spell list where appropriate for selecting spell scrolls.
+* Updated the Create Table form to better handle non-JSON formatting (removed it from accepting JSON formatting for now). You can now add subtables, reference those subtables from results, weight results in different ways, and input html (that will get parsed into linebreaks).
 
 v0.4 - 2014-03-04
 -----------------

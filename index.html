@@ -15,19 +15,23 @@
   <body>
 	  <div class="container">
 	    <div class="row hidden-print">
-	    	<div class="col-sm-12">
+	    	<div class="col-sm-6">
 				<h1>OSR Random Generator</h1>
+	    	</div>
+	    	<div class="col-sm-6">
+	    		<p id="app_alert" class="alert alert-danger">Beta: Some things may not work exactly right. Some planned features are missing.</p>
 	    	</div>
 	    </div>
 	    
 	    
 	    <ul id="maintab" class="nav nav-tabs hidden-print">
 	      <li class="active"><a href="#tables" data-toggle="tab">Random Tables</a></li>
+		  <li><a href="#import" data-toggle="tab">Create Tables</a></li>
 		  <li><a href="#npcs" data-toggle="tab">NPCs</a></li>
 		  <li><a href="#wilderness" data-toggle="tab">Wilderness</a></li>
 		  <li><a href="#dungeon" data-toggle="tab">Dungeon</a></li>
 		  <!-- <li><a href="#other" data-toggle="tab">t.b.d.</a></li> -->
-		  <li><a href="#import" data-toggle="tab">Import Tables</a></li>
+		  
 		  <li><a href="#settings" data-toggle="tab">Settings</a></li>
 		  <li><a href="#help" data-toggle="tab">Help</a></li>
 		  <li><a href="#credits" data-toggle="tab">Credits</a></li>
@@ -132,15 +136,24 @@
 						<li>Online version at: <a href="http://derikb.github.io/osr-random-generator/">http://derikb.github.io/osr-random-generator/</a></li>
 						<li>Downloadable version at: <a href="https://github.com/derikb/osr-random-generator">https://github.com/derikb/osr-random-generator</a></li>
 						<li>Mobile app version soon, though this should work in tablets/phones via your browser.</li>
-						<li>Saved characters and settings are stored in your browser's local storage. Be careful when clearing your browser cache/data else you may delete what you've saved.</li>
-						<li>Printing from the NPC tab should only print the NPCs in the "Current Characters" list as 5" wide cards (going for 3"x5" cards but height is hard to maintain).</li>
+						<li>Saved tables, characters, settings, etc. are stored in your browser's local storage. Be careful when clearing your browser cache/data else you may delete what you've saved. (I'll get an import/export working soon.)</li>
+						<li>Printing from the NPC tab should only print the NPCs in the "Current Characters" list as 5" wide cards (going for 3"x5" cards but height is hard to maintain). I'll try to improve printing for NPCs and other tabs in the future.</li>
 					</ul>
 					
 					<h3>Random Tables</h3>
 					<ul>
-						<li>Hopefully the usage is pretty obvious.</li>
-						<li>Instructions for adding your own tables, coming soon.</li>
+						<li>Click tags to filter the list.</li>
+						<li>Click table headers to sort table.</li>
+						<li><span class="glyphicon glyphicon-info-sign"></span> : Information about the table (also edit/delete custom tables)</li>
+						<li><span class="glyphicon glyphicon-eye-open"></span> : Opens a modal showing all the (sub)table options in case you want to pick the result yourself.</li>
+						<li><span class="glyphicon glyphicon-random"></span> : Opens a modal and generates a random result. From this modal you can regenerate the same result or create more.</li>
 						<li>All tables converted by me.</li>
+					</ul>
+					
+					<h3>Create Tables</h3>
+					<ul>
+						<li>Hit the "import help" to get a modal about table formatting.</li>
+						<li>More complicated options are available, I just need to better document them and improve the import option.</li>
 					</ul>
 					
 					<h3>NPCs</h3>
@@ -151,7 +164,6 @@
 						<li>Attack Bonus is shown as a melee/missile breakdown (based on class, level, and strength or dexterity as appropriate to the rules) or as a single number if both bonuses would be the same.</li>
 						<li>Level calculations/options stop at 9.</li>
 						<li>Gender only effects the random name generator.</li>
-						<li>Surnames are applied to non-Holmesian names 50% of the time.</li>
 						<li>Most 0-level humans are not given armor, but a few <em>are</em> based on their occupation.</li>
 					</ul>
 					
@@ -162,7 +174,7 @@
 					
 					<h3>Dungeon</h3>
 					<ul>
-						<li>Basic random stocking procedure from Moldvay's Basic D&D.</li>
+						<li>Basic random stocking procedure from Moldvay's Basic D&D, that will generate monsters, treasures, traps, and special/tricks.</li>
 					</ul>
 					
 					<h3>Icons</h3>
@@ -272,23 +284,7 @@
 			// Change hash for page-reload
 			$('.nav-tabs a').on('shown.bs.tab', function (e) {
 			    window.location.hash = e.target.hash.replace("#", "#" + prefix);
-			});
-			
-			
-/*
-			var newm = {};
-
-			_.each(appdata.monsters.labyrinthlord, function(v,k,l){
-				
-				v.terrain = v.terrain.split(' ');
-				
-				newm[k] = v;
-				
-			});
-
-			document.write(JSON.stringify(newm));
-*/
-			
+			});			
 		});
 	</script>
 
