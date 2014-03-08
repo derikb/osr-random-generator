@@ -725,6 +725,7 @@ var RTable_Collection = Backbone.Collection.extend(
 	 */
 	import: function (model) {
 		this.add(model);
+		console.log('refresh trigger on rtables table');
 		this.trigger('refresh');
 	},
 	
@@ -740,6 +741,7 @@ var RTable_Collection = Backbone.Collection.extend(
 	 * @param {String} attr The field to sort by
 	 */
 	sortTables: function (attr) {
+		if (typeof attr == 'undefined') { attr = 'title'; this.sortDirection = 1; }
 		this.sortAttribute = attr;
 		this.sort();
 	},
@@ -750,6 +752,13 @@ var RTable_Collection = Backbone.Collection.extend(
 	comparator: function(a, b) {
 		var a = a.get(this.sortAttribute),
 		b = b.get(this.sortAttribute);
+		
+		if (_.isString(a)) {
+			a = a.toLowerCase();
+		}
+		if (_.isString(b)) {
+			b = b.toLowerCase();
+		}
 		
 		if (a == b) return 0;
 		
