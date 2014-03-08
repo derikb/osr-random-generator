@@ -1,5 +1,9 @@
 .tab-pane { padding: 20px; }
 
+textarea.form-control { min-height: 150px; }
+
+#app_alert { margin-top: 10px; }
+
 caption {
 	padding: 0px 10px 10px 10px;
 	font-size: 16px;
@@ -97,6 +101,8 @@ fieldset fieldset legend {
 	margin-left: 15px;
 }
 */
+
+#import_preview { height: 400px; overflow: scroll; }
 
 
 /* //!Table and Phone */

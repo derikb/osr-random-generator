@@ -358,7 +358,7 @@ var RandomTable = Backbone.Model.extend(
 			}
 		}, this);
 		delete att.id;
-		return JSON.stringify(att, null, 5);
+		return JSON.stringify(att, null, 2);
 	},
 	
 	/**
