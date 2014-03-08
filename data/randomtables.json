@@ -48,7 +48,7 @@ appdata.tables.moldvay_stocking = {
 	"author": "Tom Moldvay",
 	"source": "D&D Basic Set",
 	"description": "Stocking a room in a dungeon. For fuller features see the Dungeon tab.",
-	"tags": ['dungeons'],
+	"tags": ["dungeons"],
 	"tables": {
 		"content": { 
 			"monster": { "weight": 2, "subtable": { "treasure": [{ "label": "yes", "weight": 3 }, { "label": "no", "weight": 3 }] } },
