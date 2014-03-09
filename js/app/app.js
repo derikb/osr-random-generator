@@ -33,6 +33,8 @@ var AppRouter = Backbone.Router.extend(
 		this.importer = new Importer();
 		//$('#import-form').append(new ImportForm().render().el);
 		
+		this.exporter = new Exporter();
+		
     },
 	
 	/**

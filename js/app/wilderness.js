@@ -22,6 +22,9 @@ var Wilderness = Backbone.Model.extend({
 		
 	},
 	
+	/**
+	 * @todo fix the way the tables get saved!???
+	 */
 	create: function() {
 		//load up the randomtable models
 		this.set('hexdressing_t', new RandomTable(appdata.tables.hex_dressing));
@@ -50,7 +53,43 @@ var Wilderness = Backbone.Model.extend({
 			o.push(encounter_t.niceString());
 		}
 		return o;	
-	}
+	},
+	
+	/**
+	 * outputs the json data for the wilderness (import/export)
+	 * @param {Boolean} [editmode=false] if false empty attributes will be stripped out
+	 * @returns {Object} table attributes
+	 */
+	outputObject: function(editmode) {
+		if (typeof editmode == 'undefined' ) { editmode = false; }
+		var att = _.clone(this.attributes);
+		_.each(att, function(v,k,l){
+			if (!editmode && _.isEmpty(v)) {
+				delete l[k];
+			}
+		}, this);
+		delete att.id;
+		return att;
+	},
+	
+	/**
+	 * outputs the json data for the wilderness (import/export)
+	 * @param {Boolean} [editmode=false] if false empty attributes will be stripped out
+	 * @param {Boolean} [compress=false] if true JSON will not have indentation, etc.
+	 * @returns {String} table attributes in JSON
+	 */
+	outputCode: function(editmode, compress) {
+		if (typeof editmode == 'undefined' ) { editmode = false; }
+		if (typeof compress == 'undefined' ) { compress = false; }
+		
+		var obj = this.outputObject(editmode);
+		
+		if (compress) {
+			return JSON.stringify(obj);
+		}
+		return JSON.stringify(obj, null, 2);
+	},
+
 
 });
 
@@ -63,6 +102,35 @@ var WildernessCollection = Backbone.Collection.extend({
 	initialize: function(){
 		//this.listenTo(this.model, 'sync', this.addChar);
 	},
+	
+	/**
+	 * Export the saved wildernesses
+	 * @param {String} [which] placeholder
+	 * @param {Boolean} [compress=false] if true JSON will not be indented with tabs/lines
+	 * @returns {Array} Array of table objects ? 
+	 */
+	exportOutput: function(which, compress) {
+		if (typeof which == 'undefined') {
+			which = '';
+		}
+		if (typeof compress == 'undefined') {
+			compress = false;
+		}
+		var t = this.filter(function(model){
+			/*
+			if (which == 'user') {
+				return ( typeof model.get('id') !== 'undefined' );
+			} */
+			return true;
+		});
+		
+		_.each(t, function(v,k,l){
+			l[k] = v.outputObject(false);
+		}, this);
+		
+		return t;		
+	}
+	
 });
 
 

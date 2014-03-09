@@ -90,6 +90,7 @@ var Dungeon = Backbone.Model.extend(
 	
 	/**
 	 * create monster list for level
+	 * @todo fix the way the monster data gets saved!???
 	 * @returns {Object} keyed to monster name with stats as property value
 	 */
 	generateMonsterList: function() {
@@ -158,7 +159,43 @@ var Dungeon = Backbone.Model.extend(
 		}
 		
 		return (o == '') ? 'None' : o;
-	}
+	},
+	
+	/**
+	 * outputs the json data for the dungeon (import/export)
+	 * @param {Boolean} [editmode=false] if false empty attributes will be stripped out
+	 * @returns {Object} table attributes
+	 */
+	outputObject: function(editmode) {
+		if (typeof editmode == 'undefined' ) { editmode = false; }
+		var att = _.clone(this.attributes);
+		_.each(att, function(v,k,l){
+			if (!editmode && _.isEmpty(v)) {
+				delete l[k];
+			}
+		}, this);
+		delete att.id;
+		return att;
+	},
+	
+	/**
+	 * outputs the json data for the dungeon (import/export)
+	 * @param {Boolean} [editmode=false] if false empty attributes will be stripped out
+	 * @param {Boolean} [compress=false] if true JSON will not have indentation, etc.
+	 * @returns {String} table attributes in JSON
+	 */
+	outputCode: function(editmode, compress) {
+		if (typeof editmode == 'undefined' ) { editmode = false; }
+		if (typeof compress == 'undefined' ) { compress = false; }
+		
+		var obj = this.outputObject(editmode);
+		
+		if (compress) {
+			return JSON.stringify(obj);
+		}
+		return JSON.stringify(obj, null, 2);
+	},
+
 	
 	
 });
@@ -181,6 +218,35 @@ var DungeonCollection = Backbone.Collection.extend(
 	initialize: function(){
 		
 	},
+	
+	/**
+	 * Export the saved dungeons
+	 * @param {String} [which] placeholder
+	 * @param {Boolean} [compress=false] if true JSON will not be indented with tabs/lines
+	 * @returns {Array} Array of table objects ? 
+	 */
+	exportOutput: function(which, compress) {
+		if (typeof which == 'undefined') {
+			which = '';
+		}
+		if (typeof compress == 'undefined') {
+			compress = false;
+		}
+		var t = this.filter(function(model){
+			/*
+			if (which == 'user') {
+				return ( typeof model.get('id') !== 'undefined' );
+			}
+			*/
+			return true;
+		});
+		
+		_.each(t, function(v,k,l){
+			l[k] = v.outputObject(false);
+		}, this);
+		
+		return t;		
+	}
 });
 
 

@@ -345,12 +345,13 @@ var RandomTable = Backbone.Model.extend(
 		return o;		
 	},
 	
+	
 	/**
 	 * outputs the json data for the table (import/export)
 	 * @param {Boolean} [editmode=false] if false empty attributes will be stripped out
-	 * @returns {String} table attributes in JSON
+	 * @returns {Object} table attributes
 	 */
-	outputCode: function(editmode) {
+	outputObject: function(editmode) {
 		if (typeof editmode == 'undefined' ) { editmode = false; }
 		var att = _.clone(this.attributes);
 		_.each(att, function(v,k,l){
@@ -359,7 +360,25 @@ var RandomTable = Backbone.Model.extend(
 			}
 		}, this);
 		delete att.id;
-		return JSON.stringify(att, null, 2);
+		return att;
+	},
+	
+	/**
+	 * outputs the json data for the table (import/export)
+	 * @param {Boolean} [editmode=false] if false empty attributes will be stripped out
+	 * @param {Boolean} [compress=false] if true JSON will not have indentation, etc.
+	 * @returns {String} table attributes in JSON
+	 */
+	outputCode: function(editmode, compress) {
+		if (typeof editmode == 'undefined' ) { editmode = false; }
+		if (typeof compress == 'undefined' ) { compress = false; }
+		
+		var obj = this.outputObject(editmode);
+		
+		if (compress) {
+			return JSON.stringify(obj);
+		}
+		return JSON.stringify(obj, null, 2);
 	},
 	
 	/**
@@ -813,6 +832,33 @@ var RTable_Collection = Backbone.Collection.extend(
 			return [];
 		}
 		return t; 
+	},
+	
+	/**
+	 * Export the user saved custom tables
+	 * @param {String} [which=user] user will only output user saved tables, all will output all tables
+	 * @param {Boolean} [compress=false] if true JSON will not be indented with tabs/lines
+	 * @returns {Array} Array of table objects ? 
+	 */
+	exportOutput: function(which, compress) {
+		if (typeof which == 'undefined') {
+			which = 'user';
+		}
+		if (typeof compress == 'undefined') {
+			compress = false;
+		}
+		var t = this.filter(function(model){
+			if (which == 'user') {
+				return ( typeof model.get('id') !== 'undefined' );
+			}
+			return true;
+		});
+		
+		_.each(t, function(v,k,l){
+			l[k] = v.outputObject(false);
+		}, this);
+		
+		return t;		
 	}
 	
 });

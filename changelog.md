@@ -1,6 +1,18 @@
 Change Log
 ==========
 
+v0.6 - 2014-03-xx
+-----------------
+
+* Added Export function to take saved data from LocalStorage and save it as a file.
+* Added/fixed editing of user created tables.
+    * You should now be able to edit (edit link is in the info modal) any tables you add to the app.
+* Improvements for display and usability at narrow screen widths
+	* Changed nav tabs to navbar so it will collapse into a menu at narrow screen widths, also group some tabs into a dropdown to improve nav width in non-collapsed state.
+    * Modals now have a close button at the bottom of the modal
+    * Some table columns disappear to keep tables from horizontally scrolling
+* Fixed issue with the Random Table sorting being case sensitive (which messed up the title sort).
+
 v0.5 - 2014-03-08
 -----------------
 

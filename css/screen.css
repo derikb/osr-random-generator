@@ -107,6 +107,7 @@ fieldset fieldset legend {
 
 #import_preview { height: 400px; overflow: scroll; }
 
+#export-link { margin: 0 10px; }
 
 /* //!Table and Phone */
 @media (max-width: 767px) {

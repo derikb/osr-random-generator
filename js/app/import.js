@@ -1,6 +1,6 @@
 //Importer models and views
 
-
+//!Importer
 var Importer = Backbone.Model.extend(
 /** @lends Importer.prototype */
 {
@@ -40,7 +40,7 @@ var Importer = Backbone.Model.extend(
 });
 
 
-
+//!ImportForm
 var ImportForm = Backbone.View.extend(
 /** @lends ImportForm.prototype */
 {
@@ -106,7 +106,6 @@ var ImportForm = Backbone.View.extend(
     
     /**
      * Make the form
-     * @todo edit this to handle editing tables. #26
      */
     render: function () {
     	var form = '';
@@ -518,7 +517,7 @@ var ImportForm = Backbone.View.extend(
 	
 });
 
-
+//!ImportPreview
 var ImportPreview = Backbone.View.extend(
 /** @lends ImportPreview.prototype */
 {
@@ -546,3 +545,153 @@ var ImportPreview = Backbone.View.extend(
 	
 	
 });
+
+
+
+//!Exporter
+var Exporter = Backbone.Model.extend(
+/** @lends Exporter.prototype */
+{
+			
+	/**
+	 * This is the model for Exporting data from local storage.
+	 *
+	 * @augments external:Backbone.Model
+	 * @constructs
+	 */
+	initialize: function(){
+		
+		this.form = new ExportForm();
+		$('#export').append(this.form.render().el);
+		
+		//this.listenTo(this.form, 'resetform', this.resetImporter);
+		
+	},
+	
+	/**
+	 * Reset the ImportForm view and Preview. Re-establish listener
+	 *
+	 */
+/*
+	resetImporter: function(model) {
+		this.form.remove();
+		
+		if (typeof model !== 'undefined') {
+			this.form = new ImportForm({ model: model});
+		} else {
+			this.form = new ImportForm();
+		}
+		
+		$('#import-form').html(this.form.render().el);
+		this.listenTo(this.form, 'resetform', this.resetImporter);
+	}
+*/
+	
+});
+
+
+//!ExportForm
+var ExportForm = Backbone.View.extend(
+/** @lends ExportForm.prototype */
+{
+	
+	model: Exporter,
+	tagName: 'form',
+	
+	
+    events:{
+        "submit": "prepDownload",
+    },
+	
+	data_types: {
+		'tables': { label: 'Random Tables' },
+		'npcs': { label: 'NPCs' },
+		'dungeons': { label: 'Dungeons' },
+		'wilderness': { label: 'Wilderness' },
+		'all': { label: 'All ' }	
+	},
+	
+	/**
+	 * This is the view for a Random Table import form.
+	 * In an edit operation this will be passed a RandomTable to be edited
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
+    initialize:function () {
+
+    },
+	
+	/**
+     * Make the form
+     */
+    render: function () {
+    	var f = '';
+		
+		f += '<p class="alert alert-info">With this form you can export (via file download) the data saved to this app.</p>';
+		
+		f += '<div class="form-group"><label for="data_type" class="control-label">Data to Export</label><select class="form-control" id="data_type" name="data_type">';
+			_.each(this.data_types, function(v,k,l){
+				f += '<option value="'+k+'">'+v.label+'</option>';
+			}, this);
+		f += '</select></div>';
+		
+		f += '<div class="form-group"><label for="compress" class="check"><input type="checkbox" value="1" name="compress" id="compress" /> Compress output (less human readable, but smaller file)</label></div>';
+		
+		f += '<div class="form-group"><button class="btn btn-primary" type="submit">Generate Download File</button></div>';
+		
+		
+		$(this.el).html(f);
+        return this;
+	},
+	
+	/**
+	 * Uses the form data to generate a download link
+	 * @todo improve this to not have manual JSON editing
+	 */
+	prepDownload:  function(e) {
+		e.preventDefault();
+		
+		var form = $(e.target).serializeObject();
+		var type = form.data_type;
+		var compress = (form.compress) ? true : false;
+		
+		var text = '';
+		
+		var exportdata = {};
+		
+		if (type == 'tables') {
+			exportdata.tables = app.rtables.exportOutput('user');
+		} else if (type == 'npcs') {
+			exportdata.npcs = app.charlist.exportOutput('');
+		} else if (type == 'dungeons') {
+			exportdata.dungeons = app.dungeonlist.exportOutput('');
+		} else if (type == 'wilderness') {
+			exportdata.wilderness = app.wildlist.exportOutput('');
+		} else if (type == 'all') {
+			exportdata.tables = app.rtables.exportOutput('user');
+			exportdata.npcs = app.charlist.exportOutput('');
+			exportdata.dungeons = app.dungeonlist.exportOutput('');
+			exportdata.wilderness = app.wildlist.exportOutput('');
+		}
+
+		text = (compress) ? JSON.stringify(exportdata) : JSON.stringify(exportdata, null, 2);
+		
+		var date = new Date();
+		var y = date.getFullYear(), m = date.getMonth()+1, d = date.getDate();
+		var filename = 'osr_export_'+type+'_'+y+'-'+m+'-'+d+'.txt';
+		
+		$('#export-link').remove();
+		var $download = $('<a></a>')
+			.text('Download File')
+			.attr('id', 'export-link')
+			.addClass('btn btn-success')
+			.attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
+			.attr('download', filename);
+		$(this.el).find('button[type=submit]').after($download);
+		
+	}
+	
+
+});
+
