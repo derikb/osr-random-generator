@@ -22,20 +22,43 @@
 	    		<p id="app_alert" class="alert alert-danger">Beta: Some things may not work exactly right. Some planned features are missing.</p>
 	    	</div>
 	    </div>
-	    
-	    
-	    <ul id="maintab" class="nav nav-tabs hidden-print">
-	      <li class="active"><a href="#tables" data-toggle="tab">Random Tables</a></li>
-		  <li><a href="#import" data-toggle="tab">Create Tables</a></li>
-		  <li><a href="#npcs" data-toggle="tab">NPCs</a></li>
-		  <li><a href="#wilderness" data-toggle="tab">Wilderness</a></li>
-		  <li><a href="#dungeon" data-toggle="tab">Dungeon</a></li>
-		  <!-- <li><a href="#other" data-toggle="tab">t.b.d.</a></li> -->
-		  
-		  <li><a href="#settings" data-toggle="tab">Settings</a></li>
-		  <li><a href="#help" data-toggle="tab">Help</a></li>
-		  <li><a href="#credits" data-toggle="tab">Credits</a></li>
-		</ul>
+	    		
+		<nav id="maintab" class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#app_nav">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand visible-xs" href="#">Random Generator</a>
+				</div>
+			
+				<div class="collapse navbar-collapse" id="app_nav">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="#tables" data-toggle="tab">Random Tables</a></li>
+						<li><a href="#import" data-toggle="tab">Create Tables</a></li>
+						<li><a href="#npcs" data-toggle="tab">NPCs</a></li>
+						<li><a href="#wilderness" data-toggle="tab">Wilderness</a></li>
+						<li><a href="#dungeon" data-toggle="tab">Dungeon</a></li>
+
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-info-sign"></span> <b class="caret"></b></a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a href="#export" data-toggle="tab">Export</a></li>
+								<li><a href="#settings" data-toggle="tab">Settings</a></li>
+								<li class="divider"></li>
+								<li><a href="#help" data-toggle="tab">Help</a></li>
+								<li><a href="#credits" data-toggle="tab">Credits</a></li>
+							</ul>
+						</li>
+					</ul>			
+				</div><!-- /.navbar-collapse -->
+			</div><!-- /.container-fluid -->
+		</nav>
+
 		
 		<div class="tab-content">
 			<div class="tab-pane active hidden-print" id="tables">
@@ -123,6 +146,12 @@
 					</div>
 				</div>
 			</div>
+			
+			
+			<div class="tab-pane hidden-print" id="export">
+
+			</div>
+			
 			
 			<div class="tab-pane hidden-print" id="settings">
 				<!-- The global settings form goes here. -->
@@ -282,10 +311,10 @@
 			var hash = document.location.hash;
 			var prefix = "tab_";
 			if (hash) {
-			    $('.nav-tabs a[href='+hash.replace(prefix,"")+']').tab('show');
+			    $('.navbar-nav a[href='+hash.replace(prefix,"")+']').tab('show');
 			} 
 			// Change hash for page-reload
-			$('.nav-tabs a').on('shown.bs.tab', function (e) {
+			$('.navbar-nav a').on('shown.bs.tab', function (e) {
 			    window.location.hash = e.target.hash.replace("#", "#" + prefix);
 			});			
 		});
