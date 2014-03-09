@@ -347,13 +347,14 @@ var RandomTable = Backbone.Model.extend(
 	
 	/**
 	 * outputs the json data for the table (import/export)
-	 * strips out empty attributes
+	 * @param {Boolean} [editmode=false] if false empty attributes will be stripped out
 	 * @returns {String} table attributes in JSON
 	 */
-	outputCode: function() {
+	outputCode: function(editmode) {
+		if (typeof editmode == 'undefined' ) { editmode = false; }
 		var att = _.clone(this.attributes);
 		_.each(att, function(v,k,l){
-			if (_.isEmpty(v)) {
+			if (!editmode && _.isEmpty(v)) {
 				delete l[k];
 			}
 		}, this);
@@ -456,6 +457,9 @@ var RandomTableShort = Backbone.View.extend(
     render: function () {
 		
 		$(this.el).empty();
+		
+		this.$el.attr('class', _.result(this, 'className'));
+		
 		_.each(this.model.theaders, function(v) {
 			if (v == 'actions') {
 				$(this.el).append('<td><button title="Info" class="btn btn-default info"><span class="glyphicon glyphicon-info-sign"></span></button> <button title="Pick" class="btn btn-default pick"><span class="glyphicon glyphicon-eye-open"></span></button> <button title="Roll" class="btn btn-default roll"><span class="glyphicon glyphicon-random"></span></button></td>');
@@ -476,7 +480,7 @@ var RandomTableShort = Backbone.View.extend(
 				if (src !== '') {
 					desc += 'Source: '+src; 
 				}
-				$(this.el).append('<td>'+desc+'</td>');
+				$(this.el).append('<td class="hidden-xs">'+desc+'</td>');
 				
 				return;	
 			}
@@ -823,7 +827,7 @@ var RTable_List = Backbone.View.extend(
 	
 	tagName:'table',
 	className: 'table table-striped',
-	theaders: ['Title', 'Description', 'Tags', 'Actions'],
+	theaders: [ { label: 'Title', class: '' }, { label: 'Description', class: 'hidden-xs' }, { label: 'Tags', class: '' }, { label: 'Actions', class: '' }],
 	tagFilters: [],
 	
 	events: {
@@ -953,8 +957,8 @@ var RTable_List = Backbone.View.extend(
     	$(this.el).append('<caption></caption>');
 		$th_row = $('<tr>');
 		_.each(this.theaders, function(v) {
-			var icon = (this.model.sortAttribute == v.toLowerCase()) ? (this.model.sortDirection == 1) ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down' : '';
-			$th_row.append('<th data-column="'+v.toLowerCase()+'">'+v+' <span class="sorter glyphicon '+icon+'"></span></th>');
+			var icon = (this.model.sortAttribute == v.label.toLowerCase()) ? (this.model.sortDirection == 1) ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down' : '';
+			$th_row.append('<th class="'+v.class+'" data-column="'+v.label.toLowerCase()+'">'+v.label+' <span class="sorter glyphicon '+icon+'"></span></th>');
 		}, this);
 		$(this.el).append($th_row);
 		_.each(this.model.models, function(v,k,l){

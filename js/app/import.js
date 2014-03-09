@@ -47,6 +47,7 @@ var ImportForm = Backbone.View.extend(
 	
 	model: RandomTable,
 	tagName: 'form',
+	mode: 'guided', //can also be 'freeform'
 	
     events:{
         "submit": "previewTable",
@@ -55,7 +56,8 @@ var ImportForm = Backbone.View.extend(
         "click .addtable": "addSubtableForm",
         "click .import-help": "helpModal",
         "change input": "disableSave",
-        "change textarea": "disableSave"
+        "change textarea": "disableSave",
+        "click #import_mode a": "switchMode"
     },
 	
 	/**
@@ -78,25 +80,95 @@ var ImportForm = Backbone.View.extend(
     },
     
     /**
+     *
+     *
+     */
+    switchMode: function(e) {
+		e.preventDefault();
+		$link = $(e.currentTarget);
+		mode = $(e.currentTarget).attr('data-mode');
+		if (this.mode == mode) { return; }
+		
+		$('#import_mode li').removeClass('active');
+		
+		$link.parent().addClass('active');
+		this.mode = mode;
+		
+		if (this.mode == 'freeform') {
+			t = this.freeTemplate();
+		} else {
+			t = this.guidedTemplate();
+		} 
+		
+		$('#import_fields').html(t);
+		
+    },
+    
+    /**
      * Make the form
      * @todo edit this to handle editing tables. #26
      */
     render: function () {
+    	var form = '';
+    	
+    	form += '<button type="button" class="btn btn-info import-help pull-right">Import Help</button>';
+    	
+    	form += '<ul id="import_mode" class="nav nav-pills"><li class="active"><a href="#" data-mode="guided">Guided</a></li><li><a href="#" data-mode="freeform">Freeform</a></li></ul><hr/>';
  		
-		var form = '<button type="button" class="btn btn-info import-help pull-right">Import Help</button>';
+ 		form += '<div id="import_fields">';
+ 		
+		if (this.mode == 'freeform') {
+			form += this.freeTemplate();
+		} else {
+			form += this.guidedTemplate();
+		}
 		
-		//doesn't work yet.
+		form += '</div>';
+				
+		form += '<div class="row"><div class="col-xs-8"><button type="submit" class="btn btn-primary">Preview</button> <button class="btn btn-success save" type="button" disabled>Save</button></div><div class="col-xs-4 text-right"><button type=button class="btn btn-default cancel">Cancel</button></div></div><hr/>';
+    
+    	$(this.el).html(form);
+        return this;
+    },
+	
+	/**
+	 * for free form editing (i.e. a big textarea for JSON)
+	 * @returns {String} form fields
+	 */
+	freeTemplate: function() {
+		var f = '';
+								
+		f += '<p>Freeform mode only accepts valid JSON in the input below, so it is more complicated than Guided mode. But, in exchange you have much greater control over the table options and data. Learn about formatting and table options.</p>';
+		
+		f += '<p class="alert alert-info">Once you have edited a table in this mode it is not recommended to switch back to guided mode, as some data may be lost.</p>';
+		
+		f += '<div id="freeform_error" class="alert alert-danger hidden"></div>';
+
+		f += '<div class="form-group"><label for="tabledata" class="control-label">Table Data</label><textarea class="form-control textarea-tall" name="tabledata" id="tabledata">'+this.model.outputCode(true)+'</textarea></div>';
+		
+		
+		return f;
+	},
+	
+	/**
+	 * for guided editing (i.e. a many fields, simpler syntax)
+	 * @returns {String} form fields
+	 */
+	guidedTemplate: function() {
+		var f = '';
+		
+		//simple edit mode
 		if (this.edit) {
-			alert('Sorry, editing the tables doesn\'t quite work right yet.');
-			d = this.model.get('tables');
+			
+			d = _.clone(this.model.get('tables'));
 			if (d.default) {
-				tabledata = JSON.stringify(d.default, null, 2);
+				tabledata = this.parseTableObject(d.default);
 				tabledata_hd = 'default';
 				delete d.default;
 			} else {
 				var k = _.keys(d);
 				tabledata_hd = k[0];
-				tabledata = JSON.stringify(d[k[0]], null, 2);
+				tabledata = this.parseTableObject(d[k[0]]);
 				delete d[k[0]];
 			}
 			
@@ -107,106 +179,102 @@ var ImportForm = Backbone.View.extend(
 
 		this.subt = 0;
 		
-		form += '<div class="form-group"><label for="format_html" class="check"><input type="checkbox" name="format_html" id="format_html" value="1"/> Table data is in HTML format.</label><div class="help-block">Tags will be stripped and line breaks will be added at the end of list item, table rows, div, br, and paragraph tags (that should cover most of what people would use).</div></div>';
+		f += '<div class="form-group"><label for="format_html" class="check"><input type="checkbox" name="format_html" id="format_html" value="1"/> Table data is in HTML format.</label><div class="help-block">Tags will be stripped and line breaks will be added at the end of list item, table rows, div, br, and paragraph tags (that should cover most of what people would use).</div></div>';
 		
-		form += '<div class="form-group"><label for="tabledata_hd" class="control-label">Table Name</label><input type=text class="form-control"name="tabledata_hd" id="tabledata_hd" value="'+tabledata_hd+'" placeholder="default" /><div class="help-block">Short and without spaces is best.</div></div>';
-		form += '<div class="form-group"><label for="tabledata" class="control-label">Table Data</label><textarea class="form-control" name="tabledata" id="tabledata">'+tabledata+'</textarea><div class="help-block">Import formats.</div></div>';
+		f += '<div class="form-group"><label for="tabledata_hd" class="control-label">Table Name</label><input type=text class="form-control"name="tabledata_hd" id="tabledata_hd" value="'+tabledata_hd+'" placeholder="default" /><div class="help-block">Short and without spaces is best.</div></div>';
+		f += '<div class="form-group"><label for="tabledata" class="control-label">Table Data</label><textarea class="form-control" name="tabledata" id="tabledata">'+tabledata+'</textarea><div class="help-block">Import formats.</div></div>';
 		
-		form += '<div class="form-group"><button class="btn btn-default addtable" type="button">Add a Subtable</button></div>';
+		if (this.edit){
+			
+			_.each(d, function(v,k,l){
+				f += this.subtableForm(this.parseTableObject(v), k);
+			}, this);
+		}
 		
-		form += '<div class="row">';
-		form += '<div class="col-md-6"><div class="form-group"><label for="title" class="control-label">Title</label><input type="text" class="form-control" name="title" id="title" value="'+this.model.get('title')+'" /></div></div>';
-		form += '<div class="col-md-6"><div class="form-group"><label for="author" class="control-label">Author</label><input type="text" class="form-control" name="author" id="author" value="'+this.model.get('author')+'" /></div></div>';
-		form += '</div>';
+		f += '<div class="form-group"><button class="btn btn-default addtable" type="button">Add a Subtable</button></div>';
+		
+		f += '<div class="row">';
+		f += '<div class="col-md-6"><div class="form-group"><label for="title" class="control-label">Title</label><input type="text" class="form-control" name="title" id="title" value="'+this.model.get('title')+'" /></div></div>';
+		f += '<div class="col-md-6"><div class="form-group"><label for="author" class="control-label">Author</label><input type="text" class="form-control" name="author" id="author" value="'+this.model.get('author')+'" /></div></div>';
+		f += '</div>';
 		
 		var tags = this.model.get('tags').join('; ');
 		
-		form += '<div class="row">';
-		form += '<div class="col-md-6"><div class="form-group"><label for="tags" class="control-label">Tags</label><input type="text" class="form-control" name="tags" id="tags" value="'+tags+'" /><div class="help-block">Separate tags with semi-colons.</div></div></div>';
-		form += '<div class="col-md-6"><div class="form-group"><label for="source" class="control-label">Source</label><input type="text" class="form-control" name="source" id="source" value="'+this.model.get('source')+'" /></div></div>';
-		form += '</div>';
+		f += '<div class="row">';
+		f += '<div class="col-md-6"><div class="form-group"><label for="tags" class="control-label">Tags</label><input type="text" class="form-control" name="tags" id="tags" value="'+tags+'" /><div class="help-block">Separate tags with semi-colons.</div></div></div>';
+		f += '<div class="col-md-6"><div class="form-group"><label for="source" class="control-label">Source</label><input type="text" class="form-control" name="source" id="source" value="'+this.model.get('source')+'" /></div></div>';
+		f += '</div>';
 		
-		form += '<div class="form-group"><label for="description" class="control-label">Description</label><input type="text" class="form-control" name="description" id="description" value="'+this.model.get('description')+'" /></div>';
+		f += '<div class="form-group"><label for="description" class="control-label">Description</label><input type="text" class="form-control" name="description" id="description" value="'+this.model.get('description')+'" /></div>';
 		
-		form += '<div class="row"><div class="col-xs-8"><button type="submit" class="btn btn-primary">Preview</button> <button class="btn btn-success save" type="button" disabled>Save</button></div><div class="col-xs-4 text-right"><button type=button class="btn btn-default cancel">Cancel</button></div></div><hr/>';
-    
-    	$(this.el).html(form);
-        return this;
-    },
+		return f;
+	},
 	
 	/**
-	 * add form inputs for subtables
+	 * action for add subtable button
 	 *
 	 */
 	addSubtableForm: function(e){
 		$button = $(e.currentTarget);
-		this.subt++;
-		
-		form = '<div class="form-group"><label for="subt_t'+this.subt+'" class="control-label">Subtable '+this.subt+' Name</label><input type=text class="form-control"name="subt_t'+this.subt+'" id="subt_t'+this.subt+'" value=""   placeholder="subtable'+this.subt+'"  /><div class="help-block">Short and without spaces is best.</div></div>';
-		form += '<div class="form-group"><label for="subt'+this.subt+'" class="control-label">Subtable '+this.subt+' Data</label><textarea class="form-control" name="subt'+this.subt+'" id="subt'+this.subt+'"></textarea><div class="help-block">Import formats.</div></div>';
-		
+		var form = this.subtableForm();
 		$(form).insertBefore($button.parent('div.form-group'));
+	},
+	
+	
+	/**
+	 *	returns a subtable empty or filled
+	 * @param {String} [table] the subtable data
+	 * @param {String} [title] the subtable title
+	 * @returns {String} the form fields
+	 */
+	subtableForm: function(table, title) {
+		if (typeof table == 'undefined') {
+			table = '';
+		}
+		if (typeof title == 'undefined') {
+			title = '';
+		}
+		this.subt++;
+		var f = '';
+		
+		f += '<div class="form-group"><label for="subt_t'+this.subt+'" class="control-label">Subtable '+this.subt+' Name</label><input type=text class="form-control"name="subt_t'+this.subt+'" id="subt_t'+this.subt+'" value="'+title+'"   placeholder="subtable'+this.subt+'"  /><div class="help-block">Short and without spaces is best.</div></div>';
+		f += '<div class="form-group"><label for="subt'+this.subt+'" class="control-label">Subtable '+this.subt+' Data</label><textarea class="form-control" name="subt'+this.subt+'" id="subt'+this.subt+'">'+table+'</textarea><div class="help-block">Import formats.</div></div>';
+		
+		return f;
 	},
 	
     /**
      * Process the form data and preview
+     * @todo A json validator I could run in app to highlight the error point would be cool
      * @todo edit this to handle json data. #26
      */
 	previewTable: function(e) {
 		e.preventDefault();
 		
-    	var data = $(e.target).serializeObject();
-    	//console.log(data);
-    	_.each(data, function(v,k,l){
-    		l[k] = v.trim();
-    	}, this);
-    	data.tags = data.tags.replace(/;*\s*$/, '');
-		data.tags = data.tags.split(/;\s*/g);
-		if (data.tags[0] == '') {
-			delete data.tags;
-		}
-		
-		/*
-var isjson = false;
-		var formjson = '';
-		try {
-			formjson = JSON.parse(data.tabledata);
-			isjson = true;
-		} catch (e) {
-			//console.error("Parsing error:", e); 
-		}
-		
-		//parse the json into the object
-		if (isjson) {		
-			console.log(formjson);
-			
-			if (!formjson.table && formjson.tables) {
-
+		if (this.mode == 'freeform') {
+			$('#freeform_error').addClass('hidden').html('');
+			try {
+				data = JSON.parse($('#tabledata').val());
+			} catch (e) {
+				//console.error("Parsing error:", e);
+				$('#freeform_error').html('<p>Invalid JSON: '+e+'</p><p>Usually that means you either:</p><ul><li>Didn\'t add a backslah before a double-quote.</li><li>Didn\'t put a comma after a quoted value.</li><li>Didn\'t properly close a double-quote, bracket, or brace.</li></ul><p>If the error is an "Unexpected token" then the letter after that message is the point in the data where something went wrong. Sorry, at this point that\'s the best I can tell you. You can always paste the data into <a href="http://jsonlint.com/">JSONLint</a> to get specifics.</p>').removeClass('hidden');
+				return;
 			}
 			
-			//add to json with local fields if json field isnt set
-			if (!formjson.title) {
-				formjson.title = data.title;
-			}
-			if (!formjson.author) {
-				formjson.author = data.author;
-			}
-			if (!formjson.tags) {
-				formjson.tags = data.tags;
-			}
-			if (!formjson.source) {
-				formjson.source = data.source;
-			}
-			if (!formjson.description) {
-				formjson.description = data.description;
-			}
-			
-			this.model.set(formjson);
-			this.model.normalize();
-		
 		} else {
+		
+	    	var data = $(e.target).serializeObject();
+	    	//console.log(data);
+	    	_.each(data, function(v,k,l){
+	    		l[k] = v.trim();
+	    	}, this);
+	    	data.tags = data.tags.replace(/;*\s*$/, '');
+			data.tags = data.tags.split(/;\s*/g);
+			if (data.tags[0] == '') {
+				delete data.tags;
+			}
 			
-*/
+	
 			if (data.format_html){
 				data.tabledata = this.parseTableHTML(data.tabledata);
 			} else {
@@ -234,13 +302,15 @@ var isjson = false;
 						data.tables[t] = d; 
 					}
 					delete data['subt'+i];
+					delete data['subt_t'+i];
 				}
 			}
-			
-			//console.log(data);
-			this.model.set(data);
-			this.model.normalize();
-		//}
+		
+		} //end mode switch
+		
+		//console.log(data);
+		this.model.set(data);
+		this.model.normalize();
 		
 		this.enableSave();
 		document.getElementById('import-preview').scrollIntoView(true);
@@ -346,6 +416,33 @@ var isjson = false;
 			
 	},
 	
+	
+	/**
+	 * Take a table object and convert it for use in the table edit textarea
+	 * @param {Object} table the table object
+	 * @returns {String} object converted to string for textarea
+	 */
+	parseTableObject: function(table) {
+		if (typeof table == 'undefined' || typeof table == 'string') { return ''; }
+		var string = '';
+		var t = _.map(table, function(v,k,l){
+			if(_.isString(v)){ return v; } //must be an array of string
+			var s = '';
+			if (v.weight && v.weight > 1) {
+				s += v.weight+'##';
+			}
+			s += v.label;
+			if (v.subtable && v.subtable !== '') {
+				s += '##'+v.subtable;
+			}
+			return s;
+		}, this);
+		
+		console.log(t);
+		
+		return t.join('\n');
+	},
+	
 	/**
 	 * Save action. Saves table, resets form.
 	 *
@@ -382,19 +479,25 @@ var isjson = false;
 	 * opens a modal with table import help.
 	 */
 	helpModal: function() {
-		var body = '<p>You can add your own Random Tables through this form. All fields are optional, though you at least need to put in some table data, and a title is recommended if you want to add more than one table.</p><p>You have a lot of options for formatting your data from the very simple to the complex: for now the easiest method is:</p>';
-		
-		body += '<ul><li>One entry per line. (Just that will get you a table of equally likely results.)</li>';
-		body += '<li>To weight a random chance you have two options:<ul><li>For a die like format, prefix the entry with a number or a number range and a space(s), comma, period, or colon. (i.e. "1: first", "2-3. second", "4-6, third")</li><li>To directly weight the chances, prefix with a number followed by two pound signs (i.e. "2##This entry will be twice as likely", "4##This entry is four times as likely").</li></ul></li>';
-		body += '<li>If you add multiple tables, you can add two pounds signs and the name of a table to the end of a line to have the randomizer select from the named subtable if the entry is selected (i.e. "Bandits##bandit_types") Subtables are better if short with limited punctuation.</li>';
-		
-		body += '<li>You can insert tokens into the results to perform actions like generating numbers or rolling on other random tables. For instance:<ul><li>Roll a number: {{roll:3d6+1}} in the results will generate a new random number every time that result comes up. The section after the semi-colon should accept any form of [A Number or Blank]d[Another number][An arithmatic operator: +, -, *, or /][Another number] (i.e. "d6", "d6*2", "2d10+10", etc.)</li>';
-		body += '<li>Select from a table: {{table:general.color}} will randomly select a color. You can reference any other table in the app, but I still need to improve the table references (how to reference them and where to find those names).</li>';
-		
-		body += '</ul></li>';
-		
-		body += '</ul>';
-		body += '<p>You can test the table at right before saving. Saving the table will save it to your local browser storage and add the table to the Random Tables list. The Import/export code area shows you the table as converted to JSON (which we can use later for importing/exporting/sharing).</p>';
+		if (this.mode == 'guided') {
+			var body = '<p>You can add your own Random Tables through this form. All fields are optional, though you at least need to put in some table data, and a title is recommended if you want to add more than one table.</p><p>You have a lot of options for formatting your data from the very simple to the complex: for now the easiest method is:</p>';
+			
+			body += '<ul><li>One entry per line. (Just that will get you a table of equally likely results.)</li>';
+			body += '<li>To weight a random chance you have two options:<ul><li>For a die like format, prefix the entry with a number or a number range and a space(s), comma, period, or colon. (i.e. "1: first", "2-3. second", "4-6, third")</li><li>To directly weight the chances, prefix with a number followed by two pound signs (i.e. "2##This entry will be twice as likely", "4##This entry is four times as likely").</li></ul></li>';
+			body += '<li>If you add multiple tables, you can add two pounds signs and the name of a table to the end of a line to have the randomizer select from the named subtable if the entry is selected (i.e. "Bandits##bandit_types") Subtables are better if short with limited punctuation.</li>';
+			
+			body += '<li>You can insert tokens into the results to perform actions like generating numbers or rolling on other random tables. For instance:<ul><li>Roll a number: {{roll:3d6+1}} in the results will generate a new random number every time that result comes up. The section after the semi-colon should accept any form of [A Number or Blank]d[Another number][An arithmatic operator: +, -, *, or /][Another number] (i.e. "d6", "d6*2", "2d10+10", etc.)</li>';
+			body += '<li>Select from a table: {{table:general.color}} will randomly select a color. You can reference any other table in the app, but I still need to improve the table references (how to reference them and where to find those names).</li>';
+			
+			body += '</ul></li>';
+			
+			body += '</ul>';
+			body += '<p>You must preview the table at right before saving. Saving the table will save it to your local browser storage and add the table to the Random Tables list. The Import/export code area shows you the table as converted to JSON (which we can use later for importing/exporting/sharing).</p>';
+		} else if (this.mode == 'freeform') {
+			//* @todo add link to tableformat.md doc (anchor to freeform section?) */
+			body = '<p>Freeform mode only accepts valid JSON in the input field, so it is more complicated than Guided mode. But, in exchange, you have much greater control over the table options and data. Learn about formatting and table options.</p>';
+			
+		}
 		
 		app.showModal('Import Format Help', body);		
 	},

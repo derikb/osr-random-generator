@@ -1,6 +1,7 @@
 .tab-pane { padding: 20px; }
 
 textarea.form-control { min-height: 150px; }
+textarea.form-control.textarea-tall { min-height: 400px; }
 
 #app_alert { margin-top: 10px; }
 
@@ -89,6 +90,8 @@ li.character-list, li.chargroup-list, li.wilderness-list, li.dungeon-list {
 fieldset fieldset legend {
 	font-size: 16px;
 }
+
+#rtable-list table td { word-break: break-word; }
 
 .rtable_select header { font-weight: bold; }
 .rtable_select ol { margin-left: 15px; }
