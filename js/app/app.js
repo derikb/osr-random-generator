@@ -30,12 +30,12 @@ var AppRouter = Backbone.Router.extend(
 		
 		$('#dungeon-form').append(new DungeonForm({ model: this.AppSettings }).render().el);
 		
-		this.importer = new Importer();
-		//$('#import-form').append(new ImportForm().render().el);
+		this.creator = new Creator();
 		
 		this.exporter = new Exporter();
 		
-    },
+		this.importer = new Importer();
+	},
 	
 	/**
 	 * Retrieve saved data and list out all RandomTables
@@ -94,6 +94,29 @@ var AppRouter = Backbone.Router.extend(
 		$('#editmodal').on('shown.bs.modal', function(e) {
 			$(e.target).find('input[type="text"]:first').focus();
 		});
+	},
+	
+	/**
+	 * Alert utility
+	 * @param {String} text Content of the alert
+	 * @param {Object} [options] Options such as: atype: Alert type (info, success, danger, warning), className, id
+	 * @returns {Object} bootstrap alert as a jquery object
+	 */
+	showAlert: function(text, options) {
+		if (typeof text == 'undefined' || text == '') { return; }
+		
+		options = $.extend({
+			atype: 'info',
+			className: '',
+			id: ''
+		}, options);
+				
+		var $alert = $('<div></div>')
+			.addClass('alert alert-'+options.atype+ ' '+options.className)
+			.attr('id', options.id);
+		$alert.append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>');
+		$alert.append(text);
+		return $alert;
 	}
 	
 	/*
@@ -197,6 +220,8 @@ var AppSettingsView = Backbone.View.extend(
 	render: function() {
 		var form = '';
 		form += '<div class="alert alert-info">Settings will be saved to your local browser storage for re-use.</div>';
+		form += '<div class="row">';
+		form += '<div class="col-sm-6">';
  		form += '<div class="form-group"><label for=rules_set class="control-label">Rules</label><select class="form-control" id="rules_set" name="rules_set">';
 			_.each(appdata.rules.options, function(v,k,l){
 				var sel = (v.option == this.model.get('rules_set')) ? 'selected=selected' : '';
@@ -213,7 +238,7 @@ var AppSettingsView = Backbone.View.extend(
 			var char_display = [{ option: 'full', label: 'Full Character Display' }, { option: 'soft', label: 'No Stats/Numbers' } ];
     		_.each(char_display, function(v){
     			var sel = (v.option == this.model.get('character_display')) ? 'checked=checked' : '';
-	    		form += '<label class="radio-inline"><input type="radio" name="character_display" value="'+v.option+'" '+sel+' /> '+v.label+'</label>'
+	    		form += '<label class="radio"><input type="radio" name="character_display" value="'+v.option+'" '+sel+' /> '+v.label+'</label>'
     		
     		}, this);
 			form += '<div class="help-block">If you don\'t want the numbers, change this setting.</div></div>';
@@ -223,7 +248,7 @@ var AppSettingsView = Backbone.View.extend(
 			var ability_display = [{ option: 'full', label: 'Full (all abilities/scores/modifiers)' }, { option: 'minimal', label: 'Minimal (Only abilities with modifiers not 0)' } ];
     		_.each(ability_display, function(v){
     			var sel = (v.option == this.model.get('ability_display')) ? 'checked=checked' : '';
-	    		form += '<label class="radio-inline"><input type="radio" name="ability_display" value="'+v.option+'" '+sel+' /> '+v.label+'</label>'
+	    		form += '<label class="radio"><input type="radio" name="ability_display" value="'+v.option+'" '+sel+' /> '+v.label+'</label>'
     		
     		}, this);
 			form += '<div class="help-block">For shorter character blocks pick "minimal".</div></div>';
@@ -262,6 +287,10 @@ var AppSettingsView = Backbone.View.extend(
 		form += '</fieldset>';
 		
 		form += '<div class="form-group"><button type=submit class="btn btn-primary">Save Settings</button></div>';
+		
+		form += '</div>';
+		
+		form += '</div>';
 	
 		$(this.el).html(form);
 		return this;
