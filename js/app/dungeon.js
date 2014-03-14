@@ -59,7 +59,7 @@ var Dungeon = Backbone.Model.extend(
 		//room.content = app.randomizer.rollRandom(appdata.dungeon.rooms.content);
 		//room.treasure = app.randomizer.rollRandom(appdata.dungeon.rooms.content[room.content].treasure);
 		
-		var ctable = app.rtables.getTable(app.AppSettings.get('dungeon').stocking_table);
+		var ctable = app.rtables.getByTitle(app.AppSettings.get('dungeon').stocking_table);
 		ctable.generateResult();
 		//console.log(ctable.get('result'));
 		
@@ -111,7 +111,7 @@ var Dungeon = Backbone.Model.extend(
 	 * @returns {String} trap description
 	 */	
 	generateTrap: function() {
-		var t = app.rtables.getTable(app.AppSettings.get('dungeon').trap_table);
+		var t = app.rtables.getByTitle(app.AppSettings.get('dungeon').trap_table);
 		t.generateResult();
 		return t.niceString();
 	},
@@ -121,7 +121,7 @@ var Dungeon = Backbone.Model.extend(
 	 * @returns {String} special description
 	 */	
 	generateSpecial: function() {
-		var t = app.rtables.getTable(app.AppSettings.get('dungeon').special_table);
+		var t = app.rtables.getByTitle(app.AppSettings.get('dungeon').special_table);
 		t.generateResult();
 		return t.niceString();
 	},
@@ -594,7 +594,7 @@ var DungeonEditView = Backbone.View.extend(
 				form += '<input type=hidden id=room_number name=number value="'+this.roomnumber+'" />';
 
 				form += '<div class="form-group"><label class="control-label" for="editcontent">Content</label><select class="form-control" id="editcontent" name="content">';
-					var stable = app.rtables.getTable(app.AppSettings.get('dungeon').stocking_table);
+					var stable = app.rtables.getByTitle(app.AppSettings.get('dungeon').stocking_table);
 					_.each(stable.selectList('content'), function(v,k,l){
 						var sel = (room.content == v.label) ? 'selected=selected' : '';
 						form += '<option value="'+v.label+'" '+sel+'>'+v.label.capitalize()+'</option>';

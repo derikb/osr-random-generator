@@ -209,7 +209,7 @@ var Character = Backbone.Model.extend(
 		if (cclass == 'random') {
 			this.set('charclass', app.randomizer.getWeightedRandom(this.getRules().classes.random.options, this.getRules().classes.random.weight) );
 		} else if (cclass == 'none') {
-			var oc = app.rtables.getTable(app.AppSettings.get('occupation_type')); 
+			var oc = app.rtables.getByTitle(app.AppSettings.get('occupation_type')); 
 			oc.generateResult();
 			this.set('occupation', oc.niceString(true));
 		}
@@ -221,7 +221,7 @@ var Character = Backbone.Model.extend(
 	selectArmor: function() {
 		var charclass = this.get('charclass');
 		if (charclass == 'none') {
-			var t = app.rtables.getTable(app.AppSettings.get('occupation_type'));
+			var t = app.rtables.getByTitle(app.AppSettings.get('occupation_type'));
 			var occ = t.findObject(this.get('occupation'));
 			if (typeof occ.armor == 'undefined') { return ''; }
 			if (occ.armor == false) { return ''; }
@@ -254,7 +254,7 @@ var Character = Backbone.Model.extend(
 			var spelllist = this.getRules().classes[charclass].spelllist;
 			var spelluse = this.getRules().classes[charclass].spells[this.get('level') - 1];
 			var selected = {};
-			var spelltable = app.rtables.getTable(spelllist);
+			var spelltable = app.rtables.getByTitle(spelllist);
 			for(var i=0; i < spelluse.length; i++) {
 				var level = i+1;
 				lvl = 'lvl'+level;
@@ -357,7 +357,7 @@ var Character = Backbone.Model.extend(
 	 */
 	selectPersonality: function(ct) {
 		var personality = [];
-		var ptable = app.rtables.getTable(app.AppSettings.get('personality_type')); 
+		var ptable = app.rtables.getByTitle(app.AppSettings.get('personality_type')); 
 		for(var i=1;i<=ct;i++){
 			ptable.generateResult();
 			personality.push(ptable.niceString());
@@ -371,7 +371,7 @@ var Character = Backbone.Model.extend(
 	 */
 	selectAppearance: function(ct) {
 		var appearance = [];
-		var atable = app.rtables.getTable(app.AppSettings.get('appearance_type'));
+		var atable = app.rtables.getByTitle(app.AppSettings.get('appearance_type'));
 		for(var i=1;i<=ct;i++){
 			atable.generateResult();
 			appearance.push(atable.niceString());
@@ -383,7 +383,7 @@ var Character = Backbone.Model.extend(
 	 * Select/Set goals traits
 	 */
 	selectGoals: function() {
-		var g = app.rtables.getTable('character_goals');
+		var g = app.rtables.getByTitle('character_goals');
 		g.generateResult();
 		return  g.niceString();
 	},
@@ -392,7 +392,7 @@ var Character = Backbone.Model.extend(
 	 * Set Reaction Roll
 	 */
 	rollReaction: function() {
-		var t = app.rtables.getTable('reaction');
+		var t = app.rtables.getByTitle('reaction');
 		t.generateResult();
 		return t.niceString();
 	},
@@ -503,7 +503,6 @@ var CharacterBlock = Backbone.View.extend(
 	initialize: function() {
     	this.listenTo(this.model, "change", this.render);
     	this.listenTo(this.model, "destroy", this.remove);
-    	//this.listenTo(this.model, "change", this.model.save);
     },
     
     saveCharacter: function() {
@@ -748,7 +747,7 @@ var CharacterEditView = Backbone.View.extend(
 		var list = $(e.target).attr('data-list');
 		
 		if (this.field == 'personality' || this.field == 'appearance' || this.field == 'goals') {
-			var t = app.rtables.getTable(list);
+			var t = app.rtables.getByTitle(list);
 			t.generateResult();
 			$('#'+inputtarget).val(t.niceString());
 		} else if (this.field == 'name') {
@@ -761,7 +760,7 @@ var CharacterEditView = Backbone.View.extend(
 			//list = lvl1
 			var charclass = this.model.get('charclass');
 			var spelllist = this.model.getRules().classes[charclass].spelllist;		
-			var spelltable = app.rtables.getTable(spelllist);
+			var spelltable = app.rtables.getByTitle(spelllist);
 			spelltable.generateResult(list);
 			//var newval = _.sample(appdata.spells.bylevel[spelllist][list]);
 			$('#'+inputtarget).val(spelltable.niceString(true));
@@ -811,7 +810,7 @@ var CharacterEditView = Backbone.View.extend(
 			
 			case 'occupation':
 				form += '<div class="form-group"><label for="occupation" class="control-label">Occupation</label><select class="form-control" id="occupation" name="occupation">';
-					var t = app.rtables.getTable(app.AppSettings.get('occupation_type'));
+					var t = app.rtables.getByTitle(app.AppSettings.get('occupation_type'));
 					_.each(t.selectList('default'), function(v) {
 						var sel = (v.label == this.model.get(field)) ? 'selected=selected' : '';
 						form += '<option value="'+v.label+'" '+sel+'>'+v.label.capitalize()+'</option>';
@@ -835,7 +834,7 @@ var CharacterEditView = Backbone.View.extend(
 					form += '<div class="form-group"><label class="control-label" for="edit'+field+'_'+i+'">'+field.capitalize()+' '+num+'</label><div class="input-group"><input type=text class="form-control" id="edit'+field+'_'+i+'" name="'+field+'" value="'+cur[i]+'" />';
 					
 					form += '<div class="input-group-btn"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Randomly Replace from... <span class="caret"></span></button><ul class="dropdown-menu pull-right">';
-						var options = app.rtables.getTables(field);
+						var options = app.rtables.getByTags(field);
 						_.each(options, function(v,k){
 							form += '<li><a class="randomize" href="#" data-targetfield="edit'+field+'_'+i+'" data-list="'+v.get('key')+'">'+v.get('title')+'</a></li>';
 						});			
