@@ -39,7 +39,7 @@
 				<div class="collapse navbar-collapse" id="app_nav">
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="#tables" data-toggle="tab">Random Tables</a></li>
-						<li><a href="#import" data-toggle="tab">Create Tables</a></li>
+						<li><a href="#create" data-toggle="tab">Create Tables</a></li>
 						<li><a href="#npcs" data-toggle="tab">NPCs</a></li>
 						<li><a href="#wilderness" data-toggle="tab">Wilderness</a></li>
 						<li><a href="#dungeon" data-toggle="tab">Dungeon</a></li>
@@ -48,6 +48,7 @@
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-info-sign"></span> <b class="caret"></b></a>
 							<ul class="dropdown-menu dropdown-menu-right">
 								<li><a href="#export" data-toggle="tab">Export</a></li>
+								<li><a href="#import" data-toggle="tab">Import</a></li>
 								<li><a href="#settings" data-toggle="tab">Settings</a></li>
 								<li class="divider"></li>
 								<li><a href="#help" data-toggle="tab">Help</a></li>
@@ -95,11 +96,15 @@
 			<div class="tab-pane hidden-print" id="wilderness">
 				<!-- Some other generator here. -->
 				<div class="alert alert-info">The idea here is to generate a sheet of results pre-rolled from random tables, so that it can be ready for use as needed rather than rolling randomly during gameplay. This makes it easier to tweak results, customize them, and integrate them into the rest of the session/campaign. Right now it only works with hex dressing and encounters for swamps and roads (and they are not fully fleshed out yet). More soon.</div>
-				
-				<div id=wilderness-form></div>
-				<div id=wilderness-results></div>
-				<div id=wilderness-list></div>
-				
+				<div class="row">
+					<div class="col-sm-6">
+						<div id=wilderness-results></div>
+					</div>
+					<div class="col-sm-6">
+						<div id=wilderness-form></div>
+						<div id=wilderness-list></div>
+					</div>
+				</div>
 			</div>
 			
 			<div class="tab-pane hidden-print" id="dungeon">
@@ -126,21 +131,21 @@
 			</div>
 			-->
 			
-			<div class="tab-pane hidden-print" id="import">
+			<div class="tab-pane hidden-print" id="create">
 				<!-- Form for importing tables -->
 				<div class="row">
 					<div class="col-sm-6">
-						<section id="import-form">
+						<section id="rtable-form">
 						</section>
 					</div>
 					
 					<div class="col-sm-6 hidden-print">
-						<section id="import-preview">
+						<section id="rtable-preview">
 							<table class="table table-striped">
 								<caption>Test your table before saving.</caption>
 								<tr><td></td></tr>
 							</table>
-							<h2>Import/Export Code</h2>
+							<h2>Table Code</h2>
 							<pre></pre>
 						</section>
 					</div>
@@ -149,7 +154,11 @@
 			
 			
 			<div class="tab-pane hidden-print" id="export">
-
+				
+			</div>
+			
+			<div class="tab-pane hidden-print" id="import">
+				
 			</div>
 			
 			
@@ -160,6 +169,8 @@
 			<div class="tab-pane hidden-print" id="help">
 				<section>
 					<h1>Help</h1>
+					<div class="row">
+					<section class="col-sm-6">
 					<h2>General</h2>
 					<ul>
 						<li>Online version at: <a href="http://derikb.github.io/osr-random-generator/">http://derikb.github.io/osr-random-generator/</a></li>
@@ -168,7 +179,16 @@
 						<li>Saved tables, characters, settings, etc. are stored in your browser's local storage. Be careful when clearing your browser cache/data else you may delete what you've saved. (I'll get an import/export working soon.)</li>
 						<li>Printing from the NPC tab should only print the NPCs in the "Current Characters" list as 5" wide cards (going for 3"x5" cards but height is hard to maintain). I'll try to improve printing for NPCs and other tabs in the future.</li>
 					</ul>
-					
+					<h3>Icons</h3>
+					<ul>
+						<li><span class="glyphicon glyphicon-save"></span> - Save</li>
+						<li><span class="glyphicon glyphicon-eye-open"></span> - Open/View</li>
+						<li><span class="glyphicon glyphicon-eye-close"></span> - Close (also "delete" if item has not been saved)</li>
+						<li><span class="glyphicon glyphicon-remove"></span> - Delete</li>
+						<li><span class="glyphicon glyphicon-info-sign"></span> - Get more information (usually in a modal window)</li>
+					</ul>	
+					</section>
+					<section class="col-sm-6">
 					<h3>Random Tables</h3>
 					<ul>
 						<li>Click tags to filter the list.</li>
@@ -184,7 +204,10 @@
 						<li>Hit the "import help" to get a modal about table formatting.</li>
 						<li>More complicated options are available, I just need to better document them and improve the import option.</li>
 					</ul>
-					
+					</section>
+					</div>
+					<div class="row">
+					<section class="col-sm-6">
 					<h3>NPCs</h3>
 					<ul>
 						<li>You can click on most fields to edit them (some fields that are generated exclusively from other fields cannot be edited, i.e. Attack Bonus, AC).</li>
@@ -195,7 +218,8 @@
 						<li>Gender only effects the random name generator.</li>
 						<li>Most 0-level humans are not given armor, but a few <em>are</em> based on their occupation.</li>
 					</ul>
-					
+					</section>
+					<section class="col-sm-6">
 					<h3>Wilderness</h3>
 					<ul>
 						<li>Pretty basic so far. Encounter tables are by me.</li>
@@ -205,22 +229,17 @@
 					<ul>
 						<li>Basic random stocking procedure from Moldvay's Basic D&D, that will generate monsters, treasures, traps, and special/tricks.</li>
 					</ul>
+					</section>
+					</div>
 					
-					<h3>Icons</h3>
-					<ul>
-						<li><span class="glyphicon glyphicon-save"></span> - Save</li>
-						<li><span class="glyphicon glyphicon-eye-open"></span> - Open/View</li>
-						<li><span class="glyphicon glyphicon-eye-close"></span> - Close (also "delete" if item has not been saved)</li>
-						<li><span class="glyphicon glyphicon-remove"></span> - Delete</li>
-						<li><span class="glyphicon glyphicon-info-sign"></span> - Get more information (usually in a modal window)</li>
-					</ul>	
 				</section>
 			</div>
 			
 			<div class="tab-pane hidden-print" id="credits">
 				<!-- Credits -->
 				<p>Coding by <a href="http://madinkbeard.com">Derik A. Badman</a>. Made with: <a href="http://jquery.com">jQuery</a>, <a href="http://getbootstrap.com/">Bootstrap</a>, <a href="http://backbonejs.org/">Backbone</a> (with the <a href="https://github.com/jeromegn/Backbone.localStorage">Local Storage adapter</a>), and <a href="http://underscorejs.org/">Underscore</a>.</p>
-				<section>
+				<div class="row">
+				<section class="col-sm-6">
 					<h3>Sources</h3>
 					<ul>
 						<li>For the most part, I am only using data that has an OGL license or is freely available online already. I have no plans to monetize this in any way, so please don't get mad.</li>
@@ -239,7 +258,7 @@
 						<li>Dungeon generator "special" results from: <a href=\"http://rolesrules.blogspot.com/2014/02/download-bag-of-tricks-2-now-easier.html\">Bag of Tricks 2</a> by Roger S.G. Sorolla</li>
 					</ul>
 				</section>
-				<section>
+				<section class="col-sm-6">
 					<h3>Notes</h3>
 					<ul>
 						<li>My original goal for this application was to create something that would be directly useful for me in prepping sessions for my game (we use LotFP rules), but that also might be useful during a session if something quick needs to be rolled up. I had collected so many books and pdfs and tables from various places that it was all a little overwhelming and hard to keep track of, so I thought I might be able to easily consolidate what I wanted to use in a simple way.</li>
@@ -249,6 +268,7 @@
 </li>
 					</ul>
 				</section>
+				</div>
 			</div>
 			
 		</div>
@@ -300,6 +320,7 @@
 	<script src="js/app/wilderness.js"></script>
 	<script src="js/app/dungeon.js"></script>
 	<script src="js/app/treasure.js"></script>
+	<script src="js/app/creator.js"></script>
 	<script src="js/app/import.js"></script>
 	
 	<script>
