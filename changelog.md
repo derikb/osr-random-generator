@@ -17,6 +17,7 @@ v0.6 - 2014-03-xx
     * Modals now have a close button at the bottom of the modal.
     * Some table columns disappear at narrow widths to keep tables from horizontally scrolling.
     * A bunch of pages broken into columns at wider screens.
+* Added simple keyword search filter for Random Tables list.
 * Fixed issue with the Random Table sorting being case sensitive (which messed up the title sort).
 
 v0.5 - 2014-03-08

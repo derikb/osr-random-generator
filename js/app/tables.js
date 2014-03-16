@@ -1042,7 +1042,7 @@ var RTable_List = Backbone.View.extend(
      * show tables based on search query (activated by typing in filter form)
      */
     filter_keyword: function(e) {
-	    console.log( $(e.currentTarget).val() );
+	    //console.log( $(e.currentTarget).val() );
 	    query = $(e.currentTarget).val();
 	    
 	    if (this.kwquery) {
@@ -1055,7 +1055,7 @@ var RTable_List = Backbone.View.extend(
 			// later
 			this.model.search(query, function( matches ){
 				_.each(matches, function(match){
-					console.log('Found '+query+' in '+match.get('title'));
+					//console.log('Found '+query+' in '+match.get('title'));
 					$('#'+match.get('key')).removeClass('hidden');
 				});
 			});

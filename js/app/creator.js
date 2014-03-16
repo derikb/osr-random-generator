@@ -272,7 +272,7 @@ var CreatorForm = Backbone.View.extend(
      */
 	switchFormat: function(e) {
 		format = $(e.currentTarget).val();
-		console.log(format);
+		//console.log(format);
 		
 		if (format == 'bookmarklet') {
 			$('.addtable').addClass('hidden');
@@ -431,9 +431,9 @@ var CreatorForm = Backbone.View.extend(
 		
 		html = html.replace(/\<\/?[^\>]+\>/g, '').replace(/[\n\r]+$/, '');
 		
-		console.log(html);
+		//console.log(html);
 		text = html.split(/[\n\r]+/g);
-		console.log(text);
+		//console.log(text);
 		
 		var ct = 0;
 		_.each(text, function(v,k,l){
@@ -561,7 +561,7 @@ var CreatorForm = Backbone.View.extend(
 			}, this);
 			
 		}
-		console.log(tabledata);
+		//console.log(tabledata);
 		return tabledata;
 	},
 	
