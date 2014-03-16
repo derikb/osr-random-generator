@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-v0.6 - 2014-03-xx
+v0.6 - 2014-03-16
 -----------------
 
 * Added Export function to take saved data from LocalStorage and save it as a file.

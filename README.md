@@ -7,15 +7,13 @@ Online version at: http://derikb.github.io/osr-random-generator/
 
 It has a few related functions that are in varying states of development.
 
-1) Random tables: View and roll on random tables. You can add your own tables from the very simple to the rather complex. Right now the Create Table option is more on the simple side, but you should be able to paste in content from webpages and have them get parsed.
+1) Random tables: View and roll on random tables. You can add your own tables from the very simple to the rather complex. You can create new tables with plain text, html, or use a more complicated JSON object.
 
 2) NPC generator: Creates NPCs (though I guess they could also be quickstart PCs) for Lamentations of the Flame Princess or Labyrinth Lord rules (though they could be easily used for other OSR type games, and there is some Swords & Wizardry support).
 
 3) Dungeon Stocking: Using the Moldvay dungeon stocking rules, Labyrinth Lord monster stats and treasure hoards, trap tables from Courtney Campbell, and special results from Roger S.G. Sorolla. It will generate results for Dungeon rooms. Might not be super helpful for actual use, but I'm hoping to improve this later.
 
 4) Wilderness Hex Generation: Put in a terrain type and it will generate hex dressing and encounters of various sorts. Primarily meant as a pre-session prep in case your PCs head off into an unplanned wilderness, or as a way to add some extra flavor to travel. Still very much in progress (needs more encounter tables and a way to customize them).
-
-User added tables & customization are an end-goal of this project, and I am hoping to make it as easy as possible.
 
 
 Install on a Desktop or Laptop
@@ -43,13 +41,7 @@ Usage
 * Use the Settings tab to set some parameters and defaults. These will be saved in your browser, so will "stick" as long as you don't clear your browser data.
 * Use the Random Tables tab to roll results on tables or to choose from the tables.
     * Click on tags to filter the list. Click on the x icon next to the current filter to show all tables again.
-* The Import Tables tab let's you save your own tables.
-    * The simplest format (put in the table data field) is to use:
-        * One random entry per line.
-        * To weight a random chance, prefix the entry with a number.
-            * If the number is followed by a period, comma, colon, or space it will be treated like a die roll on a die. So a single number will be weighted 1, while a range will be weighted based on the range ("2-5" would be weighted 4).
-            * If the number is followed by two pound signs the number will be the specific weight (i.e. "2##This entry will be twice as likely", "4##This entry is four times as likely").
-        * If you follow the result with two pound signs and the name of a subtable, when that results comes up, the subtable will also be rolled on. (You can also add subtable rolls to subtable results.)
+* The Create Tables tab let's you save your own tables. (See on screen help button for more details.)
 * Use the NPCs tab to create new characters. You can click on most fields to edit them (some fields that are generated exclusively from other fields cannot be edited, i.e. Attack Bonus, AC). Click the icons to save/remove/delete.
     * Assign characters to groups for sorting purposes on the "Saved Characters" list. From that list you can open the full character details (the character card will appear in the right column) or delete the character.
     * Try printing. You should only get a print-out of the characters displayed in the right column, they should be set up as 5" wide cards (it's hard to limit it to 3" height, but I was going for a 3x5 card output, maybe I can improve this later on).
