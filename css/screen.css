@@ -10,6 +10,8 @@ caption {
 	font-size: 16px;
 }
 
+code { white-space: normal; }
+
 section h1 {
 	margin-top: 5px;
 	font-size: 24px;
@@ -105,7 +107,7 @@ fieldset fieldset legend {
 }
 */
 
-#import_preview { height: 400px; overflow: scroll; }
+#import_preview, #create_preview { height: 400px; overflow: scroll; }
 
 #export-link { margin: 0 10px; }
 

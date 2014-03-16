@@ -43,6 +43,30 @@ var RandomTable = Backbone.Model.extend(
 		this.normalize();
 	},
 	
+	
+	/**
+	 * validate fields before saving
+	 * @returns {Object} error information
+	 */
+	validate: function(attributes, options) {
+		//console.log(attributes);
+		var error = { fields: [], general: '' };
+		
+		if (attributes.title == '') {
+			error.fields.push({ field: 'title', message: 'Title cannot be blank' });
+			error.general += 'Title cannot be blank. ';
+		}
+		
+		if ( typeof attributes.tables == 'string' || _.isEmpty(attributes.tables) ) {
+			error.fields.push({ field: 'title', message: 'Table cannot be empty' });
+			error.general += 'Table cannot be empty. ';
+		}
+		
+		if (!_.isEmpty(error.fields) || !_.isEmpty(error.general)) {
+			return error;
+		}
+	},
+	
 	/**
 	 * Normalize data - mostly move "table" to "table.default"
 	 */
@@ -466,11 +490,15 @@ var RandomTableShort = Backbone.View.extend(
 	 *
 	 * @augments external:Backbone.View
 	 * @constructs
+	 * @param {Object} options include optional "import" property to change view if we are in the import area.
 	 */
-    initialize:function () {
+    initialize:function (options) {
         this.tcells = this.model.shortdisplay;
         this.listenTo(this.model, "change", this.render);
         this.listenTo(this.model, "destroy", this.remove);
+       
+        this.options = options || {};
+        this.import = (this.options.import) ? this.options.import : false;
     },
      
     render: function () {
@@ -481,7 +509,13 @@ var RandomTableShort = Backbone.View.extend(
 		
 		_.each(this.model.theaders, function(v) {
 			if (v == 'actions') {
-				$(this.el).append('<td><button title="Info" class="btn btn-default info"><span class="glyphicon glyphicon-info-sign"></span></button> <button title="Pick" class="btn btn-default pick"><span class="glyphicon glyphicon-eye-open"></span></button> <button title="Roll" class="btn btn-default roll"><span class="glyphicon glyphicon-random"></span></button></td>');
+				$actions = $('<td></td>');
+				$actions.append('<button title="Info" class="btn btn-default info"><span class="glyphicon glyphicon-info-sign"></span></button> <button title="Pick" class="btn btn-default pick"><span class="glyphicon glyphicon-eye-open"></span></button> <button title="Roll" class="btn btn-default roll"><span class="glyphicon glyphicon-random"></span></button> ');
+				if (this.import) {
+					$actions.append(' <button title="Remove" class="btn btn-default remove"><span class="glyphicon glyphicon-remove"></span></button>');
+				}
+				
+				$(this.el).append($actions);
 				return;
 			} else if (v == 'tags') {
 				var tags = '';
@@ -569,7 +603,7 @@ RandomTableInfo = Backbone.View.extend(
 
 		var temp = '<dl><dt data-field="title">Title</dt><dd data-field="title"><%= title %></dd><dt data-field="author">Author</dt><dd data-field="author"><% if (author == "") { %>[unknown]<% } else { %><%= author %><% } %></dd><dt data-field="source">Source</dt><dd data-field="source"><% if (source == "") { %>[unknown]<% } else { %><%= source %><% } %></dd><dt>Tags</dt><% _.each(tags, function(v,k,l){ %><dd><%= v %></dd><% }) %><dt data-field="description">Description</dt><dd data-field="description"><%= description %></dd></dl>';
 		
-		if (typeof data.id !== 'undefined') {
+		if (typeof data.id !== 'undefined' && data.id !== '') {
 			temp += '<button title="Edit" class="btn btn-default edit"><span class="glyphicon glyphicon-edit"></span></button> <button title="Delete" class="btn btn-default conf-delete"><span class="glyphicon glyphicon-remove"></span></button>';
 		}
 		
@@ -606,10 +640,10 @@ RandomTableInfo = Backbone.View.extend(
 		$('#editmodal').modal('hide');
 		
 		//trigger import tab
-		$('#maintab a[href="#import"]').tab('show');
+		$('#maintab a[href="#create"]').tab('show');
 		
 		//load import form with this.model
-		app.importer.resetImporter(this.model);
+		app.creator.resetCreator(this.model);
 		
 	}
 	
@@ -793,11 +827,28 @@ var RTable_Collection = Backbone.Collection.extend(
 	},
 	
 	/**
+	 * Returns a table from the collection based on ID
+	 * @Param {String} id which random table to get
+	 * @returns {Object} the randomtable model
+	 */
+	getById: function(id) {
+		if (typeof id == 'undefined' || _.isEmpty(id) || id == '0') {
+			return {};
+		}
+		
+		var t = this.findWhere({ id: id });
+		if (typeof t == 'undefined') {
+			return {};
+		}
+		return t; 
+	},
+	
+	/**
 	 * Return a table from the collection
 	 * @Param {String} title which random table to get
 	 * @returns {Object} the randomtable model
 	 */
-	getTable: function(title) {
+	getByTitle: function(title) {
 		if (typeof title == 'undefined' || title == '') {
 			return {};
 		}
@@ -819,7 +870,7 @@ var RTable_Collection = Backbone.Collection.extend(
 	 * @Param {String} tag a tag to search on
 	 * @returns {Array} of randomtable models
 	 */
-	getTables: function(tag) {
+	getByTags: function(tag) {
 		if (typeof tag == 'undefined' || tag == '') {
 			return [];
 		}
