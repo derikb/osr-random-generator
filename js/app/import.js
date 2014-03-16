@@ -33,7 +33,7 @@ var ExportForm = Backbone.View.extend(
     },
 	
 	data_types: {
-		'tables': { label: 'Random Tables' },
+		'rtables': { label: 'Random Tables' },
 		'npcs': { label: 'NPCs' },
 		'dungeons': { label: 'Dungeons' },
 		'wilderness': { label: 'Wilderness' },
