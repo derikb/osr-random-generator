@@ -318,9 +318,9 @@ var CreatorForm = Backbone.View.extend(
 			} else if (data.tabledata_format == 'bookmarklet'){
 				data.tabledata = this.parseBookmarklet(data.tabledata);
 				//set up to roll on all the tables
-				data.start = [];
+				data.sequence = [];
 				_.each(data.tabledata, function(v,k,l){
-					data.start.push(k);
+					data.sequence.push(k);
 				}, this);
 				
 			} else {

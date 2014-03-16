@@ -49,7 +49,7 @@ appdata.encounters.swamp = {
 	"source": "",
 	"description": "",
 	"tags": ["swamp"],
-	"start": "general",	
+	"sequence": "general",	
  	"tables": {
 	 	"general": {
 	 		"Trap/Trick": { "subtable": "trap", "print": false, "weight": 1 },
@@ -161,7 +161,7 @@ appdata.encounters.road = {
 	"source": "",
 	"description": "For when travelling in civilization. (Not totally finished yet.)",
 	"tags": ["road"],
-	"start": 'general',	
+	"sequence": 'general',	
  	"tables": {
 	 	"general": {
 	 		"Trap/Trick": { "subtable": "trap", "print": false, "weight": 1 },
@@ -284,7 +284,7 @@ appdata.encounters.sea = {
 	"source": "",
 	"description": "For when travelling on water (sea, ocean) (in progress)",
 	"tags": ["sea", "water"],
-	"start": "general",	
+	"sequence": "general",	
  	"tables": {
 	 	"general": {
 	 		"Land": { "subtable": "land", "print": false, "weight": 1 },

@@ -12,7 +12,7 @@ appdata.tables.holmesian_names = {
 	"description": "Generate a name a la Holmes.",
 	"tags": ['names', 'npcs'],
 	"table": [],
-	"start": [],
+	"sequence": [],
 	"tables": {}
 }
 */

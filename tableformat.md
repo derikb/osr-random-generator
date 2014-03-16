@@ -115,7 +115,7 @@ A basic list of options with no extra information.
 		{ "label": "Goblins", "weight": 6 }
 	]
 
-Alternately, it could be formatted as:
+Alternately (which makes the result easier to scan), it could be formatted as:
 
 	{
 		"Orcs": { "weight": 1 },
@@ -143,12 +143,12 @@ Alternately, it could be formatted as:
 
 This table adds information about the table which helps with finding it in the table list and provides author/source information. The optional fields include:
 
-* title: Name the table
-* author: Credit where credit is due.
-* source: Book or website where the table came from (include a url/link)
-* description: What is this table? What is it for?
-* tags: a list of tags to categorize the table (you can filter on the tags in the table list)
-* tables: an object made up of table names and table data
+* `title`: Name the table
+* `author`: Credit where credit is due.
+* `source`: Book or website where the table came from (include a url/link)
+* `description`: What is this table? What is it for?
+* `tags`: a list of tags to categorize the table (you can filter on the tags in the table list)
+* `tables`: an object made up of table names and table data
 
 ### Complex Table with Subtables
 
@@ -158,7 +158,7 @@ This table adds information about the table which helps with finding it in the t
 		"source": "",
 		"description": "",
 		"tags": ["swamp", "encounters"],
-		"start": "general",	
+		"sequence": "general",	
 	 	"tables": {
 		 	"general": {
 		 		"Trap/Trick": { "subtable": "trap", "print": false, "weight": 1 },
@@ -267,14 +267,22 @@ This table adds information about the table which helps with finding it in the t
 	
 ### Other options
 
-The "start" property can be used to set what table or tables should be rolled on by default. This can be a single table name or a list of table names.
+The `sequence` property can be used to set what table or tables should be rolled on by default. This can be a single table name or a list of table names.
 
-Values within tables can have a variety of properties:
+Results within (sub)tables can have a variety of properties:
 
-* desc: add extra textual description to a result (this will be output with the result)
-* print: if set to false the result from that table will not be output. This is helpful when a bunch of subtables are chained together. You may have a top-level table that doesn't need to be shown in the results.
-* subtable: a reference to a subtable _or_ a whole subtable object.
+* `description`: add extra textual description to a result (this will be output with the result)
+* `print`: if set to false the result from that table will not be output. This is helpful when a bunch of subtables are chained together. You may have a top-level table that doesn't need to be shown in the results.
+* `subtable`: a reference to a subtable _or_ a whole subtable object.
 
 #### Tokens
 
 You can also use tokens to generate random numbers or results from other tables in the app.
+
+##### Roll a number
+
+`{{roll:3d6+1}}` in a result will generate a new random number every time that result comes up. The section after the semi-colon should accept any form of `[A Number or Blank]d[Another number][An arithmatic operator: +, -, *, or /][Another number]` such as `{{roll:d6}}` `{{roll:d6*2}}` `{{roll:2d10+10}}`.
+
+##### Roll on other tables
+
+_Still need to get this working well._

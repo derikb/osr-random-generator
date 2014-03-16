@@ -10,6 +10,7 @@ v0.6 - 2014-03-xx
     * You should now be able to edit (edit link is in the info modal) any tables you add to the app.
 * Added Guided/Freeform switch for Create Table form.
 	* Guided gives you fields broken out, but a more limited customization/feature set.
+	* Guided will also accept html and bookmarklet generators.
 	* Freeform is just for JSON objects, so more complicated but with all the features available.
 * Improvements for display and usability at various screen widths
 	* Changed nav tabs to navbar so it will collapse into a menu at narrow screen widths, also group some tabs into a dropdown to improve nav width in non-collapsed state.

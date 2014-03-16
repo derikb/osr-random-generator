@@ -4,7 +4,7 @@ Formatting random tables into json that will work in this app
 
 //if table is not empty array then assume simple table, roll there.
 
-//if start is blank then it rolls once on the first object under tables
+//if sequence is blank then it rolls once on the first object under tables
 
 //simplest, unweighted
 appdata.tables.NAME = [
@@ -27,7 +27,7 @@ appdata.tables.NAME = {
 	"description": "",
 	"tags": [],
 	"table": [],
-	"start": [],
+	"sequence": [],
 	"tables": {}
 }
 
@@ -68,7 +68,7 @@ appdata.tables.traps_campbell = {
 	"description": "A multi-table trap generator that covers a wide variety of trap types.",
 	"author": "Courtney C. Campbell",
 	"source": "<a href=\"http://hackslashmaster.blogspot.com/2011/02/on-tricks-empty-rooms-and-basic-trap.html\">Tricks, Empty Rooms, & Basic Trap Design</a> by Courtney C. Campbell",
-	"start": [
+	"sequence": [
 		{ "table": "type" }
 	],
 	"tables": {
@@ -268,7 +268,7 @@ appdata.tables.bag_tricks_2 = {
 	"description": "Generates tricks for use in dungeons",
 	"author": "Roger S.G. Sorolla",
 	"source": "<a href=\"http://rolesrules.blogspot.com/2014/02/download-bag-of-tricks-2-now-easier.html\">Bag of Tricks 2</a> by Roger S.G. Sorolla",
-	"start": [
+	"sequence": [
 		{ "table": "thing", "times": 1 },
 		{ "table": "feature", "times": 1 },
 		{ "table": "action", "times": 1 },

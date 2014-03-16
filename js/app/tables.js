@@ -14,7 +14,7 @@ var RandomTable = Backbone.Model.extend(
 			description: '',
 			source: '',
 			tags: [],
-			start: '', //where to start rolling
+			sequence: '', //where to start rolling and if other tables should always be rolled on
 			tables: {}, //subtables
 			result: {},
 		}
@@ -34,7 +34,7 @@ var RandomTable = Backbone.Model.extend(
 	 * @property {String} [description] description of the table
 	 * @property {String} [source] source of the table
 	 * @property {Array} [tags] subject tags
-	 * @property {String|Array} [start] tables to roll on. if array it can be an array of strings (table names) or objects (two properties table: the table to roll on and times: the number of times to roll)
+	 * @property {String|Array} [sequence] tables to roll on. if array it can be an array of strings (table names) or objects (two properties table: the table to roll on and times: the number of times to roll)
 	 * @property {Array} [table] default table. array of strings or objects. removed after initialization.
 	 * @property {Object} [tables] a property for each subtables. if table property is not set then the first propery of this Object is used to start rolling 
 	 * @property {Object} [result] current result
@@ -89,8 +89,8 @@ var RandomTable = Backbone.Model.extend(
 			start = '';
 		}
 		//we look in the start table for what to roll if the start wasn't explicitly set in the call
-		start = (start == '') ? this.get('start') : start;
-		if (start == '') {
+		sequence = (start == '') ? this.get('sequence') : start;
+		if (sequence == '') {
 			//if no start attribute
 			//try for "default" table
 			if (typeof this.get('tables')['default'] !== 'undefined') {
@@ -100,11 +100,11 @@ var RandomTable = Backbone.Model.extend(
 				var k = _.keys(this.get('tables'));
 				this.set('result', this.selectFromTable(k[0]), { silent: true });
 			}
-		} else if (typeof start == 'string') {
-			this.set('result', this.selectFromTable(start), { silent: true });
+		} else if (typeof sequence == 'string') {
+			this.set('result', this.selectFromTable(sequence), { silent: true });
 		} else {
 			result = [];
-			_.each(start, function(v){
+			_.each(sequence, function(v){
 				if (_.isString(v)) {
 					r = this.selectFromTable(v);
 					result = result.concat(r);

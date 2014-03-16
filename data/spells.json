@@ -9,7 +9,7 @@ appdata.spells.general = {
 	"description": "Lots of spells... I'm not actually sure what edition they are based on.",
 	"tags": ['spells'],
 	"table": [],
-	"start": [],
+	"sequence": [],
 	"tables": {}	
 };
 
