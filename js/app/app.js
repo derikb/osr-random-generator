@@ -3,8 +3,10 @@
 //! App Router
 var AppRouter = Backbone.Router.extend(
 	/** @lends AppRouter.prototype */
-	{
- 
+{
+	
+	version: '0.6', 
+
     routes:{
         "":"list",
 		//"list/:id":"someFunction"
@@ -19,8 +21,9 @@ var AppRouter = Backbone.Router.extend(
     initialize: function () {
 		this.randomizer = new AppRandomizer();
 		//this.loadCustomData();
-		this.AppSettings = new AppSettings();
+		this.AppSettings = new AppSettings({ version: this.version });
 		this.AppSettings.fetch();
+		this.AppSettings.checkVersionUpdate();
 		this.AppSettingsView = new AppSettingsView({ model: this.AppSettings });
 		$('#settings').html(this.AppSettingsView.render().el);
 		//console.log(this);
@@ -140,6 +143,7 @@ var AppSettings = Backbone.Model.extend(
 	defaults: function() {
 		return {
 			id: 'settings',
+			version: '',
 			rules_set: 'lotfp',
 			personality_type: 'onewordtraits',
 			appearance_type: 'onthenpc',
@@ -169,7 +173,17 @@ var AppSettings = Backbone.Model.extend(
 	 * @augments external:Backbone.Model
 	 * @constructs
 	 */
-	initialize: function() {
+	initialize: function(options) {
+		this.set('version', options.version);
+	},
+	
+	
+	checkVersionUpdate: function() {
+		var changed = this.changedAttributes();
+		//console.log(changed);
+		if (changed.version) {
+			//console.log(changed)
+		}
 		
 	}
 	

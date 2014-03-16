@@ -572,6 +572,7 @@ var CreatorForm = Backbone.View.extend(
 	saveTable: function(e) {
 			
 		if (this.model.isNew()) {
+			this.model.set('appv', app.version); //set the appversion it was created in
 			if(this.model.save()) {
 				//apps new table to collection, which triggers refresh on collection/view
 				app.rtables.import(this.model);
