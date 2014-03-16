@@ -9,6 +9,8 @@ var RandomTable = Backbone.Model.extend(
 	
 	defaults: function() {
 		return {
+			appv: '',
+			key : '',
 			title: '',
 			author: '',
 			description: '',
@@ -41,6 +43,9 @@ var RandomTable = Backbone.Model.extend(
 	 */
 	initialize: function(){
 		this.normalize();
+		if (this.get('key') == '') {
+			this.set('key', this.get('id'));
+		}
 	},
 	
 	
@@ -504,7 +509,7 @@ var RandomTableShort = Backbone.View.extend(
     render: function () {
 		
 		$(this.el).empty();
-		
+		this.$el.attr('id', this.model.get('key'));
 		this.$el.attr('class', _.result(this, 'className'));
 		
 		_.each(this.model.theaders, function(v) {
@@ -827,6 +832,20 @@ var RTable_Collection = Backbone.Collection.extend(
 	},
 	
 	/**
+	 * Search the collection
+	 * @param {String} query words to look for
+	 * @param {Function} callback function to perform with the matching models
+	 */
+	search: function( query, callback ){
+		var pattern = new RegExp( $.trim( query ).replace( / /gi, '|' ), "i");
+		callback.call( this, this.filter(function( model ){
+			if (pattern.test(model.attributes.title) || pattern.test(model.attributes.description) || pattern.test(model.attributes.author) || pattern.test(model.attributes.source)) {
+				return true;
+			}
+		}));
+	},
+
+	/**
 	 * Returns a table from the collection based on ID
 	 * @Param {String} id which random table to get
 	 * @returns {Object} the randomtable model
@@ -930,7 +949,8 @@ var RTable_List = Backbone.View.extend(
 	events: {
 		'click .tag-filter': 'filter_tag',
 		'click .clear-tag-filter': 'clear_filter',
-		"click th": "headerClick"
+		"click th": "headerClick",
+		"keyup #rtable_keyword": "filter_keyword"
 	},
 	
 	/**
@@ -989,7 +1009,7 @@ var RTable_List = Backbone.View.extend(
      */
     filter_caption: function() {
 		if (this.tagFilters.length == 0) {
-			$(this.el).find('caption').empty();
+			$('#rtable-list caption').html(this.defaultCaption());
 			return;
 		}
 		
@@ -999,7 +1019,7 @@ var RTable_List = Backbone.View.extend(
 		}, this);
 		caption += ' <a href="" class="clear-tag-filter" data-tag="all"><span class="glyphicon glyphicon-remove-circle"></span></a>';
 		
-		$(this.el).find('caption').html(caption);  
+		$('#rtable-list caption').html(caption);  
     },
     
     /**
@@ -1016,6 +1036,34 @@ var RTable_List = Backbone.View.extend(
   		classes.replace(/\.tag_$/, '');
   		if (classes !== '') { classes = '.tag_'+classes; }
   		$(this.el).find('tr'+classes).removeClass('hidden');		  
+    },
+    
+    /**
+     * show tables based on search query (activated by typing in filter form)
+     */
+    filter_keyword: function(e) {
+	    console.log( $(e.currentTarget).val() );
+	    query = $(e.currentTarget).val();
+	    
+	    if (this.kwquery) {
+		    delete this.kwquery;
+	    }
+	    
+	    if (query !== '') {
+	    	$('#rtable-list table tr').addClass('hidden');
+			    
+			// later
+			this.model.search(query, function( matches ){
+				_.each(matches, function(match){
+					console.log('Found '+query+' in '+match.get('title'));
+					$('#'+match.get('key')).removeClass('hidden');
+				});
+			});
+	    	
+		} else {
+			 $('#rtable-list table tr').removeClass('hidden');
+		}
+
     },
     
 	/**
@@ -1051,7 +1099,7 @@ var RTable_List = Backbone.View.extend(
      */
     render: function () {
     	$(this.el).empty();
-    	$(this.el).append('<caption></caption>');
+    	$(this.el).append('<caption>'+this.defaultCaption()+'</caption>');
 		$th_row = $('<tr>');
 		_.each(this.theaders, function(v) {
 			var icon = (this.model.sortAttribute == v.label.toLowerCase()) ? (this.model.sortDirection == 1) ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down' : '';
@@ -1066,8 +1114,15 @@ var RTable_List = Backbone.View.extend(
 	  	this.filter_caption();
 
         return this;
-    }
+    },
 	
+	/**
+	 * the default caption (when filters are reset)
+	 * @returns {String} caption html
+	 */
+	defaultCaption: function() {
+		return '<form class="form-inline"><div class="form-group"><label for="rtable_keyword">Filter by Keyword</label><input type="text" class="form-control" name="rtable_keyword" id="rtable_keyword" value="" /></div></form> <span class="divider">or</span> Click a Tag';
+	}
 	
 });
 

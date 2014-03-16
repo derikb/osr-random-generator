@@ -95,6 +95,11 @@ fieldset fieldset legend {
 
 #rtable-list table td { word-break: break-word; }
 
+#rtable-list caption form { display: inline-block; }
+#rtable-list caption label { font-weight: normal; margin-right: 10px; }
+#rtable-list caption .divider { display: inline-block; margin: 0 20px; }
+#filter-tags { margin-left: 25px; }
+
 .rtable_select header { font-weight: bold; }
 .rtable_select ol { margin-left: 15px; }
 .subtable_roll { margin-left: 10px; font-size: .8em; font-style: italic; }
