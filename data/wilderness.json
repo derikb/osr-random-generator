@@ -49,7 +49,7 @@ appdata.encounters.swamp = {
 	"source": "",
 	"description": "",
 	"tags": ["swamp"],
-	"start": 'general',	
+	"start": "general",	
  	"tables": {
 	 	"general": {
 	 		"Trap/Trick": { "subtable": "trap", "print": false, "weight": 1 },

@@ -13,11 +13,11 @@ Each table or subtable has a title (if you don't provide one the default values 
 Table data should be formatted as:
 
 * One result entry per line.
-* To weight a random chance you have two options:
+* _(optional)_ To weight a random chance you have two options:
     * For a die-like format, prefix the entry with a number or a number range and a space(s), comma, period, or colon: `1: first` `2-3. second` `4-6, third`.
     * To directly weight the chances, prefix with a number followed by two pound signs: `2##This entry will be twice as likely` `4##This entry is four times as likely`.
-* You can cause a roll on a subtable if the result is selected by adding two pounds signs and the title of a table to the end of a line: `Bandits##bandit_types` where "bandit_types" is the title of a subtable.
-* You can insert tokens into the results to perform actions like generating numbers or rolling on other random tables. For instance:
+* _(optional)_ You can cause a roll on a subtable if the result is selected by adding two pounds signs and the title of a table to the end of a line: `Bandits##bandit_types` where "bandit_types" is the title of a subtable.
+* _(optional)_ You can insert tokens into the results to perform actions like generating numbers or rolling on other random tables. For instance:
     * Roll a number: `{{roll:3d6+1}}` in the results will generate a new random number every time that result comes up. The section after the semi-colon should accept any form of `[A Number or Blank]d[Another number][An arithmatic operator: +, -, *, or /][Another number]` such as `{{roll:d6}}` `{{roll:d6*2}}` `{{roll:2d10+10}}`.
     * Select from a table: `{{table:general.color}}` will randomly select a color. You can reference any other table in the app, but I still need to improve the table references (how to reference them and where to find those names).
     
@@ -153,50 +153,116 @@ This table adds information about the table which helps with finding it in the t
 ### Complex Table with Subtables
 
 	{
-		"title": "Sea Encounters",
+		"title": "Swamp Encounters",
 		"author": "Derik Badman",
 		"source": "",
-		"description": "For when travelling on water (sea, ocean) (in progress)",
-		"tags": ["sea", "water", "encounters", "wilderness"],
+		"description": "",
+		"tags": ["swamp", "encounters"],
+		"start": "general",	
 	 	"tables": {
 		 	"general": {
-		 		"Ship": { "subtable": "ship", "print": false, "weight": 3 },
-		 		"Animal/Monster": { "subtable": "monster", "print": false, "weight": 2 },
+		 		"Trap/Trick": { "subtable": "trap", "print": false, "weight": 1 },
+		 		"Building/Lair": { "subtable": "lair","print": false, "weight": 2 },
+		 		"Animal/Monster": { "subtable": "monster", "print": false, "weight": 3 },
+		 		"Human(oid)": { "subtable": "human", "print": false, "weight": 6 },
 		 		"Natural": { "subtable": "natural", "print": false, "weight": 2 },
+		 		"Special": { "subtable": "special", "print": false, "weight": 1 }
 		 	},
-		 	"ship": {
-			 	"Merchants": {},
-			 	"Military": {},
-			 	"Pirates": {},
-			 	"Fishers": {},
-			 	"Raiders": {},
-			 	"Explorers": {},
-			 	"Pilgrims": {},
-			 	"Wreck": {},
-			 	"Ghost Ship": {},
+		 	"trap": {
+		 		"Spiderweb": { "weight": 2 },
+		 		"Tripwire": { "weight": 2 },
+		 		"Net trap": { "weight": 3 },
+		 		"Pit trap": { "weight": 3 },
+		 		"Snare": { "weight": 3 },
+		 		"Rocks from above": { "weight": 1 }
 		 	},
-		 	"monster": {
-			 	"Sharks": {},
-			 	"Whales": {},
-			 	"Dolphins": {},
-			 	"Turtles": {},
-			 	"Fish": {},
-			 	"Dragon Turtle": {},
-			 	"Sea Monster": {},
+			"lair": {
+				"Village": { "weight": 1 },   
+				"Campsite": { "weight": 2 },
+				"Ruins": { "weight": 1 },
+				"Cave": { "weight": 1 },
+				"Tree lair": { "weight": 2 },
+				"Nest (ground)": { "weight": 2 },
+				"Nest (water)": { "weight": 2 },
+				"Altar/shrine": { "weight": 1 },
+				"Tower": { "weight": 1 }
+			},
+			"monster": {
+				"Insect swarm": { "weight": 2 },
+				"Frogs": { "weight": 2 },
+				"Alligators": { "weight": 2 },
+				"Giant Grasshoppers": { "weight": 1 },
+				"Spiders": { "weight": 2 },
+				"Fish": { "weight": 2 },
+				"Water Fowl": { "weight": 2 },
+				"Monkeys/Sloths": { "weight": 1 },
+				"Crabs/Crayfish": { "weight": 2 },
+				"Will-o-wisp": { "weight": 1 },
+				"Lizardmen/Snakemen": { "weight": 1 },
+				"Dragon": { "weight": 1 },
+				"Dryad": { "weight": 1 },
+				"Carnivorous Plant": { "weight": 2 },
+				"Zombies (drowners)": { },
+				"Wild Boar": {},
+				"Leeches": { "weight": 2 },
+				"Snakes": { "weight": 2 },
+				"[Other: Something large or dangerous]": {}
+			},
+			"human": {
+				"Militia": { "weight": 1, "subtable": "human actions" },
+				"Local Tribespeople": { "weight": 1, "subtable": "human actions" },
+				"Druid": { "weight": 1 },
+				"Cultist(s)": { "weight": 1 },
+				"Lost Child/Peasant": { "weight": 1 },
+				"NPC adventuring party": { "weight": 1, "subtable": "human actions" },
+				"Mage": { "weight": 1, "subtable": "human actions" },
+				"Bandit/Convict": { "weight": 1, "subtable": "human actions" }
+			},
+			"natural": {
+				"Weather event": { "weight": 1, "subtable": "weather event" },
+				"Fire": { "weight": 1 },
+				"Whirlpool": { "weight": 1 },
+				"Rapids": { "weight": 1 },
+				"Quicksand": { "weight": 1 },
+				"Heavy vines/brush": { "weight": 1 },
+				"Large Dead Tree": { "weight": 1 }
+			},
+			"special": {
+				"Magic Clearing": { "weight": 1 },
+				"Mushroom Circle": { "weight": 1 },
+				"Magic Pool": { "weight": 1 },
+				"Statue": { "weight": 1 },
+				"Grave(s)": { "weight": 1 },
+				"[Demon?]": { "weight": 1 }
+			},
+		 	"human actions": {
+			 	"Hunting": { "weight": 2 },
+			 	"Foraging": {},
+			 	"Lost": {},
+			 	"Camping": { "weight": 2 },
+			 	"Searching for someone": { "subtable": "human"  },
+			 	"Searching for something": {},
+			 	"Travelling": { "weight": 3 },
+			 	"Fighting": {},
+			 	"Religious ceremony": {},
+			 	"Dying": {},
+			 	"Dead": {},
 		 	},
-		 	"natural": {
-			 	"Heavy winds": {},
-			 	"Storm": {},
-			 	"Whirlpool": {},
-			 	"No wind": {},
-			 	"Rain": {},
-			 	"Fog": {},
-			 	"Choppy Sea": {},
-			 	"Hurricane": {},
+		 	"weather_event": {
+			 	"Light Fog/mist": { "weight": 2 },
+			 	"Heavy Fog/mist": { "weight": 2 },
+			 	"Light precipitation": { "weight": 2 },
+			 	"Heavy precipitation": {},
+			 	"Light Wind": { "weight": 2 },
+			 	"Heavy Wind": {},
+			 	"Thunder & Lightning": {},
+			 	"Heavy Clouds": {},
+			 	"Sun shower": {},
+			 	"Bright Sun": {},
+			 	"Major Weather event": { "description": "Hurricane, tornado, blizzard, flood, etc." }
 		 	}
-		}
+	 	}
 	}
-
 
 	
 ### Other options
