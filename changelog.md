@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+v0.6.1 - 2014-03-17
+-------------------
+
+* Bug fix: The default appearance setting for NPC generation was bad causing NPCs to not be generated.
+
+
 v0.6 - 2014-03-16
 -----------------
 
