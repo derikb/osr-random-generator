@@ -146,7 +146,7 @@ var AppSettings = Backbone.Model.extend(
 			version: '',
 			rules_set: 'lotfp',
 			personality_type: 'onewordtraits',
-			appearance_type: 'onthenpc',
+			appearance_type: 'onthenpc_appearance',
 			goals_type: 'character_goals',
 			occupation_type: 'medieval_occupations',
 			personality_count: 2,
