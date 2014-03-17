@@ -34,6 +34,26 @@ var Wilderness = Backbone.Model.extend({
 		this.set('encounters', this.getEncounters(this.get('encounter_count')));
 	},
 	
+	/**
+	 * validate fields before saving
+	 * @returns {Object} error information
+	 */
+	validate: function(attributes, options) {
+		//console.log(attributes);
+		var error = { fields: [], general: '' };
+		
+	/*
+		if (attributes.title == '') {
+			error.fields.push({ field: 'title', message: 'Title cannot be blank' });
+			error.general += 'Title cannot be blank. ';
+		}
+	*/
+		
+		if (!_.isEmpty(error.fields) || !_.isEmpty(error.general)) {
+			return error;
+		}
+	},
+	
 	
 	getHexDressing: function(ct) {
 		var o = [];
