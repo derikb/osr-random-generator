@@ -179,7 +179,6 @@ var WildernessDetails = Backbone.View.extend({
 		'click .save': 'saveWild',
 		'click .conf-delete': 'confirmDelete',
 		'click .delete': 'deleteWild',
-		'click .remove': 'removeWild',
 		'click *[data-field]': 'editField',
 	},
 	
@@ -189,6 +188,9 @@ var WildernessDetails = Backbone.View.extend({
     	
     },
 	
+	/**
+	 * Save an edited item
+	 */
 	saveWild: function() {
 		//do something
 		if (this.model.isNew()) {
@@ -201,11 +203,13 @@ var WildernessDetails = Backbone.View.extend({
 		return false;
     },
     
+    /**
+     * Delete the item
+     */
     deleteWild: function(e) {
 		e.preventDefault();
 		this.model.destroy();
 		this.remove();
-		//return false;  
     },
     
     /**
@@ -217,30 +221,20 @@ var WildernessDetails = Backbone.View.extend({
 		$button.removeClass('conf-delete btn-default').addClass('btn-danger delete');
 	},
     
-    removeWild: function(e) {
-	    e.preventDefault();
-	    //console.log(this.model.changedAttributes());
-	    if (this.model.isNew()) {
-		    if (!confirm('You have not saved this wilderness. Are you sure you with to delete it?')) {
-			    return false;
-		    }
-	    } else if (this.model.changedAttributes()) {
-		    if (!confirm('You have unsaved changes that will be lost. Are you sure?')) {
-			    return false;
-		    }
-	    }
-	    this.remove();
-    },
-    
+    /**
+     * Show the edit modal
+     */
     editField: function(e) {
-	    var field = $(e.target).attr('data-field');
-	    //console.log(field);
-	    
+	    var field = $(e.target).attr('data-field');	    
 	    var editv = new WildernessEditView({model: this.model, field: field});
 	    app.showModal({ full_content: editv.render().el });
     },
 
-	
+	/**
+	 * Template
+	 * @param {Object} data attributes for the template
+	 * @param {Boolean} open should the panel be open
+	 */
 	template: function(data, open) {
 		var temp = '';
 		
@@ -272,18 +266,13 @@ var WildernessDetails = Backbone.View.extend({
 	},
 	
 	render: function() {
-    	//console.log('view render');
     	//console.log(arguments);
     	var open = false;
     	if (arguments[1]) {
 	    	open = (arguments[1]['open']) ? arguments[1]['open'] : false;
     	}
-    	//console.log(open);
-    	//console.trace();
     	this.$el.html(this.template(this.model.attributes, open));
-    	    	
-		return this;
-    	
+		return this;    	
 	}
 	
 	
@@ -438,7 +427,6 @@ var WildernessList = Backbone.View.extend({
      * Remove an item from the list (when it's removed from the collection)
      */
     removeItem: function(m) {
-	    console.log(m);
 	    $('#wild'+m.get('id')).parents('.panel').remove();
     }
 	
