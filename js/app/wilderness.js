@@ -182,23 +182,16 @@ var WildernessDetails = Backbone.View.extend({
 		'click *[data-field]': 'editField',
 	},
 	
-	initialize: function(options) {
-    	this.listenTo(this.model, 'change', this.render);
-    	this.open = (options.open) ? options.open : false;
-    	
+	initialize: function() {
+    	this.listenTo(this.model, 'change', this.render);    	
     },
 	
 	/**
 	 * Save an edited item
 	 */
 	saveWild: function() {
-		//do something
-		if (this.model.isNew()) {
-			this.model.save();
-			app.wildlist.add(this.model);
-		} else {
-			this.model.save();
-		}
+		this.model.save();
+
 		this.$el.find('.unsaved, .save').remove();
 		return false;
     },
@@ -395,9 +388,14 @@ var WildernessList = Backbone.View.extend({
 	
 	model: WildernessCollection,
 	tagName:'section',
-	className: '',
 	id: 'wilderness-collection',
 	
+	/**
+	 * List of Wilderness
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
     initialize:function () {
         this.listenTo(this.model, "add", this.addItem);
         this.listenTo(this.model, "destroy", this.removeItem);

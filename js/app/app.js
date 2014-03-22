@@ -60,7 +60,7 @@ var AppRouter = Backbone.Router.extend(
 		this.dungeonlist = new DungeonCollection();
         this.dungeonlistview = new DungeonList({model:this.dungeonlist});
 		this.dungeonlist.fetch({silent: true});
-        $('#dungeon-list').html(this.dungeonlistview.render().el);
+        $('#dungeon-results').html(this.dungeonlistview.render().el);
 	
 		//load up random tables, first saved ones then hardcoded ones
 		this.rtables = new RTable_Collection();

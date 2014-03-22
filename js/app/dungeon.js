@@ -42,13 +42,18 @@ var Dungeon = Backbone.Model.extend(
 	validate: function(attributes, options) {
 		//console.log(attributes);
 		var error = { fields: [], general: '' };
-		
-	/*
+
 		if (attributes.title == '') {
 			error.fields.push({ field: 'title', message: 'Title cannot be blank' });
 			error.general += 'Title cannot be blank. ';
 		}
-	*/
+
+		/*
+if (!_.isNumber(attributes.room_count)) {
+			error.fields.push({ field: 'room_count', message: 'Room Count must be a number.' });
+			error.general += 'Room Count must be a number. ';
+		}
+*/
 		
 		if (!_.isEmpty(error.fields) || !_.isEmpty(error.general)) {
 			return error;
@@ -276,14 +281,13 @@ var DungeonDetails = Backbone.View.extend(
 	{
 	
 	tagName: 'div',
-	className: 'dungeon-details clearfix',
+	className: 'dungeon-details panel panel-default',
 	model: Dungeon,
 	
 	events: {
 		'click .save': 'saveDungeon',
 		'click .delete': 'deleteDungeon',
 		'click .conf-delete': 'confirmDelete',
-		'click .remove': 'removeDungeon',
 		'click *[data-field]': 'editField',
 		'click *[data-room]': 'editRoom',
 	},
@@ -302,13 +306,8 @@ var DungeonDetails = Backbone.View.extend(
 	 * Save the dungeon
 	 */
 	saveDungeon: function() {
-		if (this.model.isNew()) {
-			this.model.save();
-			app.dungeonlist.add(this.model);
-		} else {
-			this.model.save();
-		}
-		this.$el.find('.unsaved').remove();
+		this.model.save();
+		this.$el.find('.unsaved, .save').remove();
 		return false;
     },
     
@@ -330,24 +329,6 @@ var DungeonDetails = Backbone.View.extend(
 		$button.removeClass('conf-delete btn-default').addClass('btn-danger delete');
 	},
     
-    /**
-     * Prompts to removes unsaved dungeons
-     */
-    removeDungeon: function(e) {
-	    e.preventDefault();
-	    $button = $(e.currentTarget);
-
-	    if (this.model.isNew()) {
-	    	var msg = 'Are you sure?';
-	    } else if (this.model.changedAttributes()) {
-	   		var msg = 'Unsaved changes will be lost.';
-	    } else {
-		    this.remove();
-		    return;
-	    }
-	    $button.html(msg);
-	    $button.removeClass('remove btn-default').addClass('btn-danger delete');
-    },
     
     /**
      * Opens modal for editing fields (title and level only so far)
@@ -368,27 +349,38 @@ var DungeonDetails = Backbone.View.extend(
 		app.showModal({ full_content: editv.render().el });
 	},
 	
-	template: function(data) {
+	template: function(data, open) {
 		var temp = '';
-				
-		temp = '<section><h1 data-field="title"><% if (title == "") { %>[untitled]<% } else { %><%= title %><% } %></h1><dl><dt data-field="level">Level</dt><dd data-field="level"><%= level %></dd></dl><h2>Rooms</h2><% _.each(rooms, function(v,k,l){ %><section class="dungeon-room"><h3>Room <%= v.number %></h3><dl data-room="<%= v.number %>"><dt>Content:</dt><dd><%= v.content.capitalize() %></dd><% if (v.trap_type !== "") { %><dt>Trap:</dt><dd><%= v.trap_type %></dd><% } if (v.monster_type !== "") { %><dt>Monster:</dt><dd><%= v.monster_type %></dd><% } if (v.special_type !== "") { %><dt>Special:</dt><dd><%= v.special_type %></dd><% } %><dt>Treasure:</dt><dd><%= v.treasure_type %></dd></dl></section><% }); %></section>';
+		
+		open = (open) ? open : false;
+		var openclass = (open) ? 'in' : '';
+
+		temp += '<div class="panel-heading clearfix">';
 		
 		temp += '<div class="pull-right hidden-print">';
+				if (this.model.changedAttributes()) { temp += '<span class="label label-danger unsaved">Unsaved Changes</span> <button title="Save" class="btn btn-default btn-xs save"><span class="glyphicon glyphicon-save"></span></button>'; }
+			
+				temp += '<button title="Delete" class="btn btn-default btn-xs conf-delete"><span class="glyphicon glyphicon-remove"></span></button>';
+			temp += '</div>';
 		
-		if (this.model.changedAttributes()) { temp += '<span class="label label-danger unsaved">Unsaved Changes</span> '; }
+		temp += '<h4 class="panel-title"><a data-toggle="collapse" data-parent="#dungeon-accordion" href="#dung<%= id %>"><%= title %></a></h4></div>';
 		
-		temp += '<button title="Save" class="btn btn-default btn-xs save"><span class="glyphicon glyphicon-save"></span></button>';
+		temp += '<div id="dung<%= id %>" class="panel-collapse collapse '+openclass+'"><div class="panel-body">';
 		
-		temp += ' <button title="Close" class="btn btn-default btn-xs remove"><span class="glyphicon glyphicon-eye-close"></span></button>';
-		
-		temp += '<% if (typeof id !== "undefined"){ %> <button title="Delete" class="btn btn-default btn-xs conf-delete"><span class="glyphicon glyphicon-remove"></span></button><% } else { %><%} %></div>';
+			temp += '<section><h1 data-field="title"><% if (title == "") { %>[untitled]<% } else { %><%= title %><% } %></h1><dl><dt data-field="level">Level</dt><dd data-field="level"><%= level %></dd></dl><h2>Rooms</h2><% _.each(rooms, function(v,k,l){ %><section class="dungeon-room"><h3>Room <%= v.number %></h3><dl data-room="<%= v.number %>"><dt>Content:</dt><dd><%= v.content.capitalize() %></dd><% if (v.trap_type !== "") { %><dt>Trap:</dt><dd><%= v.trap_type %></dd><% } if (v.monster_type !== "") { %><dt>Monster:</dt><dd><%= v.monster_type %></dd><% } if (v.special_type !== "") { %><dt>Special:</dt><dd><%= v.special_type %></dd><% } %><dt>Treasure:</dt><dd><%= v.treasure_type %></dd></dl></section><% }); %></section>';
+								
+		temp += '</div>';
 		
 		var html = _.template(temp, data);
 		return html;
 	},
 	
 	render: function() {
-    	this.$el.html(this.template(this.model.attributes));    	    	
+		var open = false;
+    	if (arguments[1]) {
+	    	open = (arguments[1]['open']) ? arguments[1]['open'] : false;
+    	}
+    	this.$el.html(this.template(this.model.attributes, open));    	    	
 		return this;
 	}
 	
@@ -403,109 +395,48 @@ var DungeonList = Backbone.View.extend(
 	
 	model: DungeonCollection,
 	tagName:'section',
-	className: 'dungeon-collection',
+	id: 'dungeon-collection',
  
-	attributes : function () {
-		return {
-			//id: 'character_'+this.model.get('id')
-		};
-	},
 	
 	/**
-	 * List of Dungeons in DungeonListItem format
+	 * List of Dungeons
 	 *
 	 * @augments external:Backbone.View
 	 * @constructs
 	 */
     initialize:function () {
-        this.listenTo(this.model, "add", this.render);
-        this.listenTo(this.model, "destroy", this.render);
-        //this.listenTo(this.model, "change:title", this.render);
+        this.listenTo(this.model, "add", this.addItem);
+        this.listenTo(this.model, "destroy", this.removeItem);
     },
      
     render: function () {
     	var html = '';
     	$(this.el).html('<h1>Saved Dungeons</h1>');
-    	$ul = $('<ul class="list-unstyled"></ul>');
+    	$ul = $('<div id="dungeon-accordion" class="panel-group"></div>');
        	_.each(this.model.models, function(v,k,l){
-	    	$ul.append(new DungeonListItem({model:v}).render().el);
+	    	$ul.append(new DungeonDetails({model:v}).render().el);
     	}, this);
 		
 		$(this.el).append($ul);
         return this;
+    },
+    
+    /**
+     * Put a new item into the list (when it's added to the collection), default it to open
+     */
+    addItem: function(m) {
+	    //console.log(m);
+	    $(this.el).find('#dungeon-accordion').prepend(new DungeonDetails({model: m, open: true}).render().el);
+	    $('#dung'+m.get('id')).collapse('show');
+    },
+    
+    /**
+     * Remove an item from the list (when it's removed from the collection)
+     */
+    removeItem: function(m) {
+	    $('#dung'+m.get('id')).parents('.panel').remove();
     }
 	
-	
-});
-
-
-
-//!DungeonListItem
-var DungeonListItem = Backbone.View.extend(
-	/** @lends DungeonListItem.prototype */
-	{
-	
-	tagName: 'li',
-	className: 'dungeon-list',
-
-	events: {
-		'click .view': 'view',
-		'click .delete': 'deleteDungeon',
-		'click .conf-delete': 'confirmDelete'
-	},
-	
-	/**
-	 * Brief Dungeon listing
-	 *
-	 * @augments external:Backbone.View
-	 * @constructs
-	 */
-	initialize: function() {
-    	this.listenTo(this.model, "sync", this.render); //only change when character is saved.
-    },
-
-	/**
-	 * open the details view in the main column
-	 */
-    view: function(e) {
-		e.preventDefault();
-		$('#dungeon-results').append(new DungeonDetails({model:this.model}).render().el)
-	},
-    
-    /**
-     * delete!
-     */
-    deleteDungeon: function(e) {
-		e.preventDefault();
-		this.model.destroy();
-    },
-    
-    /**
-     * Updates the delete button to make you click it twice to delete
-     */
-    confirmDelete: function(e) {
-		$button = $(e.currentTarget);
-		$button.html('Are you sure?');
-		$button.removeClass('conf-delete btn-default').addClass('btn-danger delete');
-	},
-   
-    template: function(data){
-    	var list = '';
-    	
- 		list += '<div class="pull-right"><button title="View" class="btn btn-default btn-xs view"><span class="glyphicon glyphicon-eye-open"></span></button>';
-		
-		list+= '<% if (typeof id !== "undefined"){ %> <button title="Delete" class="btn btn-default btn-xs conf-delete"><span class="glyphicon glyphicon-remove"></span></button><% } else { %><%} %></div>';
-		
-		list += '<% if (title == "") { %>[untitled]<% } else { %><%= title %><% } %> <%= level %>';
-				
-		var html = _.template(list, data);
-		return html;
-    },
-    
-    render: function() {
-    	this.$el.html(this.template(this.model.attributes));
-		return this;
-	}
 	
 });
 
@@ -517,6 +448,7 @@ var DungeonEditView = Backbone.View.extend(
 	
 	tagName: 'form',
 	field: '',
+	className: 'modal-content',
 	
 	events: {
 		'submit': 'commitEdit',
@@ -565,10 +497,10 @@ var DungeonEditView = Backbone.View.extend(
 			
 			rooms[index] = formdata;
 			
-			this.model.set('rooms', rooms);
+			this.model.set('rooms', rooms, { open: true });
 
 		} else {
-			this.model.set(formdata);
+			this.model.set(formdata, { open: true });
 		}
 		$('#editmodal').modal('hide');
 		
@@ -674,9 +606,10 @@ var DungeonEditView = Backbone.View.extend(
 
 //!DungeonForm
 var DungeonForm = Backbone.View.extend(
-	/** @lends DungeonForm.prototype */
-	{
+/** @lends DungeonForm.prototype */
+{
 	
+	model: AppSettings,
 	tagName: 'form',
 	className: 'dungeon-form clearfix',
 	
@@ -700,11 +633,22 @@ var DungeonForm = Backbone.View.extend(
 	 */
 	createDungeon: function(e) {
 		e.preventDefault();
+		var $mess = $(this.el).find('.messages');
+		$mess.empty();
+		
 		formdata = $(e.target).serializeObject();
-		if (!formdata.room_count.match(/^[0-9]+$/)) { alert('Room Count must be a number.'); return; }
+		
+		formdata.room_count = parseFloat(formdata.room_count);
     	var dungeon = new Dungeon(formdata);
     	dungeon.create();
-    	$('#dungeon-results').prepend(new DungeonDetails({model:dungeon}).render().el);
+
+    	if (!dungeon.isValid()) {
+    		$mess.html(app.showAlert(dungeon.validationError.general, { atype: 'danger' }));
+			$mess[0].scrollIntoView(true);
+	    	return;
+    	}
+    	dungeon.save();
+		app.dungeonlist.add(dungeon);
     	
     	this.$('#title').val('');
 			
@@ -713,6 +657,10 @@ var DungeonForm = Backbone.View.extend(
 	
 	template: function(data) {
 		var html = '';
+		
+		html += '<h1>Create Dungeon</h1>';
+		
+		html += '<div class="messages"></div>';
 		
 		html += '<div class="row">';
 		
