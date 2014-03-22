@@ -1,5 +1,9 @@
 .tab-pane { padding: 20px; }
 
+.panel-heading { padding: 0px; }
+.panel-title>a { padding: 10px 15px; display: block; }
+.panel-heading .btn { margin: 8px 10px; }
+
 textarea.form-control { min-height: 150px; }
 textarea.form-control.textarea-tall { min-height: 400px; }
 
@@ -55,12 +59,22 @@ dd { margin-left: 10px; }
 .delete, .conf-delete, .edit { margin-left: 10px; }
 .character-block .delete { margin-left: 50px; }
 
-.character-block, .wilderness-details, .dungeon-details {
+.character-block, .dungeon-details {
 	padding: 10px;
 	border: 1px solid rgb(221,221,221);
 	border-radius: 5px;
 	margin-bottom: 10px;
 	background-color: aliceblue;
+}
+
+.wilderness-details {
+/*
+	border: 1px solid rgb(221,221,221);
+	border-radius: 5px;
+*/
+	margin-bottom: 10px;
+	background-color: aliceblue;
+	
 }
 
 .dungeon-room {
@@ -121,8 +135,9 @@ fieldset fieldset legend {
 /* //!Table and Phone */
 @media (max-width: 767px) {
 
-	
+	.panel-title { font-size: 20px; }
 	.btn { font-size: 18px; margin: 0px 5px 5px 5px; padding: 6px 12px;  }
+	.panel-heading .btn { font-size: 16px; }
 	.modal-header .close { font-size: 30px; }
 	.badge { font-size: 14px; margin: 5px; }
 	.label { font-size: 100%; }

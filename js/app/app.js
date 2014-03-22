@@ -28,7 +28,6 @@ var AppRouter = Backbone.Router.extend(
 		$('#settings').html(this.AppSettingsView.render().el);
 		
 		
-		
 		//console.log(this);
 		
 		
@@ -51,12 +50,12 @@ var AppRouter = Backbone.Router.extend(
 		this.charlist.fetch({silent: true});
         $('#characters-list').html(this.charlistview.render().el);
 	
-		$('#character-form').append(new CharForm({ model: this.AppSettings }).render().el);
+		$('#character-form').html(new CharForm({ model: this.AppSettings }).render().el);
        			
 		this.wildlist = new WildernessCollection();
         this.wildlistview = new WildernessList({model:this.wildlist});
 		this.wildlist.fetch({silent: true});
-        $('#wilderness-list').html(this.wildlistview.render().el);
+        $('#wilderness-results').html(this.wildlistview.render().el);
 
 		this.dungeonlist = new DungeonCollection();
         this.dungeonlistview = new DungeonList({model:this.dungeonlist});
@@ -190,8 +189,14 @@ var AppSettings = Backbone.Model.extend(
 				monster_table: 'labyrinthlord',	
 			},
 			
-			hexdressing_count: 3,
-			encounter_count: 5,
+			
+			wilderness: {
+				hexdressing_count: 3,
+				encounter_count: 5,
+				hexdressing_default: 'hex_dressing'
+			}
+			
+			
 		}	
 	},
 	

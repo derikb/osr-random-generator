@@ -23,15 +23,12 @@ var Wilderness = Backbone.Model.extend({
 	},
 	
 	/**
-	 * @todo fix the way the tables get saved!???
+	 * Generate the starting results
+	 * @todo make it customizable what tables get used
 	 */
 	create: function() {
-		//load up the randomtable models
-		this.set('hexdressing_t', new RandomTable(appdata.tables.hex_dressing));
-		this.set('encounters_t', new RandomTable(appdata.encounters[this.get('terrain')]));
-		//generate the starting results
-		this.set('hexdressing', this.getHexDressing(this.get('hexdressing_count')) );
-		this.set('encounters', this.getEncounters(this.get('encounter_count')));
+		this.set('hexdressing', this.getHexDressing(app.AppSettings.get('wilderness').hexdressing_count) );
+		this.set('encounters', this.getEncounters(app.AppSettings.get('wilderness').encounter_count) );
 	},
 	
 	/**
@@ -42,22 +39,26 @@ var Wilderness = Backbone.Model.extend({
 		//console.log(attributes);
 		var error = { fields: [], general: '' };
 		
-	/*
 		if (attributes.title == '') {
 			error.fields.push({ field: 'title', message: 'Title cannot be blank' });
 			error.general += 'Title cannot be blank. ';
 		}
-	*/
 		
 		if (!_.isEmpty(error.fields) || !_.isEmpty(error.general)) {
 			return error;
 		}
 	},
 	
-	
+	/**
+	 * Get hex dressing result
+	 * @todo have this be based on terrain (with a default fallback)
+	 * @param {Number} ct how many results to return
+	 * @returns {Array} of strings
+	 */
 	getHexDressing: function(ct) {
 		var o = [];
-		var dressing_t = this.get('hexdressing_t');
+		//var dressing_t = app.rtables.getByTitle(app.AppSettings.get('wilderness').hexdressing_default);
+		var dressing_t = app.rtables.getByTitle('hex_dressing');
 		for(var i=1;i<=ct;i++) {
 			dressing_t.generateResult();
 			o.push(dressing_t.niceString());
@@ -65,9 +66,16 @@ var Wilderness = Backbone.Model.extend({
 		return o;
 	},
 	
+	/**
+	 * Get encounter results
+	 * @todo have the tables be customizable
+	 * @param {Number} ct how many results to return
+	 * @returns {Array} of strings
+	 */
 	getEncounters: function(ct) {
 		var o = [];
-		var encounter_t = this.get('encounters_t');
+
+		var encounter_t = new RandomTable(appdata.encounters[this.get('terrain')]);
 		for(var i=1;i<=ct;i++){
 			encounter_t.generateResult();
 			o.push(encounter_t.niceString());
@@ -120,7 +128,7 @@ var WildernessCollection = Backbone.Collection.extend({
 	localStorage: new Backbone.LocalStorage("osr-random-generator-wilds"), // Unique name within your app.
 		
 	initialize: function(){
-		//this.listenTo(this.model, 'sync', this.addChar);
+
 	},
 	
 	/**
@@ -158,7 +166,7 @@ var WildernessCollection = Backbone.Collection.extend({
 var WildernessDetails = Backbone.View.extend({
 	
 	tagName: 'div',
-	className: 'wilderness-details clearfix',
+	className: 'wilderness-details panel panel-default',
 	model: Wilderness,
 	
 	attributes : function () {
@@ -169,13 +177,16 @@ var WildernessDetails = Backbone.View.extend({
 	
 	events: {
 		'click .save': 'saveWild',
+		'click .conf-delete': 'confirmDelete',
 		'click .delete': 'deleteWild',
 		'click .remove': 'removeWild',
 		'click *[data-field]': 'editField',
 	},
 	
-	initialize: function() {
+	initialize: function(options) {
     	this.listenTo(this.model, 'change', this.render);
+    	this.open = (options.open) ? options.open : false;
+    	
     },
 	
 	saveWild: function() {
@@ -186,7 +197,7 @@ var WildernessDetails = Backbone.View.extend({
 		} else {
 			this.model.save();
 		}
-		this.$el.find('.unsaved').remove();
+		this.$el.find('.unsaved, .save').remove();
 		return false;
     },
     
@@ -196,6 +207,15 @@ var WildernessDetails = Backbone.View.extend({
 		this.remove();
 		//return false;  
     },
+    
+    /**
+     * Updates the delete button to make you click it twice to delete
+     */
+	confirmDelete: function(e) {
+		$button = $(e.currentTarget);
+		$button.html('Are you sure?');
+		$button.removeClass('conf-delete btn-default').addClass('btn-danger delete');
+	},
     
     removeWild: function(e) {
 	    e.preventDefault();
@@ -221,24 +241,31 @@ var WildernessDetails = Backbone.View.extend({
     },
 
 	
-	template: function(data) {
+	template: function(data, open) {
 		var temp = '';
 		
-		temp += '<dl><dt data-field="title">Title</dt><dd data-field="title"><%= title %></dd><dt data-field="terrain">Terrain</dt><dd data-field="terrain"><%= terrain %></dd></dl>';
-		
-		temp += '<dl><dt>Hex Dressing</dt><% _.each(hexdressing, function(v,k,l){ %><dd data-field="hexdressing"><%= v %></dd><% }); %></dl>';
-		
-		temp += '<dl><dt>Encounters</dt><dd data-field="encounters"><ol><% _.each(encounters, function(v,k,l){ %><li data-field="encounters"><%= v %></li><% }); %></ol></dd></dl>';
+		open = (open) ? open : false;
+		var openclass = (open) ? 'in' : '';
+
+		temp += '<div class="panel-heading clearfix">';
 		
 		temp += '<div class="pull-right hidden-print">';
+				if (this.model.changedAttributes()) { temp += '<span class="label label-danger unsaved">Unsaved Changes</span> <button title="Save" class="btn btn-default btn-xs save"><span class="glyphicon glyphicon-save"></span></button>'; }
+			
+				temp += '<button title="Delete" class="btn btn-default btn-xs conf-delete"><span class="glyphicon glyphicon-remove"></span></button>';
+			temp += '</div>';
 		
-		if (this.model.changedAttributes()) { temp += '<span class="label label-danger unsaved">Unsaved Changes</span> '; }
+		temp += '<h4 class="panel-title"><a data-toggle="collapse" data-parent="#wilderness-accordion" href="#wild<%= id %>"><%= title %></a></h4></div>';
 		
-		temp += '<button title="Save" class="btn btn-default btn-xs save"><span class="glyphicon glyphicon-save"></span></button>';
+		temp += '<div id="wild<%= id %>" class="panel-collapse collapse '+openclass+'"><div class="panel-body">';
 		
-		temp += ' <button title="Close" class="btn btn-default btn-xs remove"><span class="glyphicon glyphicon-eye-close"></span></button>';
-		
-		temp += '<% if (typeof id !== "undefined"){ %> <button title="Delete" class="btn btn-default btn-xs delete"><span class="glyphicon glyphicon-remove"></span></button><% } else { %><%} %></div>';
+			temp += '<dl><dt data-field="title">Title</dt><dd data-field="title"><%= title %></dd><dt data-field="terrain">Terrain</dt><dd data-field="terrain"><%= terrain %></dd></dl>';
+			
+			temp += '<dl><dt>Hex Dressing</dt><% _.each(hexdressing, function(v,k,l){ %><dd data-field="hexdressing"><%= v %></dd><% }); %></dl>';
+			
+			temp += '<dl><dt>Encounters</dt><dd data-field="encounters"><ol><% _.each(encounters, function(v,k,l){ %><li data-field="encounters"><%= v %></li><% }); %></ol></dd></dl>';
+						
+		temp += '</div>';
 		
 		var html = _.template(temp, data);
 		return html;
@@ -246,8 +273,14 @@ var WildernessDetails = Backbone.View.extend({
 	
 	render: function() {
     	//console.log('view render');
+    	//console.log(arguments);
+    	var open = false;
+    	if (arguments[1]) {
+	    	open = (arguments[1]['open']) ? arguments[1]['open'] : false;
+    	}
+    	//console.log(open);
     	//console.trace();
-    	this.$el.html(this.template(this.model.attributes));
+    	this.$el.html(this.template(this.model.attributes, open));
     	    	
 		return this;
     	
@@ -289,7 +322,7 @@ var WildernessEditView = Backbone.View.extend({
 			
 
 		} else {
-			this.model.set(formdata);
+			this.model.set(formdata, { open: true });
 			//this.model.save(formdata, {wait: true});
 		}
 		//this.model.save();
@@ -373,86 +406,42 @@ var WildernessList = Backbone.View.extend({
 	
 	model: WildernessCollection,
 	tagName:'section',
-	className: 'wilderness-collection',
- 
-	attributes : function () {
-		return {
-			//id: 'character_'+this.model.get('id')
-		};
-	},
+	className: '',
+	id: 'wilderness-collection',
 	
     initialize:function () {
-        this.listenTo(this.model, "add", this.render);
-        this.listenTo(this.model, "destroy", this.render);
-        //this.listenTo(this.model, "change:title", this.render);
+        this.listenTo(this.model, "add", this.addItem);
+        this.listenTo(this.model, "destroy", this.removeItem);
     },
      
     render: function () {
-    	var html = '';
     	$(this.el).html('<h1>Saved Wilderness</h1>');
-    	$ul = $('<ul class="list-unstyled"></ul>');
+    	$ul = $('<div id="wilderness-accordion" class="panel-group"></div>');
        	_.each(this.model.models, function(v,k,l){
-	    	$ul.append(new WildernessListItem({model:v}).render().el);
+	    	$ul.append(new WildernessDetails({model:v}).render().el);
     	}, this);
 		
 		$(this.el).append($ul);
         return this;
+    },
+    
+    /**
+     * Put a new item into the list (when it's added to the collection), default it to open
+     */
+    addItem: function(m) {
+	    //console.log(m);
+	    $(this.el).find('#wilderness-accordion').prepend(new WildernessDetails({model: m, open: true}).render().el);
+	    $('#wild'+m.get('id')).collapse('show');
+    },
+    
+    /**
+     * Remove an item from the list (when it's removed from the collection)
+     */
+    removeItem: function(m) {
+	    console.log(m);
+	    $('#wild'+m.get('id')).parents('.panel').remove();
     }
 	
-	
-});
-
-//!WildernessListItem
-//View for wilderness data in brief list
-var WildernessListItem = Backbone.View.extend({
-	
-	tagName: 'li',
-	className: 'wilderness-list',
-	
-	attributes : function () {
-		return {
-			//id: 'character_'+this.model.get('id')
-		};
-	},
-	
-	events: {
-		'click .view': 'viewWild',
-		'click .delete': 'deleteWild'
-	},
-	
-	initialize: function() {
-    	//this.listenTo(this.model, "change", this.render);
-    	this.listenTo(this.model, "sync", this.render); //only change when character is saved.
-    },
-
-    viewWild: function(e) {
-		e.preventDefault();
-		$('#wilderness-results').append(new WildernessDetails({model:this.model}).render().el)
-	},
-    
-    deleteWild: function(e) {
-		e.preventDefault();
-		if (!confirm('Are you sure you want to delete this wilderness?')) { return; }
-		this.model.destroy();
-    },
-   
-    template: function(data){
-    	var list = '';
-    	
- 		list += '<div class="pull-right"><button title="View" class="btn btn-default btn-xs view"><span class="glyphicon glyphicon-eye-open"></span></button>';
-		
-		list+= '<% if (typeof id !== "undefined"){ %> <button title="Delete" class="btn btn-default btn-xs delete"><span class="glyphicon glyphicon-remove"></span></button><% } else { %><%} %></div>';
-		
-		list += '<%= title %> ';
-				
-		var html = _.template(list, data);
-		return html;
-    },
-    
-    render: function() {
-    	this.$el.html(this.template(this.model.attributes));
-		return this;
-	}
 	
 });
 
@@ -460,6 +449,7 @@ var WildernessListItem = Backbone.View.extend({
 //!WildernessForm
 var WildernessForm = Backbone.View.extend({
 	
+	model: AppSettings,
 	tagName: 'form',
 	className: 'wilderness-form clearfix',
 	
@@ -478,13 +468,25 @@ var WildernessForm = Backbone.View.extend({
         this.listenTo(this.model, 'change', this.render);
     },
 	
-	
+	/**
+	 * Submit form action, validates, creates, saves, adds to collection.
+	 */
 	createWilderness: function(e) {
 		e.preventDefault();
+		var $mess = $(this.el).find('.messages');
+		$mess.empty();
+		
 		formdata = $(e.target).serializeObject();
     	var wild = new Wilderness(formdata);
     	wild.create();
-    	$('#wilderness-results').prepend(new WildernessDetails({model:wild}).render().el);
+    	if (!wild.isValid()) {
+    		$mess.html(app.showAlert(wild.validationError.general, { atype: 'danger' }));
+			$mess[0].scrollIntoView(true);
+	    	//console.log(wild.validationError);
+	    	return;
+    	}
+    	wild.save();
+		app.wildlist.add(wild);
     	
     	this.$('#title').val('');
 			
@@ -493,6 +495,10 @@ var WildernessForm = Backbone.View.extend({
 	
 	template: function(data) {
 		var html = '';
+		
+		html += '<h1>Create Wilderness</h1>';
+		
+		html += '<div class="messages"></div>';
 		
 		html += '<div class="form-group"><label for=title class="control-label">Title</label><input type="text" class="form-control" name="title" id="title" value=""/><div class="help-block">Just a way to identify it later.</div></div>';	
 		html += '<div class="form-group"><label for=terrain class="control-label">Terrain</label><select class="form-control" name="terrain" id="terrain">';
@@ -508,12 +514,8 @@ var WildernessForm = Backbone.View.extend({
 	},
 	
 	render: function() {
-    	//console.log('view render');
-    	//console.trace();
     	this.$el.html(this.template(this.model.attributes));
-    	    	
 		return this;
-    	
 	}
 	
 	
