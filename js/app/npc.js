@@ -570,7 +570,7 @@ var CharacterBlock = Backbone.View.extend(
 	    spell = _.findWhere(appdata.spells.descriptions[spelllist], { title: title });
 	    
 	    var spellv = new SpellView({spell: spell});
-	    app.showModal('Spell Details: '+spell.title.capitalize(), spellv.render().el);	    
+	    app.showModal({ title: 'Spell Details: '+spell.title.capitalize(), body: spellv.render().el });
     },
     
     editField: function(e) {
@@ -578,7 +578,7 @@ var CharacterBlock = Backbone.View.extend(
 	    //console.log(field);
 	    
 	    var editv = new CharacterEditView({model: this.model, field: field});
-	    app.showModal('Edit Field: '+field.capitalize(), editv.render().el);
+	    app.showModal({ full_content: editv.render().el });
     },
     
     
@@ -689,11 +689,12 @@ var CharacterEditView = Backbone.View.extend(
 	/** @lends CharacterEditView.prototype */
 	{
 	
-	tagName: 'div',
+	tagName: 'form',
 	field: '',
+	className: 'modal-content',
 	
 	events: {
-		'submit form': 'commitEdit',
+		'submit': 'commitEdit',
 		'click .randomize': 'loadRandom',
 	},
 	
@@ -795,7 +796,8 @@ var CharacterEditView = Backbone.View.extend(
 		var subfield = this.subfield;
 		
 		//console.log(this);
-		var form = '<form>';
+		var form = app.modalHeader('Edit Field: '+field.capitalize());
+		form += '<div class="modal-body">';
 		switch (field) {
 			case 'ability_scores':
 				var score = this.model.getAttScore(subfield);
@@ -955,7 +957,9 @@ var CharacterEditView = Backbone.View.extend(
 
 		}
 		
-		form += '<div class="form-group"><button type=submit class="btn btn-primary">Update</button></div></form>';
+		form += '</div>';
+		
+		form += app.modalFooter('<button type=submit class="btn btn-primary">Update</button>');
 
 		var html = _.template(form, data);
 		return html;
@@ -992,7 +996,21 @@ var CharCollection = Backbone.Collection.extend(
 		//this.listenTo(this.model, 'sync', this.addChar);
 	},
 	
+	/**
+	 * Get a list of all groups (via the saved NPCs)
+	 * @returns {Array}
+	 */
+	grouplist: function() {
+		var groups = this.pluck('chargroup');
+		groups = _.uniq(_.reject(groups, function(v){ return v == ''; }));
+		return groups;
+	},
 	
+	/**
+	 * Update the group name on saved NPCs
+	 * @param {String} oldgroup old name of the group
+	 * @param {String} newgroup new name of the group
+	 */
 	editGroups: function(oldgroup, newgroup) {
 		
 		var ch = this.where({chargroup: oldgroup});
@@ -1149,7 +1167,8 @@ var CharacterListItem = Backbone.View.extend(
 var CharForm = Backbone.View.extend(
 	/** @lends CharForm.prototype */
 	{
- 
+		
+	model: AppSettings,
 	tagName: 'form',
 	id: 'npc-form',
 	
@@ -1165,7 +1184,6 @@ var CharForm = Backbone.View.extend(
 	 * @constructs
 	 */
     initialize:function () {
-        this.render();
         this.listenTo(this.model, 'change', this.render);
     },
     
@@ -1200,7 +1218,27 @@ var CharForm = Backbone.View.extend(
 
 			form += '<div class="form-group col-sm-6"><label for="chargroup" class="control-label">Character Group</label><select class="form-control" name="chargroup" id="chargroup">';
 				form += '<option value="">---</option>';
-				_.each(this.model.get('chargroup'), function(v,k) {
+				
+				//Complicated process to make sure the saved groups in settings and npcs are merged.
+				var npcgrouplist = app.charlist.grouplist();
+				//console.log(npcgrouplist);
+				
+				var savedgroups = this.model.get('chargroup');
+				_.each(savedgroups, function(v,k,l){
+					var x = npcgrouplist.indexOf(v.name);
+					if (x > -1) {
+						delete npcgrouplist[x];
+					}
+				}, this);
+				//console.log(npcgrouplist);
+				
+				_.each(npcgrouplist, function(v,k,l){
+					savedgroups.push({ name: v });
+				}, this);
+				//console.log(savedgroups);				
+				this.model.save( { chargroup: savedgroups });
+
+				_.each(savedgroups, function(v,k) {
 					form += '<option value="'+v.name+'">'+v.name+'</option>';
 				}, this);
 				form += '<option value="">------</option><option value="0">Manage Groups</option>';
@@ -1225,7 +1263,7 @@ var CharForm = Backbone.View.extend(
 	    var val = $(e.target).val();
 	    if (val == '0') {
 		    var form = ''; 
-		    app.showModal('Manage Character Groups', new CharGroupView({model:this.model}).render().el);
+		    app.showModal({ full_content: new CharGroupView({model:this.model}).render().el });
 		    $(e.target).val('');
 	    }
     }
@@ -1261,26 +1299,31 @@ var CharGroupView = Backbone.View.extend(
 	
 	template: function(data) {
 		//console.log('CharGroupView: here is template');
-		var html = '';
-		
-		html += '<fieldset id="chargroup_edit"><legend>Character Groups</legend><ul class="list-unstyled">';
+		var html = app.modalHeader('Manage Groups');
+		html += '<div class="modal-body">';
+		html += '<ul class="list-unstyled">';
 			_.each(this.model.get('chargroup'), function (v) {
 				html += '<li class="chargroup-list" data-group="'+v.name+'">'+v.name+' <a href="#" class="edit"><span class="glyphicon glyphicon-edit"></span></a> <a href="#" class="delete"><span class="glyphicon glyphicon-remove"></span></a></li>';
 			});
-		html += '</ul></fieldset>';
+		html += '</ul>';
 		
-		html += '<div class="form-group"><label for="newgroup" class="control-label">New Character Group</label><input type="text" class="form-control" id="newgroup" name="newgroup" value="" /></div><div class="form-group"><button type=submit class="btn btn-primary">Add</button></div>';
+		html += '<div class="form-group"><label for="newgroup" class="control-label">New Character Group</label><input type="text" class="form-control" id="newgroup" name="newgroup" value="" /></div>';
+		
+		html += '</div>';
 
+		html += app.modalFooter('<button type=submit class="btn btn-primary">Add</button>');
 		
 		return html;
 	},
 	
 	render: function(){
-		//console.log('CharGroupView: here is render');
 		this.$el.html(this.template());
 		return this;
 	},
 	
+	/**
+	 * Create a new group from the form data
+	 */
 	newGroup: function(e) {
 		e.preventDefault();
     	var formdata = $(e.target).serializeObject();
@@ -1302,6 +1345,9 @@ var CharGroupView = Backbone.View.extend(
     	}
 	},
 	
+	/**
+	 * Delete group remove it from settings and from saved NPCs
+	 */
 	deleteGroup: function(e) {
 		e.preventDefault();
 		var group = $(e.target).parents('li').attr("data-group");
@@ -1312,6 +1358,9 @@ var CharGroupView = Backbone.View.extend(
 		$(e.target).parents('li').remove();
 	},
 	
+	/**
+	 * Replace group name with an input group
+	 */
 	setupEdit: function(e) {
 		e.preventDefault();
 		var $li = $(e.target).parents('li');
@@ -1320,14 +1369,18 @@ var CharGroupView = Backbone.View.extend(
 		
 	},
 	
+	/**
+	 * Rename group and all associated saved NPCs
+	 */
 	editGroup: function(e) {
 		e.preventDefault();
 		var $li = $(e.target).parents('li');
 		var oldgroup = $li.attr("data-group");
 		var newgroup = $li.find('input').val();
-		
+
 		var groups = _.clone( this.model.get('chargroup') );
 		groups = _.reject(groups, function(g){ return g.name == oldgroup; });
+		//console.log(groups);
 		groups.push({ name: newgroup });
 		this.model.save( { 'chargroup': groups } );
 		app.charlist.editGroups(oldgroup, newgroup);

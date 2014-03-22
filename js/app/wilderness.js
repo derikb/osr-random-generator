@@ -217,7 +217,7 @@ var WildernessDetails = Backbone.View.extend({
 	    //console.log(field);
 	    
 	    var editv = new WildernessEditView({model: this.model, field: field});
-	    app.showModal('Edit Field: '+field.capitalize(), editv.render().el);
+	    app.showModal({ full_content: editv.render().el });
     },
 
 	
@@ -260,11 +260,12 @@ var WildernessDetails = Backbone.View.extend({
 //!WildernessEditView View for editing the fields
 var WildernessEditView = Backbone.View.extend({
 	
-	tagName: 'div',
+	tagName: 'form',
 	field: '',
+	className: 'modal-content',
 	
 	events: {
-		'submit form': 'commitEdit',
+		'submit': 'commitEdit',
 		'click .randomize': 'loadRandom',
 	},
 	
@@ -318,8 +319,8 @@ var WildernessEditView = Backbone.View.extend({
 		var field = this.field;
 		var subfield = this.subfield;
 		
-		//console.log(this);
-		var form = '<form>';
+		var form = app.modalHeader('Edit Field: '+field.capitalize());
+		form += '<div class="modal-body">';
 		switch (field) {
 						
 			case 'hexdressing':
@@ -350,7 +351,9 @@ var WildernessEditView = Backbone.View.extend({
 
 		}
 		
-		form += '<div class="form-group"><button type=submit class="btn btn-primary">Update</button></div></form>';
+		form += '</div>';
+		
+		form += app.modalFooter('<button type=submit class="btn btn-primary">Update</button>');
 
 		var html = _.template(form, data);
 		return html;

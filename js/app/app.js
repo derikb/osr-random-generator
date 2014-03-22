@@ -26,17 +26,18 @@ var AppRouter = Backbone.Router.extend(
 		this.AppSettings.checkVersionUpdate();
 		this.AppSettingsView = new AppSettingsView({ model: this.AppSettings });
 		$('#settings').html(this.AppSettingsView.render().el);
+		
+		
+		
 		//console.log(this);
-		$('#character-form').append(new CharForm({ model: this.AppSettings }).render().el);
+		
 		
 		$('#wilderness-form').append(new WildernessForm({ model: this.AppSettings }).render().el);
 		
 		$('#dungeon-form').append(new DungeonForm({ model: this.AppSettings }).render().el);
 		
 		this.creator = new Creator();
-		
 		this.exporter = new Exporter();
-		
 		this.importer = new Importer();
 	},
 	
@@ -44,11 +45,14 @@ var AppRouter = Backbone.Router.extend(
 	 * Retrieve saved data and list out all RandomTables
 	 */
     list: function () {
-       	this.charlist = new CharCollection();
+
+		this.charlist = new CharCollection();
         this.charlistview = new CharList({model:this.charlist});
 		this.charlist.fetch({silent: true});
         $('#characters-list').html(this.charlistview.render().el);
-		
+	
+		$('#character-form').append(new CharForm({ model: this.AppSettings }).render().el);
+       			
 		this.wildlist = new WildernessCollection();
         this.wildlistview = new WildernessList({model:this.wildlist});
 		this.wildlist.fetch({silent: true});
@@ -86,17 +90,62 @@ var AppRouter = Backbone.Router.extend(
 	 * @param {String} body Body of the modal
 	 * @param {String} [size] Size class for modal (modal-lg or modal-sm)
 	 */
-	showModal: function(title, body, size) {
+	/*
+showModal: function(title, body, buttons, size) {
 		$('#editmodal .modal-title').html(title);
 		$('#editmodal .modal-body').html(body);
 		$('#editmodal .modal-dialog').removeClass('modal-lg modal-sm');
 		if (typeof size !== undefined) {
 			$('#editmodal .modal-dialog').addClass(size);
 		}
+		var modal_footer = '';
+		if (typeof buttons !== undefined && !_.isEmpty(buttons)) {
+			modal_footer += buttons;
+		}
+		modal_footer += ' <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
+		$('#editmodal .modal-footer').html(modal_footer);
 		$('#editmodal').modal({});
 		$('#editmodal').on('shown.bs.modal', function(e) {
 			$(e.target).find('input[type="text"]:first').focus();
 		});
+	},
+*/
+	
+	showModal: function(options) {
+		options = $.extend({
+			title: 'Modal',
+			body: '',
+			size: '',
+			full_content: ''
+		}, options);
+		
+		$('#editmodal .modal-dialog').removeClass('modal-lg modal-sm');
+		if (typeof options.size !== 'undefined') {
+			$('#editmodal .modal-dialog').addClass(options.size);
+		}
+		
+		if (options.full_content !== '') {
+			$('#editmodal .modal-content').html(options.full_content);
+		} else {
+			$('#editmodal .modal-content').empty();
+			$('#editmodal .modal-content').append(this.modalHeader(options.title));
+			$('#editmodal .modal-content').append('<div class="modal-body"></div>').append(this.modalFooter());
+			$('#editmodal .modal-body').append(options.body);
+			
+		}
+		$('#editmodal').modal({});
+		$('#editmodal').on('shown.bs.modal', function(e) {
+			$(e.target).find('input[type="text"]:first').focus();
+		});
+	},
+	
+	modalHeader: function(title) {
+		return '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title">'+title+'</h4></div>';
+	},
+	
+	modalFooter: function(buttons) {
+		if (typeof buttons == 'undefined') { buttons = ''; }
+		return '<div class="modal-footer">'+buttons+'<button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>';
 	},
 	
 	/**

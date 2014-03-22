@@ -10,6 +10,8 @@ caption {
 	font-size: 16px;
 }
 
+.modal-footer .btn, .modal-footer .btn+.btn { margin-left: 10px; margin-bottom: 0px; }
+
 code { white-space: normal; }
 
 section h1 {
@@ -120,9 +122,10 @@ fieldset fieldset legend {
 @media (max-width: 767px) {
 
 	
-	.btn { font-size: 18px; margin: 0px 5px 5px 5px;  }
+	.btn { font-size: 18px; margin: 0px 5px 5px 5px; padding: 6px 12px;  }
 	.modal-header .close { font-size: 30px; }
 	.badge { font-size: 14px; margin: 5px; }
+	.label { font-size: 100%; }
 	caption a { font-size: 20px; }
 	
 	.dungeon-form button { margin-top: 0px; }

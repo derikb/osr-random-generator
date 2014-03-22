@@ -627,7 +627,7 @@ var CreatorForm = Backbone.View.extend(
 			
 		}
 		
-		app.showModal(title, body);		
+		app.showModal({ title: title, body: body });		
 	},
 	
 	

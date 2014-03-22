@@ -280,7 +280,7 @@ var RandomTable = Backbone.Model.extend(
 		
 		if (use_columns) {
 			o += '<div class="row">';
-			o += '<div class="col-sm-6">';
+			o += '<div class="col-xs-6">';
 		}
 		
 		_.each(this.get('tables'), function(v,k,l){
@@ -288,7 +288,7 @@ var RandomTable = Backbone.Model.extend(
 			//most of the time we break in between tables (except single long tables, see below)
 			if (use_columns && breakpoint) {
 				if (ct >= breakpoint) {
-					o += '</div><div class="col-sm-6">';
+					o += '</div><div class="col-xs-6">';
 					breakpoint = false;
 				}
 			}
@@ -357,7 +357,7 @@ var RandomTable = Backbone.Model.extend(
 				//for single long tables we'll break in the list itself
 				if (use_columns && breakpoint && t_tables == 1) {
 					if (ct >= breakpoint) {
-						o += '</ol></div><div class="col-sm-6"><ol class="list-unstyled">';
+						o += '</ol></div><div class="col-xs-6"><ol class="list-unstyled">';
 						breakpoint = false;
 					}
 				}
@@ -554,7 +554,7 @@ var RandomTableShort = Backbone.View.extend(
      */
     roll: function() {
     	editv = new RandomTableRoller({ model: this.model });
-    	app.showModal('Table Result: '+editv.model.get('title'), editv.render().el);
+    	app.showModal({ full_content: editv.render().el });
     },
     
     /**
@@ -562,7 +562,7 @@ var RandomTableShort = Backbone.View.extend(
      */
     pick: function() {
 	    editv = new RandomTablePicker({ model: this.model });
-	    app.showModal('Table Options: '+editv.model.get('title'), editv.render().el, 'modal-lg');		
+	    app.showModal({ title: 'Table Options: '+editv.model.get('title'), body: editv.render().el, size: 'modal-lg' });		
     },
     
     /**
@@ -570,7 +570,7 @@ var RandomTableShort = Backbone.View.extend(
      */
     info: function() {
     	editv = new RandomTableInfo({ model: this.model });
-	    app.showModal('Table Info: '+editv.model.get('title'), editv.render().el);		
+	    app.showModal({ full_content: editv.render().el });		
     },
 	
 	
@@ -583,7 +583,8 @@ RandomTableInfo = Backbone.View.extend(
 	{
 	
 	model: RandomTable,
-	tagName:'div',
+	tagName: 'div',
+	className: 'modal-content',
 	
 	events: {
 		'click .delete': 'delete',
@@ -603,15 +604,22 @@ RandomTableInfo = Backbone.View.extend(
 		this.$el.html(this.template(this.model.attributes));
         return this;
     },
-    
+        
     template: function(data) {
-
-		var temp = '<dl><dt data-field="title">Title</dt><dd data-field="title"><%= title %></dd><dt data-field="author">Author</dt><dd data-field="author"><% if (author == "") { %>[unknown]<% } else { %><%= author %><% } %></dd><dt data-field="source">Source</dt><dd data-field="source"><% if (source == "") { %>[unknown]<% } else { %><%= source %><% } %></dd><dt>Tags</dt><% _.each(tags, function(v,k,l){ %><dd><%= v %></dd><% }) %><dt data-field="description">Description</dt><dd data-field="description"><%= description %></dd></dl>';
+		var temp = '';
+		
+		temp += app.modalHeader(data.title);
+		temp += '<div class="modal-body">';
+		temp += '<dl><dt data-field="title">Title</dt><dd data-field="title"><%= title %></dd><dt data-field="author">Author</dt><dd data-field="author"><% if (author == "") { %>[unknown]<% } else { %><%= author %><% } %></dd><dt data-field="source">Source</dt><dd data-field="source"><% if (source == "") { %>[unknown]<% } else { %><%= source %><% } %></dd><dt>Tags</dt><% _.each(tags, function(v,k,l){ %><dd><%= v %></dd><% }) %><dt data-field="description">Description</dt><dd data-field="description"><%= description %></dd></dl>';
+		temp += '</div>';
 		
 		if (typeof data.id !== 'undefined' && data.id !== '') {
-			temp += '<button title="Edit" class="btn btn-default edit"><span class="glyphicon glyphicon-edit"></span></button> <button title="Delete" class="btn btn-default conf-delete"><span class="glyphicon glyphicon-remove"></span></button>';
-		}
+			buttons = '<button title="Edit" class="btn btn-primary edit">Edit</button> <button title="Delete" class="btn btn-danger conf-delete">Delete</button>';
+		} else { buttons = ''; }
 		
+		temp += app.modalFooter(buttons);
+		
+				
 		return _.template(temp, data);
 	},
 	
@@ -663,6 +671,7 @@ RandomTableRoller = Backbone.View.extend(
 	
 	model: RandomTable,
 	tagName:'div',
+	className: 'modal-content',
 	
 	events: {
 		'click .reroll': 'reroll',
@@ -685,6 +694,10 @@ RandomTableRoller = Backbone.View.extend(
         return this;
     },
     
+    modalButtons: function() {
+	   return '<button type=button class="btn btn-primary rollagain">Roll Again</button>';
+    },
+    
     /**
      * template for individual result
      */
@@ -699,8 +712,12 @@ RandomTableRoller = Backbone.View.extend(
     template: function() {
     	var data = this.model.attributes;
     	data.result = this.model.niceString();
-    	var temp = this.result_template(1);		
-		temp += '<div><button type=button class="btn btn-default rollagain">Roll Again</button></div>';
+    	var temp = '';
+    	temp += app.modalHeader('Results: '+data.title);
+    	temp += '<div class="modal-body">';
+    	temp += this.result_template(1);	
+    	temp += '</div>';
+    	temp += app.modalFooter('<button type=button class="btn btn-primary rollagain">Roll Again</button>');
 		return _.template(temp, data);
 	},
 	

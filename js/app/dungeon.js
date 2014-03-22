@@ -356,7 +356,7 @@ var DungeonDetails = Backbone.View.extend(
 	    var field = $(e.currentTarget).attr('data-field');
 	    //console.log(field);
 	    var editv = new DungeonEditView({model: this.model, field: field });
-	    app.showModal('Edit Field: '+field.capitalize(), editv.render().el);
+	    app.showModal({ full_content: editv.render().el });
     },
 
     /**
@@ -365,7 +365,7 @@ var DungeonDetails = Backbone.View.extend(
 	editRoom: function(e) {
 		var roomnumber = $(e.currentTarget).attr('data-room');
 		var editv = new DungeonEditView({model: this.model, field: '', roomnumber: roomnumber});
-		app.showModal('Edit Room: '+roomnumber, editv.render().el);
+		app.showModal({ full_content: editv.render().el });
 	},
 	
 	template: function(data) {
@@ -515,11 +515,11 @@ var DungeonEditView = Backbone.View.extend(
 	/** @lends DungeonEditView.prototype */
 	{
 	
-	tagName: 'div',
+	tagName: 'form',
 	field: '',
 	
 	events: {
-		'submit form': 'commitEdit',
+		'submit': 'commitEdit',
 		'click .randomize': 'loadRandom',
 	},
 	
@@ -601,10 +601,13 @@ var DungeonEditView = Backbone.View.extend(
 		var field = this.field;
 		var subfield = this.subfield;
 		
-		var form = '<form>';
+		var form = '';
 		switch (field) {
 									
 			case 'rooms':
+			
+				form += app.modalHeader('Edit Room #'+this.roomnumber);
+				form += '<div class="modal-body">';
 
 				var rooms = this.model.get('rooms');
 				//console.log(rooms);
@@ -635,13 +638,22 @@ var DungeonEditView = Backbone.View.extend(
 				form += '<input type=hidden id=treasure name=treasure value="'+room.treasure+'" />';
 				form += '<div class="form-group"><label class="control-label" for="edittreasure_type">Treasure</label><textarea class="form-control" id="edittreasure_type" name="treasure_type" rows="5">'+room.treasure_type.br2nl()+'</textarea><span class="help-block"></span></div>';
 				
-				//reroll room
-				form += '<div class="form-group"><button type=submit class="btn btn-primary">Update</button> &nbsp; <button type="button" class="btn btn-warning randomize" data-targetfield="rooms">Reroll Room</button></div>';
+				form += '</div>';
 				
+				//reroll room
+				form += app.modalFooter('<button type=submit class="btn btn-primary">Update</button><button type="button" class="btn btn-warning randomize" data-targetfield="rooms">Reroll Room</button>');
+								
 				break;
 							
 			default:
-				form += '<div class="form-group"><label class="control-label" for="edit'+field+'">'+field+'</label><input type=text class="form-control" id="edit'+field+'" name="'+field+'" value="<%= '+field+' %>" /><span class="help-block"></span></div><div class="form-group"><button type=submit class="btn btn-primary">Update</button></div>';
+				
+				form += app.modalHeader('Edit Field: '+field.capitalize());
+				form += '<div class="modal-body">';
+				
+				form += '<div class="form-group"><label class="control-label" for="edit'+field+'">'+field+'</label><input type=text class="form-control" id="edit'+field+'" name="'+field+'" value="<%= '+field+' %>" /><span class="help-block"></span></div>';
+				form += '</div>';
+				form += app.modalFooter('<button type=submit class="btn btn-primary">Update</button>');
+
 				break;
 
 		}
