@@ -675,7 +675,7 @@ RandomTableRoller = Backbone.View.extend(
 	
 	events: {
 		'click .reroll': 'reroll',
-		'click .rollagain': 'rollagain',
+		'click .rollagain': 'rollagain'
 	},
 	
 	/**
@@ -694,15 +694,39 @@ RandomTableRoller = Backbone.View.extend(
         return this;
     },
     
-    modalButtons: function() {
-	   return '<button type=button class="btn btn-primary rollagain">Roll Again</button>';
+    /**
+     * Button(s) for modal footer
+     */
+    rollButton: function() {
+    	var subtables = _.keys(this.model.get('tables'));
+    	var button = '';
+    	if (subtables.length > 1) {
+	    	button = '<div class="btn-group">'+
+				'<button type="button" class="btn btn-primary rollagain" data-subtable="">Roll Again</button>'+
+				'<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">'+
+					'<span class="caret"></span>'+
+					'<span class="sr-only">Toggle Dropdown</span>'+
+				'</button>'+
+				'<ul class="dropdown-menu dropdown-menu-right rollsubtable" role="menu">'+
+					'<li class="dropdown-header">Roll on a Subtable</li>'+
+					'<li class="divider"></li>';
+					_.each(subtables, function(v,k,l){
+						if (v == 'default') { return; }
+						button += '<li><a href="#" data-subtable="'+v+'" class="rollagain">'+v+'</a></li>';
+					}, this);
+				button += '</ul>'+
+			'</div>';
+    	} else {
+			button = '<button type=button class="btn btn-primary rollagain" data-subtable="">Roll Again</button>';
+		}
+		return button;
     },
     
     /**
      * template for individual result
      */
     result_template: function(num) {
-	  	  var temp = '<div id="res'+num+'" class="well clearfix"><button type="button" class="btn btn-default reroll pull-right"><span class="glyphicon glyphicon-refresh"></span></button><div class="results"><%= result %></div></div>';	  
+	  	  var temp = '<div id="res'+num+'" data-subtable="<%= subtable %>" class="well clearfix"><button type="button" class="btn btn-default reroll pull-right"><span class="glyphicon glyphicon-refresh"></span></button><div class="results"><%= result %></div></div>';	  
 	  	  return temp;
     },
     
@@ -712,12 +736,14 @@ RandomTableRoller = Backbone.View.extend(
     template: function() {
     	var data = this.model.attributes;
     	data.result = this.model.niceString();
+    	data.subtable = '';
     	var temp = '';
     	temp += app.modalHeader('Results: '+data.title);
     	temp += '<div class="modal-body">';
     	temp += this.result_template(1);	
     	temp += '</div>';
-    	temp += app.modalFooter('<button type=button class="btn btn-primary rollagain">Roll Again</button>');
+
+    	temp += app.modalFooter(this.rollButton());
 		return _.template(temp, data);
 	},
 	
@@ -725,21 +751,29 @@ RandomTableRoller = Backbone.View.extend(
 	 * reroll an existing result
 	 */
 	reroll: function(e) {
-		var id = jQuery(e.target).parents('.well').attr('id');
-		this.model.generateResult();
+		var $res = jQuery(e.target).parents('.well');
+		var id = $res.attr('id');
+		var subtable = $res.attr('data-subtable');
+		this.model.generateResult(subtable);
 		this.$el.find('#'+id+' .results').html(this.model.niceString());
 	},
 	
+	
 	/**
-	 * roll another result on this table
+	 * roll another result on this (sub)table
 	 */
 	rollagain: function(e) {
-		this.model.generateResult();
+		e.preventDefault();
+		var target = $(e.currentTarget);
+		var subtable = target.attr('data-subtable');
+		this.model.generateResult(subtable);
 		this.num_results++;
 		var temp = this.result_template(this.num_results);
 		var data = this.model.attributes;
 		data.result = this.model.niceString();
+		data.subtable = subtable;
 		this.$el.find('.well:last').after(_.template(temp, data));
+				
 	}
 
 });
