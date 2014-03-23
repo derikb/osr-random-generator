@@ -1,10 +1,22 @@
 Change Log
 ==========
 
+v0.7 - 2014-03-
+-----------------
+
+* Updated the modal for rolling on a table to allow for the generation of results from subtables.
+* Design change: Updated the modals to have form buttons in the footer to save vertical space.
+* Design change: NPC, Wilderness, and Dungeon pages redesigned to be more concise and more mobile friendly. This includes moving the "new" results into the saved list and changing the saved list into accordion panels that expand to show full details of the item.
+* NPC, Wilderness, and Dungeon creations are now automatically saved on generation. This gets rid of the multiple save/close/delete options which were confusing.
+* A number of changes to improve/add printing. Only the currently shown section and currently opened items (tables, characters, dungeons, etc.) will print. Improved the stylesheet too.
+* Fixed an issue with character groups.
+* A bunch of minor design/usability changes.
+* Fixed issue where tags with spaces (and some other characters) would break filtering of tables.
+
 v0.6.1 - 2014-03-17
 -------------------
 
-* Bug fix: The default appearance setting for NPC generation was bad causing NPCs to not be generated.
+* Bug fix: The default appearance setting for NPC generation was bad, causing NPCs to not be generated.
 
 
 v0.6 - 2014-03-16
