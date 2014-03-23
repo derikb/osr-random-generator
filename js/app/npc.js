@@ -499,7 +499,7 @@ var CharacterBlock = Backbone.View.extend(
 	{
 	
 	tagName: 'div',
-	className: 'character-block panel panel-default',
+	className: 'character-block panel panel-default hidden-print',
 	
 	attributes : function () {
 		return {
@@ -606,10 +606,7 @@ if (this.model.isNew()) {
     	
 		open = (open) ? open : false;
 		var openclass = (open) ? 'in' : '';
-		
-		
-		accordion = data.chargroup.replace(/[\s\.:'"]/g, '_');
-		
+				
     	var temp = '';
     	temp += '<div class="panel-heading clearfix">';
 		
@@ -619,7 +616,7 @@ if (this.model.isNew()) {
 				temp += '<button title="Delete" class="btn btn-default btn-xs conf-delete"><span class="glyphicon glyphicon-remove"></span></button>';
 			temp += '</div>';
 		
-		temp += '<h4 class="panel-title"><a data-toggle="collapse" data-parent="#npc-accordion-'+accordion+'" href="#char<%= id %>"><%= name %> <% if(charclass == "none") { %>(<%= occupation %>)<% } else { %>(<% var cc = charclass.capitalize() %><%= cc %> <%= level %>)<% } %></a></h4></div>';
+		temp += '<h4 class="panel-title"><a data-toggle="collapse" href="#char<%= id %>"><%= name %> <% if(charclass == "none") { %>(<%= occupation %>)<% } else { %>(<% var cc = charclass.capitalize() %><%= cc %> <%= level %>)<% } %></a></h4></div>';
 		
 		temp += '<div id="char<%= id %>" class="panel-collapse collapse '+openclass+'"><div class="panel-body">';
 
@@ -639,13 +636,15 @@ if (this.model.isNew()) {
     	
 	    	if (app.AppSettings.get('ability_display') == 'minimal') {
 		    	
-		    	temp += '<dl class="dl-horizontal clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); if (v.modifier !== 0) { %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %> (<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span></dd><% } }); %></dl>';
+		    	temp += '<dl class="dl-inline clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); if (v.modifier !== 0) { %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %>&nbsp;(<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span> </dd><% } }); %></dl>';
 		    	
 	    	} else {
-	    		temp += '<dl class="dl-horizontal clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %> (<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span></dd><% }); %></dl>';
+	    		temp += '<dl class="dl-inline clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %>&nbsp;(<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span> </dd><% }); %></dl>';
 	    	}
-    	
-    		temp += '<dl class="dl-horizontal clearfix"><dt>HP</dt><dd><span data-field="hp"><%= hp %></span></dd><dt>AC</dt><dd><%= ac %><% if (armor !== "") { %> (<span data-field="armor"><%= armor %></span>)<% } %></dd><dt>Attack Bonus</dt><% if (attack.melee == attack.missile) { %><dd><%= attack.melee %></dd><% } else { %><dd><%= attack.melee %> Melee</dd><dd><%= attack.missile %> Missile</dd><% } %><dt>Reaction Roll</dt><dd><%= reaction_roll %></dd></dl>';
+			
+			//data.attack.melee = data.attack.melee.replace('-', '&#8209;');
+			
+    		temp += '<dl class="dl-inline clearfix"><dt>HP</dt><dd><span data-field="hp"><%= hp %></span> </dd><dt>AC</dt><dd><%= ac %><% if (armor !== "") { %> (<span data-field="armor"><%= armor %></span>)<% } %> </dd><dt>Attack&nbsp;Bonus</dt><% if (attack.melee == attack.missile) { %><dd><span class="nobreak"><%= attack.melee %></span> </dd><% } else { %><dd><span class="nobreak"><%= attack.melee %></span>&nbsp;Melee </dd><dd><span class="nobreak"><%= attack.missile %></span>&nbsp;Missile </dd><% } %><dt>Reaction</dt><dd><%= reaction_roll %> </dd></dl>';
     	
 			temp += '</div><div class="col-xs-6">';
     	
@@ -1122,9 +1121,9 @@ var CharList = Backbone.View.extend(
 
     	_.each(k, function(group) {
     		var grouplabel = (group == '') ? '[no group]' : group;
-    	 	$(this.el).append('<h2>'+grouplabel+'</h2>');
+    	 	$(this.el).append('<h2 class="npc-group-header">'+grouplabel+'</h2>');
     	 	var ghtml = group.replace(/[\s\.:'"]/g, '_');
-    	 		var $glist = $('<div id="npc-accordion-'+ghtml+'" class="panel-group"></div>');
+    	 		var $glist = $('<div id="npc-list-'+ghtml+'" class="panel-group"></div>');
     	 		//var $glist = $('<ul class="list-unstyled"></ul>');
 		 		_.each(ord[group], function(char){
         			$glist.append(new CharacterBlock({model:char}).render().el);
@@ -1144,7 +1143,7 @@ var CharList = Backbone.View.extend(
 	    
 	    var ghtml = m.get('chargroup').replace(/[\s\.:'"]/g, '_');
 	    
-	    $(this.el).find('#npc-accordion-'+ghtml).prepend(new CharacterBlock({model: m, open: true}).render().el);
+	    $(this.el).find('#npc-list-'+ghtml).prepend(new CharacterBlock({model: m, open: true}).render().el);
 	    $('#char'+m.get('id')).collapse('show');
 	    $('#char'+m.get('id')).parents('.character-block')[0].scrollIntoView(true);
     },

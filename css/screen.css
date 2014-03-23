@@ -39,6 +39,18 @@ dd { margin-left: 10px; }
 }
 .dl-horizontal dd { float: left; margin-left: 15px; }
 
+.dl-inline { display: inline-block; }
+.dl-inline dt {
+	display: inline;
+}
+
+.dl-inline dd {
+	display:inline;
+	margin-right: 10px;
+}
+
+.nobreak { white-space: nowrap; }
+
 .spell-details .dl-horizontal dt, .dl-horizontal dd {
 	margin-bottom: 5px;
 }

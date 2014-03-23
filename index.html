@@ -23,7 +23,7 @@
 	    	</div>
 	    </div>
 	    		
-		<nav id="maintab" class="navbar navbar-default" role="navigation">
+		<nav id="maintab" class="navbar navbar-default hidden-print" role="navigation">
 			<div class="container-fluid">
 
 				<div class="navbar-header">
@@ -64,7 +64,7 @@
 		<div class="tab-content">
 			<div class="tab-pane active hidden-print" id="tables">
 				<div class="row">
-					<div class="col-sm-23">
+					<div class="col-sm-12 hidden-print">
 						<section id="rtable-section">
 							<div id="rtable-list">
 								<!-- table of tables loaded here -->
@@ -74,7 +74,7 @@
 				</div>
 			</div>
 			
-			<div class="tab-pane" id="npcs">
+			<div class="tab-pane hidden-print" id="npcs">
 				<div class="row">
 					<div class="col-sm-6">
 						<section id="characters-results">
@@ -96,7 +96,7 @@
 					<div class="col-sm-8">
 						<section id=wilderness-results></section>
 					</div>
-					<div class="col-sm-4">
+					<div class="col-sm-4 hidden-print">
 						<section id=wilderness-form></section>
 					</div>
 				</div>
@@ -114,17 +114,9 @@
 						<section id="dungeon-form">
 							<!-- Dungeon creation form here. -->
 						</section>
-						<div id="dungeon-list">
-						</div>
 					</div>
 				</div>				
 			</div>
-			
-			<!--
-			<div class="tab-pane hidden-print" id="other">
-				<div class="alert alert-info">Planning on adding some other generators soon.</div>
-			</div>
-			-->
 			
 			<div class="tab-pane hidden-print" id="create">
 				<!-- Form for importing tables -->
@@ -134,7 +126,7 @@
 						</section>
 					</div>
 					
-					<div class="col-sm-6 hidden-print">
+					<div class="col-sm-6">
 						<section id="rtable-preview">
 							<table class="table table-striped">
 								<caption>Test your table before saving.</caption>
@@ -326,13 +318,30 @@
 			// Javascript to enable link to tab
 			var hash = document.location.hash;
 			var prefix = "tab_";
-			if (hash) {
-			    $('.navbar-nav a[href='+hash.replace(prefix,"")+']').tab('show');
-			} 
-			// Change hash for page-reload
+			
+			// Change hash so the right tab will stay open on page-reload
+			// and adjust print classes
 			$('.navbar-nav a').on('shown.bs.tab', function (e) {
 			    window.location.hash = e.target.hash.replace("#", "#" + prefix);
-			});			
+			    $('.tab-pane').addClass('hidden-print');
+			    var opentab = e.target.hash.replace("#", "");
+			    $('#'+opentab).removeClass('hidden-print');
+			});
+			
+			if (hash) {
+			    $('.navbar-nav a[href='+hash.replace(prefix,"")+']').tab('show');
+			    var opentab = hash.replace("#"+prefix, "");
+			    $('#'+opentab).removeClass('hidden-print');
+			} 
+
+			//toggle print class			
+			$('.panel').on('shown.bs.collapse', function(e) {
+				$(e.currentTarget).removeClass('hidden-print');
+			});
+			$('.panel').on('hidden.bs.collapse', function(e) {
+				$(e.currentTarget).addClass('hidden-print');
+			});
+			
 		});
 	</script>
 

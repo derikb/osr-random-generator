@@ -281,7 +281,7 @@ var DungeonDetails = Backbone.View.extend(
 	{
 	
 	tagName: 'div',
-	className: 'dungeon-details panel panel-default',
+	className: 'dungeon-details panel panel-default hidden-print',
 	model: Dungeon,
 	
 	events: {
@@ -372,11 +372,11 @@ var DungeonDetails = Backbone.View.extend(
 				temp += '<button title="Delete" class="btn btn-default btn-xs conf-delete"><span class="glyphicon glyphicon-remove"></span></button>';
 			temp += '</div>';
 		
-		temp += '<h4 class="panel-title"><a data-toggle="collapse" data-parent="#dungeon-accordion" href="#dung<%= id %>"><%= title %></a></h4></div>';
+		temp += '<h4 class="panel-title"><a data-toggle="collapse" href="#dung<%= id %>"><%= title %></a></h4></div>';
 		
 		temp += '<div id="dung<%= id %>" class="panel-collapse collapse '+openclass+'"><div class="panel-body">';
 		
-			temp += '<section><dl><dt data-field="title">Title</dt><dd data-field="title"><% if (title == "") { %>[untitled]<% } else { %><%= title %><% } %></dd><dt data-field="level">Level</dt><dd data-field="level"><%= level %></dd></dl><h2>Rooms</h2><% _.each(rooms, function(v,k,l){ %><section class="dungeon-room"><h3>Room <%= v.number %></h3><dl data-room="<%= v.number %>"><dt>Content:</dt><dd><%= v.content.capitalize() %></dd><% if (v.trap_type !== "") { %><dt>Trap:</dt><dd><%= v.trap_type %></dd><% } if (v.monster_type !== "") { %><dt>Monster:</dt><dd><%= v.monster_type %></dd><% } if (v.special_type !== "") { %><dt>Special:</dt><dd><%= v.special_type %></dd><% } %><dt>Treasure:</dt><dd><%= v.treasure_type %></dd></dl></section><% }); %></section>';
+			temp += '<section><dl class="dl-horizontal clearfix"><dt data-field="title">Title</dt><dd data-field="title"><% if (title == "") { %>[untitled]<% } else { %><%= title %><% } %></dd><dt data-field="level">Level</dt><dd data-field="level"><%= level %></dd></dl><h2>Rooms</h2><% _.each(rooms, function(v,k,l){ %><section class="dungeon-room"><h3>Room <%= v.number %></h3><dl class="dl-horizontal clearfix" data-room="<%= v.number %>"><dt>Content:</dt><dd><%= v.content.capitalize() %></dd><% if (v.trap_type !== "") { %><dt>Trap:</dt><dd><%= v.trap_type %></dd><% } if (v.monster_type !== "") { %><dt>Monster:</dt><dd><%= v.monster_type %></dd><% } if (v.special_type !== "") { %><dt>Special:</dt><dd><%= v.special_type %></dd><% } %><dt>Treasure:</dt><dd><%= v.treasure_type %></dd></dl></section><% }); %></section>';
 								
 		temp += '</div>';
 		
@@ -421,7 +421,7 @@ var DungeonList = Backbone.View.extend(
     render: function () {
     	var html = '';
     	$(this.el).html('<h1>Saved Dungeons</h1>');
-    	$ul = $('<div id="dungeon-accordion" class="panel-group"></div>');
+    	$ul = $('<div id="dungeon-list" class="panel-group"></div>');
        	_.each(this.model.models, function(v,k,l){
 	    	$ul.append(new DungeonDetails({model:v}).render().el);
     	}, this);
@@ -435,7 +435,7 @@ var DungeonList = Backbone.View.extend(
      */
     addItem: function(m) {
 	    //console.log(m);
-	    $(this.el).find('#dungeon-accordion').prepend(new DungeonDetails({model: m, open: true}).render().el);
+	    $(this.el).find('#dungeon-list').prepend(new DungeonDetails({model: m, open: true}).render().el);
 	    $('#dung'+m.get('id')).collapse('show');
 	    $('#dung'+m.get('id')).parents('.dungeon-details')[0].scrollIntoView(true);
     },

@@ -166,7 +166,7 @@ var WildernessCollection = Backbone.Collection.extend({
 var WildernessDetails = Backbone.View.extend({
 	
 	tagName: 'div',
-	className: 'wilderness-details panel panel-default',
+	className: 'wilderness-details panel panel-default hidden-print',
 	model: Wilderness,
 	
 	attributes : function () {
@@ -252,11 +252,11 @@ var WildernessDetails = Backbone.View.extend({
 				temp += '<button title="Delete" class="btn btn-default btn-xs conf-delete"><span class="glyphicon glyphicon-remove"></span></button>';
 			temp += '</div>';
 		
-		temp += '<h4 class="panel-title"><a data-toggle="collapse" data-parent="#wilderness-accordion" href="#wild<%= id %>"><%= title %></a></h4></div>';
+		temp += '<h4 class="panel-title"><a data-toggle="collapse" href="#wild<%= id %>"><%= title %></a></h4></div>';
 		
 		temp += '<div id="wild<%= id %>" class="panel-collapse collapse '+openclass+'"><div class="panel-body">';
 		
-			temp += '<dl><dt data-field="title">Title</dt><dd data-field="title"><%= title %></dd><dt data-field="terrain">Terrain</dt><dd data-field="terrain"><%= terrain %></dd></dl>';
+			temp += '<dl class="dl-horizontal clearfix"><dt data-field="title">Title</dt><dd data-field="title"><%= title %></dd><dt data-field="terrain">Terrain</dt><dd data-field="terrain"><%= terrain %></dd></dl>';
 			
 			temp += '<dl><dt>Hex Dressing</dt><% _.each(hexdressing, function(v,k,l){ %><dd data-field="hexdressing"><%= v %></dd><% }); %></dl>';
 			
@@ -413,7 +413,7 @@ var WildernessList = Backbone.View.extend({
      
     render: function () {
     	$(this.el).html('<h1>Saved Wilderness</h1>');
-    	$ul = $('<div id="wilderness-accordion" class="panel-group"></div>');
+    	$ul = $('<div id="wilderness-list" class="panel-group"></div>');
        	_.each(this.model.models, function(v,k,l){
 	    	$ul.append(new WildernessDetails({model:v}).render().el);
     	}, this);
@@ -427,7 +427,7 @@ var WildernessList = Backbone.View.extend({
      */
     addItem: function(m) {
 	    //console.log(m);
-	    $(this.el).find('#wilderness-accordion').prepend(new WildernessDetails({model: m, open: true}).render().el);
+	    $(this.el).find('#wilderness-list').prepend(new WildernessDetails({model: m, open: true}).render().el);
 	    $('#wild'+m.get('id')).collapse('show');
 	    $('#wild'+m.get('id')).parents('.wilderness-details')[0].scrollIntoView(true);
 	    

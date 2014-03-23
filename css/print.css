@@ -1,5 +1,9 @@
 .hidden-print { display: none; }
-    	
+.alert, .close, .btn, .btn-group { display: none; }
+
+.panel { padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #aaa; }
+.panel-title { font-size: 1.4em; }
+   	
 .character-block {
 	font-size: 11pt;
 	box-sizing: border-box;
@@ -10,9 +14,20 @@
 	padding: .125in;
 	margin-bottom: .25in;
 	page-break-inside: avoid;
-}	
+}
+
+.dungeon-details h2 { font-size: 1.25em; }
+.dungeon-details h3 { font-size: 1.1em; }
+.dungeon-room { padding-bottom: 5px; margin-bottom: 5px; border-bottom: 1px solid #ddd; }
 
 .character-block .col-sm-6 { width: 50%; float: left; }
+.npc-group-header { display: none; }
+
+.results { margin-bottom: 15px; }
+
+.list-unstyled { list-style-type: none; }
+
+h1,h2,h3,h4,h5,h6 { margin-top: 0px; margin-bottom: 12px; }
 
 dl {
   margin-top: 0;
@@ -27,6 +42,19 @@ dt {
 dd {
   margin-left: 0;
 }
+
+.dl-inline { display: inline-block; }
+.dl-inline dt {
+	display: inline;
+	margin-right: 10px;
+}
+
+.dl-inline dd {
+	display:inline-block;
+	margin-right: 10px;
+}
+.nobreak { white-space: nowrap; }
+
 .dl-horizontal dt {
 	float: left;
 	width: 160px;
