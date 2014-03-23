@@ -640,7 +640,17 @@ RandomTableInfo = Backbone.View.extend(
 	confirmDelete: function(e) {
 		$button = $(e.currentTarget);
 		$button.html('Are you sure?');
-		$button.removeClass('conf-delete btn-default').addClass('btn-danger delete');
+		$button.removeClass('conf-delete').addClass('delete');
+		
+		//reset the button about a few seconds
+		window.setTimeout(this.resetDelete.bind(this), 4000);	
+	},
+	
+	/**
+	 * Resets the confirm delete button so the 'are you sure' doesn't stick around
+	 */
+	resetDelete: function() {
+		this.$el.find('.delete').html('Delete').removeClass('delete').addClass('conf-delete');
 	},
 	
 	/**

@@ -560,25 +560,21 @@ if (this.model.isNew()) {
 		$button = $(e.currentTarget);
 		$button.html('Are you sure?');
 		$button.removeClass('conf-delete btn-default').addClass('btn-danger delete');
+		
+		//reset the button about a few seconds
+		window.setTimeout(this.resetDelete.bind(this), 4000);
 	},
-    
-/*
-    removeCharacter: function(e) {
-	    e.preventDefault();
-	    //console.log(this.model.changedAttributes());
-	    if (this.model.isNew()) {
-		    if (!confirm('You have not saved this character. Are you sure you with to delete it?')) {
-			    return false;
-		    }
-	    } else if (this.model.changedAttributes()) {
-		    if (!confirm('You have unsaved changes that will be lost. Are you sure?')) {
-			    return false;
-		    }
-	    }
-	    this.remove();
-    },
-*/
-    
+	
+	/**
+	 * Resets the confirm delete button so the 'are you sure' doesn't stick around
+	 */
+	resetDelete: function() {
+		this.$el.find('.delete').html('<span class="glyphicon glyphicon-remove"></span>').removeClass('btn-danger delete').addClass('conf-delete btn-default');
+	},
+
+	/**
+	 * Opens a modal with spell information
+	 */    
     showSpell: function(e) {
 	    e.preventDefault();
 	    var title = $(e.target).attr('data-spell');
@@ -593,6 +589,9 @@ if (this.model.isNew()) {
 	    app.showModal({ title: 'Spell Details: '+spell.title.capitalize(), body: spellv.render().el });
     },
     
+    /**
+     * Opens the edit modal for a field
+     */
     editField: function(e) {
 	    var field = $(e.target).attr('data-field');
 	    //console.log(field);

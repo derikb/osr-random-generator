@@ -212,6 +212,16 @@ var WildernessDetails = Backbone.View.extend({
 		$button = $(e.currentTarget);
 		$button.html('Are you sure?');
 		$button.removeClass('conf-delete btn-default').addClass('btn-danger delete');
+		
+		//reset the button about a few seconds
+		window.setTimeout(this.resetDelete.bind(this), 4000);
+	},
+	
+	/**
+	 * Resets the confirm delete button so the 'are you sure' doesn't stick around
+	 */
+	resetDelete: function() {
+		this.$el.find('.delete').html('<span class="glyphicon glyphicon-remove"></span>').removeClass('btn-danger delete').addClass('conf-delete btn-default');
 	},
     
     /**

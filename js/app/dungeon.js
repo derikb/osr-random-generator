@@ -327,8 +327,17 @@ var DungeonDetails = Backbone.View.extend(
 		$button = $(e.currentTarget);
 		$button.html('Are you sure?');
 		$button.removeClass('conf-delete btn-default').addClass('btn-danger delete');
+		
+		//reset the button about a few seconds
+		window.setTimeout(this.resetDelete.bind(this), 4000);
 	},
-    
+	
+	/**
+	 * Resets the confirm delete button so the 'are you sure' doesn't stick around
+	 */
+	resetDelete: function() {
+		this.$el.find('.delete').html('<span class="glyphicon glyphicon-remove"></span>').removeClass('btn-danger delete').addClass('conf-delete btn-default');
+	},
     
     /**
      * Opens modal for editing fields (title and level only so far)
@@ -367,7 +376,7 @@ var DungeonDetails = Backbone.View.extend(
 		
 		temp += '<div id="dung<%= id %>" class="panel-collapse collapse '+openclass+'"><div class="panel-body">';
 		
-			temp += '<section><h1 data-field="title"><% if (title == "") { %>[untitled]<% } else { %><%= title %><% } %></h1><dl><dt data-field="level">Level</dt><dd data-field="level"><%= level %></dd></dl><h2>Rooms</h2><% _.each(rooms, function(v,k,l){ %><section class="dungeon-room"><h3>Room <%= v.number %></h3><dl data-room="<%= v.number %>"><dt>Content:</dt><dd><%= v.content.capitalize() %></dd><% if (v.trap_type !== "") { %><dt>Trap:</dt><dd><%= v.trap_type %></dd><% } if (v.monster_type !== "") { %><dt>Monster:</dt><dd><%= v.monster_type %></dd><% } if (v.special_type !== "") { %><dt>Special:</dt><dd><%= v.special_type %></dd><% } %><dt>Treasure:</dt><dd><%= v.treasure_type %></dd></dl></section><% }); %></section>';
+			temp += '<section><dl><dt data-field="title">Title</dt><dd data-field="title"><% if (title == "") { %>[untitled]<% } else { %><%= title %><% } %></dd><dt data-field="level">Level</dt><dd data-field="level"><%= level %></dd></dl><h2>Rooms</h2><% _.each(rooms, function(v,k,l){ %><section class="dungeon-room"><h3>Room <%= v.number %></h3><dl data-room="<%= v.number %>"><dt>Content:</dt><dd><%= v.content.capitalize() %></dd><% if (v.trap_type !== "") { %><dt>Trap:</dt><dd><%= v.trap_type %></dd><% } if (v.monster_type !== "") { %><dt>Monster:</dt><dd><%= v.monster_type %></dd><% } if (v.special_type !== "") { %><dt>Special:</dt><dd><%= v.special_type %></dd><% } %><dt>Treasure:</dt><dd><%= v.treasure_type %></dd></dl></section><% }); %></section>';
 								
 		temp += '</div>';
 		
