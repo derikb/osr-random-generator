@@ -437,6 +437,7 @@ var DungeonList = Backbone.View.extend(
 	    //console.log(m);
 	    $(this.el).find('#dungeon-accordion').prepend(new DungeonDetails({model: m, open: true}).render().el);
 	    $('#dung'+m.get('id')).collapse('show');
+	    $('#dung'+m.get('id')).parents('.dungeon-details')[0].scrollIntoView(true);
     },
     
     /**

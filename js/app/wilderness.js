@@ -429,6 +429,8 @@ var WildernessList = Backbone.View.extend({
 	    //console.log(m);
 	    $(this.el).find('#wilderness-accordion').prepend(new WildernessDetails({model: m, open: true}).render().el);
 	    $('#wild'+m.get('id')).collapse('show');
+	    $('#wild'+m.get('id')).parents('.wilderness-details')[0].scrollIntoView(true);
+	    
     },
     
     /**

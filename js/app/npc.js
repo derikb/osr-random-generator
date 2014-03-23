@@ -1146,7 +1146,7 @@ var CharList = Backbone.View.extend(
 	    
 	    $(this.el).find('#npc-accordion-'+ghtml).prepend(new CharacterBlock({model: m, open: true}).render().el);
 	    $('#char'+m.get('id')).collapse('show');
-	    $('#char'+m.get('id'))[0].scrollIntoView(true);
+	    $('#char'+m.get('id')).parents('.character-block')[0].scrollIntoView(true);
     },
     
     /**
