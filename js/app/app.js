@@ -609,6 +609,14 @@ String.prototype.nl2br = function() {
 }
 
 /**
+ * converts string to be usable as a class/id
+ * @returns {String} string with some characters remove or replaced
+ */
+String.prototype.cleanClass = function() {
+    return this.replace(/[\s,'";<>]/g, "_");
+}
+
+/**
  * Flatten an array into a string
  * @returns {String} a comma separate, capitalized string of the array
  */

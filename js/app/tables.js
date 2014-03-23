@@ -479,7 +479,8 @@ var RandomTableShort = Backbone.View.extend(
 	className: function(){
 		var o='tag_all ';
 		_.each(this.model.get('tags'), function(v) {
-	        o += 'tag_'+v+' ';
+	        o += 'tag_'+v.cleanClass()+' ';
+	        //o += 'tag_'+v+' ';
         }, this);
         return o;
 	},
@@ -1093,7 +1094,8 @@ var RTable_List = Backbone.View.extend(
 		}
 				  
 		$(this.el).find('tr.tag_all').addClass('hidden');
-  		var classes = this.tagFilters.join('.tag_');
+		filter = _.map(this.tagFilters, function(v){ return v.cleanClass(); }, this);
+  		var classes = filter.join('.tag_');
   		classes.replace(/\.tag_$/, '');
   		if (classes !== '') { classes = '.tag_'+classes; }
   		$(this.el).find('tr'+classes).removeClass('hidden');		  
