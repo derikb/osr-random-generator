@@ -48,7 +48,7 @@ var AppRouter = Backbone.Router.extend(
 		this.charlist = new CharCollection();
         this.charlistview = new CharList({model:this.charlist});
 		this.charlist.fetch({silent: true});
-        $('#characters-list').html(this.charlistview.render().el);
+        $('#characters-results').html(this.charlistview.render().el);
 	
 		$('#character-form').html(new CharForm({ model: this.AppSettings }).render().el);
        			

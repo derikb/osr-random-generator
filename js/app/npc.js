@@ -499,7 +499,7 @@ var CharacterBlock = Backbone.View.extend(
 	{
 	
 	tagName: 'div',
-	className: 'character-block clearfix',
+	className: 'character-block panel panel-default',
 	
 	attributes : function () {
 		return {
@@ -511,7 +511,8 @@ var CharacterBlock = Backbone.View.extend(
 		'click *[data-field]': 'editField',
 		'click .save': 'saveCharacter',
 		'click .delete': 'deleteCharacter',
-		'click .remove': 'removeCharacter',
+		'click .conf-delete': 'confirmDelete',
+		//'click .remove': 'removeCharacter',
 		'click .spell': 'showSpell'
 	},
 	
@@ -523,27 +524,45 @@ var CharacterBlock = Backbone.View.extend(
 	 */
 	initialize: function() {
     	this.listenTo(this.model, "change", this.render);
-    	this.listenTo(this.model, "destroy", this.remove);
+    	//this.listenTo(this.model, "destroy", this.remove);
     },
     
+    /**
+	 * Save an edited item
+	 */
     saveCharacter: function() {
 		//do something
-		if (this.model.isNew()) {
+		/*
+if (this.model.isNew()) {
 			this.model.save();
 			app.charlist.add(this.model);
 		} else {
+*/
 			this.model.save();
-		}
-		this.$el.find('.unsaved').remove();
+		//}
+		this.$el.find('.unsaved, .save').remove();
 		return false;
     },
     
+    /**
+     * Delete the item
+     */
     deleteCharacter: function(e) {
 		e.preventDefault();
 		this.model.destroy();
 		this.remove();
     },
     
+    /**
+     * Updates the delete button to make you click it twice to delete
+     */
+	confirmDelete: function(e) {
+		$button = $(e.currentTarget);
+		$button.html('Are you sure?');
+		$button.removeClass('conf-delete btn-default').addClass('btn-danger delete');
+	},
+    
+/*
     removeCharacter: function(e) {
 	    e.preventDefault();
 	    //console.log(this.model.changedAttributes());
@@ -558,6 +577,7 @@ var CharacterBlock = Backbone.View.extend(
 	    }
 	    this.remove();
     },
+*/
     
     showSpell: function(e) {
 	    e.preventDefault();
@@ -582,61 +602,78 @@ var CharacterBlock = Backbone.View.extend(
     },
     
     
-    template: function(data){
+    template: function(data, open){
     	var character_display = app.AppSettings.get('character_display');
+    	
+		open = (open) ? open : false;
+		var openclass = (open) ? 'in' : '';
+		
+		
+		accordion = data.chargroup.replace(/[\s\.:'"]/g, '_');
+		
+    	var temp = '';
+    	temp += '<div class="panel-heading clearfix">';
+		
+		temp += '<div class="pull-right hidden-print">';
+				if (this.model.changedAttributes()) { temp += '<span class="label label-danger unsaved">Unsaved Changes</span> <button title="Save" class="btn btn-default btn-xs save"><span class="glyphicon glyphicon-save"></span></button>'; }
+			
+				temp += '<button title="Delete" class="btn btn-default btn-xs conf-delete"><span class="glyphicon glyphicon-remove"></span></button>';
+			temp += '</div>';
+		
+		temp += '<h4 class="panel-title"><a data-toggle="collapse" data-parent="#npc-accordion-'+accordion+'" href="#char<%= id %>"><%= name %> <% if(charclass == "none") { %>(<%= occupation %>)<% } else { %>(<% var cc = charclass.capitalize() %><%= cc %> <%= level %>)<% } %></a></h4></div>';
+		
+		temp += '<div id="char<%= id %>" class="panel-collapse collapse '+openclass+'"><div class="panel-body">';
+
+
     	
     	if (character_display == 'soft') {
 	    	
-	    	var char_full = '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %></dd><% } %><dt data-field="race">Race</dt><dd data-field="race"><% var r = race.capitalize() %><%= r %></span></dd><dt data-field="chargroup">Group</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
+	    	temp += '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %></dd><% } %><dt data-field="race">Race</dt><dd data-field="race"><% var r = race.capitalize() %><%= r %></span></dd><dt data-field="chargroup">Group</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
 	    	
-	    	char_full += '</div><div class="col-xs-6">';
+	    	temp += '</div><div class="col-xs-6">';
     	
-			char_full += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goals">Goals</dt><dd><span data-field="goals"><%= goals %></span></dd></dl>';
+			temp += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goals">Goals</dt><dd><span data-field="goals"><%= goals %></span></dd></dl>';
 			
     	} else {
     	
-    		var char_full = '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %>, <span data-field="level">Lvl <%= level %></span></dd><% } %><dt data-field="race">Race</dt><dd data-field="race"><% var r = race.capitalize() %><%= r %></span></dd></dl>';
+    		temp += '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %>, <span data-field="level">Lvl <%= level %></span></dd><% } %><dt data-field="race">Race</dt><dd data-field="race"><% var r = race.capitalize() %><%= r %></span></dd></dl>';
     	
 	    	if (app.AppSettings.get('ability_display') == 'minimal') {
 		    	
-		    	char_full += '<dl class="dl-horizontal clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); if (v.modifier !== 0) { %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %> (<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span></dd><% } }); %></dl>';
+		    	temp += '<dl class="dl-horizontal clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); if (v.modifier !== 0) { %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %> (<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span></dd><% } }); %></dl>';
 		    	
 	    	} else {
-	    		char_full += '<dl class="dl-horizontal clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %> (<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span></dd><% }); %></dl>';
+	    		temp += '<dl class="dl-horizontal clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %> (<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span></dd><% }); %></dl>';
 	    	}
     	
-    		char_full += '<dl class="dl-horizontal clearfix"><dt>HP</dt><dd><span data-field="hp"><%= hp %></span></dd><dt>AC</dt><dd><%= ac %><% if (armor !== "") { %> (<span data-field="armor"><%= armor %></span>)<% } %></dd><dt>Attack Bonus</dt><% if (attack.melee == attack.missile) { %><dd><%= attack.melee %></dd><% } else { %><dd><%= attack.melee %> Melee</dd><dd><%= attack.missile %> Missile</dd><% } %><dt>Reaction Roll</dt><dd><%= reaction_roll %></dd></dl>';
+    		temp += '<dl class="dl-horizontal clearfix"><dt>HP</dt><dd><span data-field="hp"><%= hp %></span></dd><dt>AC</dt><dd><%= ac %><% if (armor !== "") { %> (<span data-field="armor"><%= armor %></span>)<% } %></dd><dt>Attack Bonus</dt><% if (attack.melee == attack.missile) { %><dd><%= attack.melee %></dd><% } else { %><dd><%= attack.melee %> Melee</dd><dd><%= attack.missile %> Missile</dd><% } %><dt>Reaction Roll</dt><dd><%= reaction_roll %></dd></dl>';
     	
-			char_full += '</div><div class="col-xs-6">';
+			temp += '</div><div class="col-xs-6">';
     	
-    		char_full += '<dl class="dl-horizontal clearfix"><dt data-field="chargroup">Group</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
+    		temp += '<dl class="dl-horizontal clearfix"><dt data-field="chargroup">Group</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
     	
-    		char_full += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goals">Goals</dt><dd><span data-field="goals"><%= goals %></span></dd></dl>';
+    		temp += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goals">Goals</dt><dd><span data-field="goals"><%= goals %></span></dd></dl>';
     	
-    		char_full += '<% if (spellcaster == true) { %><section><h4 data-field="spells">Spells</h4><dl class=""><% _.each(spells, function(v,k) { %><dt data-field="spells"><%= k %></dt><% _.each(v, function(y,x) { %><dd class="spell" data-spell="<%= y %>"><%= y %> <span class="glyphicon glyphicon-info-sign"></span></dd><% }); }); %></dl></section><% } %>'; //spells
+    		temp += '<% if (spellcaster == true) { %><section><h4 data-field="spells">Spells</h4><dl class=""><% _.each(spells, function(v,k) { %><dt data-field="spells"><%= k %></dt><% _.each(v, function(y,x) { %><dd class="spell" data-spell="<%= y %>"><%= y %> <span class="glyphicon glyphicon-info-sign"></span></dd><% }); }); %></dl></section><% } %>'; //spells
 		
-			char_full += '</div></div>';
+			temp += '</div></div>';
 		
 		}
-		
-		char_full += '<div class="pull-right hidden-print">';
-		
-		if (this.model.changedAttributes()) { char_full += '<span class="label label-danger unsaved">Unsaved Changes</span> '; }
-		
-		char_full += '<button title="Save" class="btn btn-default btn-xs save"><span class="glyphicon glyphicon-save"></span></button>';
-		
-		char_full += ' <button title="Close" class="btn btn-default btn-xs remove"><span class="glyphicon glyphicon-eye-close"></span></button>';
-		
-		char_full += '<% if (typeof id !== "undefined"){ %> <button title="Delete" class="btn btn-default btn-xs delete"><span class="glyphicon glyphicon-remove"></span></button><% } else { %><%} %></div>';
+
+		temp += '</div>';
 				
-		var html = _.template(char_full, data);
+		var html = _.template(temp, data);
 		return html;
     },
     
     render: function() {
     	//console.log('view render');
     	//console.trace();
-    	this.$el.html(this.template(this.model.attributes));
+    	var open = false;
+    	if (arguments[1]) {
+	    	open = (arguments[1]['open']) ? arguments[1]['open'] : false;
+    	}
+    	this.$el.html(this.template(this.model.attributes, open));
 		return this;
 	}
 	
@@ -739,7 +776,7 @@ var CharacterEditView = Backbone.View.extend(
 			this.model.set({ ability_scores: scores });
 			//this.model.save({ ability_scores: scores });
 			this.model.trigger('change:'+a.name, this.model);
-			this.model.trigger('change', this.model);
+			this.model.trigger('change', this.model, { open: true });
 		
 		} else if (this.field == 'spells') {
 			
@@ -750,10 +787,10 @@ var CharacterEditView = Backbone.View.extend(
 					l[k] = [v];
 				}
 			});
-			this.model.set(fdata);
+			this.model.set(fdata, { open: true });
 			//this.model.save(fdata);
 		} else {
-			this.model.set(formdata);
+			this.model.set(formdata, { open: true });
 			//this.model.save(formdata, {wait: true});
 		}
 		//this.model.save();
@@ -1062,7 +1099,7 @@ var CharList = Backbone.View.extend(
 	model: CharCollection,
 	
 	tagName:'section',
-	className: '',
+	id: 'character-collection',
 
 	/**
 	 * This is the view for the Character Collection
@@ -1071,8 +1108,8 @@ var CharList = Backbone.View.extend(
 	 * @constructs
 	 */
     initialize:function () {
-        this.listenTo(this.model, "add", this.render);
-        this.listenTo(this.model, "destroy", this.render);
+        this.listenTo(this.model, "add", this.addItem);
+        this.listenTo(this.model, "destroy", this.removeItem);
         this.listenTo(this.model, "change:chargroup", this.render);
     },
      
@@ -1083,82 +1120,43 @@ var CharList = Backbone.View.extend(
     		return char.get('chargroup');
     	});
     	k = _.keys(ord).sort(); //sort by group name
+
     	_.each(k, function(group) {
     		var grouplabel = (group == '') ? '[no group]' : group;
     	 	$(this.el).append('<h2>'+grouplabel+'</h2>');
-    	 		var $glist = $('<ul class="list-unstyled"></ul>');
+    	 	var ghtml = group.replace(/[\s\.:'"]/g, '_');
+    	 		var $glist = $('<div id="npc-accordion-'+ghtml+'" class="panel-group"></div>');
+    	 		//var $glist = $('<ul class="list-unstyled"></ul>');
 		 		_.each(ord[group], function(char){
-        			$glist.append(new CharacterListItem({model:char}).render().el);
+        			$glist.append(new CharacterBlock({model:char}).render().el);
         		}, this);
         		$(this.el).append($glist);
         }, this);
 
+
         return this;
+    },
+    
+    /**
+     * Put a new item into the list (when it's added to the collection), default it to open
+     */
+    addItem: function(m) {
+	    //console.log(m);
+	    
+	    var ghtml = m.get('chargroup').replace(/[\s\.:'"]/g, '_');
+	    
+	    $(this.el).find('#npc-accordion-'+ghtml).prepend(new CharacterBlock({model: m, open: true}).render().el);
+	    $('#char'+m.get('id')).collapse('show');
+	    $('#char'+m.get('id'))[0].scrollIntoView(true);
+    },
+    
+    /**
+     * Remove an item from the list (when it's removed from the collection)
+     */
+    removeItem: function(m) {
+	    $('#char'+m.get('id')).parents('.panel').remove();
     }
 	
-	
-});
-
-
-//!CharacterListItem
-//View for character data in brief list
-var CharacterListItem = Backbone.View.extend(
-	/** @lends CharacterListItem.prototype */
-	{
-	
-	tagName: 'li',
-	className: 'character-list clearfix',
-	
-	attributes : function () {
-		return {
-			//id: 'character_'+this.model.get('id')
-		};
-	},
-	
-	events: {
-		'click .view': 'viewCharacter',
-		'click .delete': 'deleteCharacter'
-	},
-	
-	/**
-	 * This is the view for Characters in shorted form
-	 *
-	 * @augments external:Backbone.View
-	 * @constructs
-	 */
-	initialize: function() {
-    	//this.listenTo(this.model, "change", this.render);
-    	this.listenTo(this.model, "sync", this.render); //only change when character is saved.
-    },
-
-    viewCharacter: function(e) {
-		e.preventDefault();
-		$('#characters-new').append(new CharacterBlock({model:this.model}).render().el)
-	},
-    
-    deleteCharacter: function(e) {
-		e.preventDefault();
-		if (!confirm('Are you sure you want to delete this character?')) { return; }
-		this.model.destroy();
-    },
-    
-    template: function(data){
-    	var char_list = '';
-    	
- 		char_list += '<div class="pull-right"><button title="View" class="btn btn-default btn-xs view"><span class="glyphicon glyphicon-eye-open"></span></button>';
-		
-		char_list += '<% if (typeof id !== "undefined"){ %> <button title="Delete" class="btn btn-default btn-xs delete"><span class="glyphicon glyphicon-remove"></span></button><% } else { %><%} %></div>';
-		
-		char_list += '<%= name %> <% if(charclass == "none") { %>(<%= occupation %>)<% } else { %>(<% var cc = charclass.capitalize() %><%= cc %> <%= level %>)<% } %>';
-				
-		var html = _.template(char_list, data);
-		return html;
-    },
-    
-    render: function() {
-    	this.$el.html(this.template(this.model.attributes));
-		return this;
-	}
 	
 });
 
@@ -1189,7 +1187,9 @@ var CharForm = Backbone.View.extend(
     
     render: function () {
     	var rules = appdata.rules[this.model.get('rules_set')];
-    	var form = '<div class="row">';
+    	var form = '<h1>Create Character</h1>';
+    	form += '<div class="messages"></div>';
+    	form += '<div class="row">';
     	
     	form += '<div class="form-group col-sm-4"><label for="race" class="control-label">Race</label><select class="form-control" id="race" name="race">';
     		_.each(rules.races, function(v,k,l) {
@@ -1253,10 +1253,23 @@ var CharForm = Backbone.View.extend(
  
     newChar:function (e) {
     	e.preventDefault();
+    	var $mess = $(this.el).find('.messages');
+		$mess.empty();
+		
     	formdata = $(e.target).serializeObject();
     	var char = new Character(formdata);
     	char.create();
-    	$('#characters-new').prepend(new CharacterBlock({model:char}).render().el);
+    	
+    	if (!char.isValid()) {
+    		$mess.html(app.showAlert(char.validationError.general, { atype: 'danger' }));
+			$mess[0].scrollIntoView(true);
+	    	//console.log(wild.validationError);
+	    	return;
+    	}
+    	char.save();
+		app.charlist.add(char);
+    	
+    	//$('#characters-new').prepend(new CharacterBlock({model:char}).render().el);
     },
     
     addGroup: function(e) {

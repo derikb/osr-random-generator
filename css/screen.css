@@ -59,15 +59,8 @@ dd { margin-left: 10px; }
 .delete, .conf-delete, .edit { margin-left: 10px; }
 .character-block .delete { margin-left: 50px; }
 
-.character-block {
-	padding: 10px;
-	border: 1px solid rgb(221,221,221);
-	border-radius: 5px;
-	margin-bottom: 10px;
-	background-color: aliceblue;
-}
 
-.wilderness-details, .dungeon-details {
+.wilderness-details, .dungeon-details, .character-block {
 	margin-bottom: 10px;
 	background-color: aliceblue;
 }
