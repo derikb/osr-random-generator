@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-v0.7 - 2014-03-
+v0.7 - 2014-03-23
 -----------------
 
 * Updated the modal for rolling on a table to allow for the generation of results from subtables.
