@@ -798,7 +798,7 @@ var CharacterEditView = Backbone.View.extend(
 	},
 	
 	loadRandom: function(e) {
-		
+		e.preventDefault();
 		//console.log(e);
 		var inputtarget = $(e.target).attr('data-targetfield');
 		var list = $(e.target).attr('data-list');
