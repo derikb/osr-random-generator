@@ -40,7 +40,16 @@
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="#tables" data-toggle="tab">Random Tables</a></li>
 						<li><a href="#create" data-toggle="tab">Create Tables</a></li>
-						<li><a href="#npcs" data-toggle="tab">NPCs</a></li>
+						<!-- <li><a href="#npcs" data-toggle="tab">NPCs</a></li> -->
+						
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">NPCs <b class="caret"></b></a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a href="#npcs" data-toggle="tab">Create</a></li>
+								<li><a href="#names" data-toggle="tab">Names</a></li>
+							</ul>
+						</li>
+						
 						<li><a href="#wilderness" data-toggle="tab">Wilderness</a></li>
 						<li><a href="#dungeon" data-toggle="tab">Dungeon</a></li>
 
@@ -84,6 +93,21 @@
 					<div class="col-sm-6 hidden-print">
 						<section id="character-form">
 							<!-- Character creation form here. -->
+						</section>
+					</div>
+				</div>
+			</div>
+			
+			<div class="tab-pane hidden-print" id="names">
+				<div class="row">
+					<div class="col-sm-12 hidden-print">
+						<section id="name-form">
+							<!-- Character creation form here. -->
+						</section>
+					</div>
+					
+					<div class="col-sm-12">
+						<section id="name-results">
 						</section>
 					</div>
 				</div>

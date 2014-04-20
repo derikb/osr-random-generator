@@ -123,6 +123,7 @@ var Character = Backbone.Model.extend(
 	 * @param {String} gender Gender to user
 	 * @returns {String} name
 	 */
+/*
 	holmesname: function(gender) {
 		var name = '';
 		scount = app.randomizer.getWeightedRandom(appdata.name.holmesian_scount.values, appdata.name.holmesian_scount.weights);
@@ -143,6 +144,7 @@ var Character = Backbone.Model.extend(
 		});
 		return name;
 	},
+*/
 	
 	/**
 	 * Create a name
@@ -152,6 +154,11 @@ var Character = Backbone.Model.extend(
 	generateName: function(name_type) {
 		var gender = this.get('gender');
 		var name = '';
+		var NameM = new Names();
+		
+		name = NameM.generateName(name_type, gender);
+		
+/*
 		switch (name_type) {
 		 	case "holmesian":
 				name = this.holmesname(gender);
@@ -166,6 +173,7 @@ var Character = Backbone.Model.extend(
 				name = app.randomizer.findToken(name);
 				break;
 		}
+*/
 		return name;
 	},
 	
@@ -1401,3 +1409,171 @@ var CharGroupView = Backbone.View.extend(
 	
 	
 });
+
+
+//!Names model
+var Names = Backbone.Model.extend(
+	/** @lends Names.prototype */
+	{
+	
+	defaults: function() {
+		return {
+			listCount: 10	
+		}
+	},
+	
+	initialize:  function() {
+		
+	},
+	
+	
+	generateList: function(nametypes) {
+		var names = {};
+		
+		if (!_.isArray(nametypes)) {
+			nametypes = [nametypes];
+		}
+		
+		_.each(nametypes, function(v,k,l){
+			var a = { male: [], female: [] };
+			var n = this.get('listCount');
+			for(var i=1; i<=n; i++) {
+				var gender = (i <= Math.ceil(n/2)) ? 'male' : 'female';
+				a[gender].push(this.generateName(v, gender));
+			}
+			names[v] = a;
+		}, this);
+		
+		return names;
+	},
+	
+	/**
+	 * Generate a Holmes name
+	 * @param {String} gender Gender to user
+	 * @returns {String} name
+	 */
+	holmesname: function(gender) {
+		var name = '';
+		scount = app.randomizer.getWeightedRandom(appdata.name.holmesian_scount.values, appdata.name.holmesian_scount.weights);
+	
+		for (i=1; i<=scount; i++) {
+			name += app.randomizer.rollRandom(appdata.name.holmesian_syllables); //array
+			if (i<scount) {
+				name += app.randomizer.getWeightedRandom(['',' ','-'],[3,2,2]);
+			}
+		}
+		name = name.toLowerCase().capitalize();
+		name += ' '+app.randomizer.rollRandom(appdata.name.holmesian_title);
+		
+		name = app.randomizer.findToken(name);
+		
+		name = name.replace(/[\s\-]([a-z]{1})/g, function(match) {
+			return match.toUpperCase();
+		});
+		return name;
+	},
+	
+	/**
+	 * Create a name
+	 * @param {String} name_type What name list/process to use
+	 * @returns {String} a name
+	 */
+	generateName: function(name_type, gender) {
+		var name = '';
+		switch (name_type) {
+		 	case "holmesian":
+				name = this.holmesname(gender);
+				break;
+			case "cornish":
+			case "flemish":
+			default:
+				name = app.randomizer.rollRandom(appdata.name[name_type][gender]).capitalize();
+				if (typeof appdata.name[name_type]['surname'] !== 'undefined') {
+					name += ' '+app.randomizer.rollRandom(appdata.name[name_type]['surname']).capitalize();
+				}
+				name = app.randomizer.findToken(name);
+				break;
+		}
+		return name;
+	},
+	
+		
+	}
+);
+
+
+//!Name  creation form
+var NameForm = Backbone.View.extend(
+	/** @lends NameForm.prototype */
+	{
+		
+	model: Names,
+	tagName: 'form',
+	id: 'name-form',
+	
+    events:{
+        "submit": "showResults",
+    },
+	
+	/**
+	 * This is the view for a name creation form
+	 *
+	 * @augments external:Backbone.View
+	 * @constructs
+	 */
+    initialize:function () {
+        //this.listenTo(this.model, 'change', this.render);
+    },
+    
+    render: function () {
+    	//var rules = appdata.rules[this.model.get('rules_set')];
+    	var form = '<h1>Generate Names</h1>';
+    	form += '<div class="messages"></div>';
+    	form += '<div class="form-group">';
+    	form += '<fieldset><legend>Name Types</legend>';
+    		_.each(appdata.name.options, function(v){
+    			if (v.option == 'none') { return; }
+    			form += '<label for="'+v.option+'" class="checkbox-inline"><input type="checkbox" name="nametype" id="'+v.option+'" value="'+v.option+'" checked=checked> '+v.label+'</label>';
+			});
+    	form += '</fieldset>';
+    	form += '</div>';
+			    	
+    	form += '<div class="form-group"><button type=submit class="btn btn-primary">Generate</button></div>';
+    	//form += '</div>';
+    	$(this.el).html(form);
+        return this;
+    },
+    
+    /**
+     * Output the generated names
+     */
+    showResults: function(e) {
+    	e.preventDefault();
+    	var formdata = $(e.target).serializeObject();
+		//console.log(formdata);
+		var names = this.model.generateList(formdata.nametype);
+		//console.log(n);
+    
+	    var html = '<h1>Names</h1>';
+	    _.each(names, function(v,k,l) {
+		    html += '<section class="name-block"><h1>'+k.capitalize()+'</h1>';
+		    html += '<div class="row">';
+		    _.each(v, function(z,y){
+			    if (_.isArray(z) && z.length > 0) {
+					html += '<div class="col-sm-6"><h2>'+y.capitalize()+'</h2><ul>';
+					_.each(z, function(n){
+						html += '<li>'+n+'</li>';
+					}, this);
+					html += '</ul></div>';
+			    }
+		    }, this);
+		    html += '</div></section>';
+	    }, this);
+	    
+		$('#name-results').html(html);
+    }
+
+    
+});
+
+

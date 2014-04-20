@@ -51,6 +51,9 @@ var AppRouter = Backbone.Router.extend(
         $('#characters-results').html(this.charlistview.render().el);
 	
 		$('#character-form').html(new CharForm({ model: this.AppSettings }).render().el);
+		
+		this.names = new Names();
+		$('#name-form').html(new NameForm({ model: this.names  }).render().el);
        			
 		this.wildlist = new WildernessCollection();
         this.wildlistview = new WildernessList({model:this.wildlist});
