@@ -89,6 +89,21 @@ var AppRouter = Backbone.Router.extend(
 		this.rtables.add(load_tables);
         $('#rtable-list').html(this.rtablelist.render().el);
 
+		//load up monsters, first saved ones then hardcoded ones
+		this.monsters = new Monster_Collection();
+		this.monsters.fetch({silent: true});
+        this.monsterslist = new Monster_List({model:this.monsters});
+		var load_monsters = [];
+		_.each(appdata.monsters.dnd5e, function(v, k){
+			if (typeof v.name == 'undefined') {
+				v.name = k;
+			}
+			v.key = k;
+			load_monsters.push(v);
+		}, this);
+		this.monsters.add(load_monsters);
+        $('#monster-list').html(this.monsterslist.render().el);
+
     },
 	
 	/**

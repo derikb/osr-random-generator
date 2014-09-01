@@ -2,7 +2,6 @@ appdata = (typeof appdata == "undefined") ? {} : appdata;
 appdata.monsters = (typeof appdata.monsters == "undefined") ? {} : appdata.monsters;
 
 appdata.monsters.dnd5e = [
-	{ "cr": CR, "type": "Type", "name": "Name", "source": "Reference" },
 	{ "cr": 0, "type": "Plant", "name": "Awakened Shrub", "source": "B10" },
 	{ "cr": 0, "type": "Beast", "name": "Baboon", "source": "B11" },
 	{ "cr": 0, "type": "Beast", "name": "Badger", "source": "B11" },
