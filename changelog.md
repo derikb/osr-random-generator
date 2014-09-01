@@ -1,12 +1,14 @@
 Change Log
 ==========
 
-v0.8 - 2014-xx-xx
+v0.8 - 2014-09-01
 -----------------
 
 * Added a standalone name generator (separate from the NPC generator) that creates lists of names.
 * Added Japanese and Turkish names to the default data.
-* 
+* Added Mission generator.
+* Added a bunch of new tables for my fantasy colonial america-esque campaign. Most should have broader relevancy though.
+* Started adding 5e stuff (monsters and rules for NPC generation) (incomplete).
 
 v0.7 - 2014-03-23
 -----------------
