@@ -60,7 +60,7 @@ appdata.tables.colonial_appearance = {
   "author": "Derik Badman",
   "tags": [
     "colonial",
-    "npc",
+    "npcs",
     "appearance"
   ],
   "tables": {
@@ -104,7 +104,7 @@ appdata.tables.colonial_goals = {
   "title": "Goals (Colonial)",
   "author": "Derik Badman",
   "tags": [
-    "npc",
+    "npcs",
     "colonial",
     "goals"
   ],

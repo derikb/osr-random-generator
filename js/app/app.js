@@ -24,8 +24,10 @@ var AppRouter = Backbone.Router.extend(
 		this.AppSettings = new AppSettings({ version: this.version });
 		this.AppSettings.fetch();
 		this.AppSettings.checkVersionUpdate();
-		this.AppSettingsView = new AppSettingsView({ model: this.AppSettings });
+		/*
+this.AppSettingsView = new AppSettingsView({ model: this.AppSettings });
 		$('#settings').html(this.AppSettingsView.render().el);
+*/
 		
 		
 		//console.log(this);
@@ -94,7 +96,7 @@ var AppRouter = Backbone.Router.extend(
 		this.monsters.fetch({silent: true});
         this.monsterslist = new Monster_List({model:this.monsters});
 		var load_monsters = [];
-		_.each(appdata.monsters.dnd5e, function(v, k){
+		_.each(appdata.monsters[this.AppSettings.get('monster_table')], function(v, k){
 			if (typeof v.name == 'undefined') {
 				v.name = k;
 			}
@@ -103,6 +105,9 @@ var AppRouter = Backbone.Router.extend(
 		}, this);
 		this.monsters.add(load_monsters);
         $('#monster-list').html(this.monsterslist.render().el);
+
+		this.AppSettingsView = new AppSettingsView({ model: this.AppSettings });
+		$('#settings').html(this.AppSettingsView.render().el);
 
     },
 	
@@ -204,12 +209,12 @@ var AppSettings = Backbone.Model.extend(
 			chargroup: [],
 			character_display: 'full',
 			ability_display: 'full',
+			monster_table: 'labyrinthlord',
 			
 			dungeon: {
 				stocking_table: 'moldvay_stocking',
 				trap_table: 'traps_campbell',
 				special_table: 'bag_tricks_2',
-				monster_table: 'labyrinthlord',	
 			},
 			
 			
@@ -324,6 +329,13 @@ var AppSettingsView = Backbone.View.extend(
 			form += '<div class="help-block">For shorter character blocks pick "minimal".</div></div>';
 			
 			form += '</div></fieldset>';
+			
+		form += '<div class="row"><div class="form-group col-sm-12"><label for="occupation_type" class="control-label">Occupation List</label><select class="form-control" id="occupation_type" name="occupation_type">';
+    		_.each(app.rtables.getByTags('occupation'), function(v){
+    			var sel = (v.get('key') == this.model.get('occupation_type')) ? 'selected=selected' : '';
+	    		form += '<option value="'+v.get('key')+'" '+sel+'>'+v.get('title')+'</option>';
+    		}, this);
+		form += '</select><div class="help-block">For 0 level NPCs.</div></div></div>';
 		
 		form += '<div class="row"><div class="form-group col-sm-9"><label for="personality_type" class="control-label">Personality List</label><select class="form-control" id="personality_type" name="personality_type">';
     		_.each(appdata.personality_options, function(v){
@@ -354,6 +366,17 @@ var AppSettingsView = Backbone.View.extend(
 		form += '</select><div class="help-block"></div></div></div>';
 		
 				
+		form += '</fieldset>';
+		
+		form += '<fieldset><legend>Other Settings</legend>';
+		
+		form += '<div class="row"><div class="form-group col-sm-9"><label for="monster_table" class="control-label">Monster Table</label><select class="form-control" id="monster_table" name="monster_table">';
+    		_.each(appdata.monsters, function(v,k){
+    			var sel = (k == this.model.get('monster_table')) ? 'selected=selected' : '';
+	    		form += '<option value="'+k+'" '+sel+'>'+k+'</option>';
+    		}, this);
+		form += '</select><div class="help-block">For generators and the "Monsters" tab.</div></div></div>';
+		
 		form += '</fieldset>';
 		
 		form += '<div class="form-group"><button type=submit class="btn btn-primary">Save Settings</button></div>';
