@@ -1008,12 +1008,13 @@ var RTable_List = Backbone.View.extend(
 	className: 'table table-striped',
 	theaders: [ { label: 'Title', class: '' }, { label: 'Description', class: 'hidden-xs' }, { label: 'Tags', class: '' }, { label: 'Actions', class: '' }],
 	tagFilters: [],
+	kwquery: '',
 	
 	events: {
 		'click .tag-filter': 'filter_tag',
 		'click .clear-tag-filter': 'clear_filter',
 		"click th": "headerClick",
-		"keyup #rtable_keyword": "filter_keyword"
+		"keyup #rtable_keyword": "trigger_filter_keyword"
 	},
 	
 	/**
@@ -1034,6 +1035,7 @@ var RTable_List = Backbone.View.extend(
      */
     filter_tag: function(e) {
 	  	e.preventDefault();
+	  	this.kwquery = '';
 	  	var tag = $(e.target).data('tag');
 	  	if (_.contains(this.tagFilters, tag)) {
 		  	return;
@@ -1103,21 +1105,25 @@ var RTable_List = Backbone.View.extend(
     },
     
     /**
+     * Event action for typing in filter
+     */
+    trigger_filter_keyword: function(e) {
+	    //console.log( $(e.currentTarget).val() );
+	    
+	   this.kwquery = $(e.currentTarget).val();
+	    
+	   this.filter_keyword();
+	    
+	},
+	
+    /**
      * show tables based on search query (activated by typing in filter form)
      */
-    filter_keyword: function(e) {
-	    //console.log( $(e.currentTarget).val() );
-	    query = $(e.currentTarget).val();
-	    
-	    if (this.kwquery) {
-		    delete this.kwquery;
-	    }
-	    
-	    if (query !== '') {
-	    	$('#rtable-list table tr').addClass('hidden');
+    filter_keyword: function() {
+	    if (this.kwquery !== '') {
+	    	$('#rtable-list table tbody tr').addClass('hidden');
 			    
-			// later
-			this.model.search(query, function( matches ){
+			this.model.search(this.kwquery, function( matches ){
 				_.each(matches, function(match){
 					//console.log('Found '+query+' in '+match.get('title'));
 					$('#'+match.get('key')).removeClass('hidden');
@@ -1156,6 +1162,9 @@ var RTable_List = Backbone.View.extend(
 		}
 		
 		this.model.sortTables(ns);
+		if (this.kwquery) {
+			this.filter_keyword();
+		}
 	},
     
     /**
@@ -1164,16 +1173,19 @@ var RTable_List = Backbone.View.extend(
     render: function () {
     	$(this.el).empty();
     	$(this.el).append('<caption>'+this.defaultCaption()+'</caption>');
-		$th_row = $('<tr>');
+    	var $thead = $('<thead>');
+		var $th_row = $('<tr>');
 		_.each(this.theaders, function(v) {
 			var icon = (this.model.sortAttribute == v.label.toLowerCase()) ? (this.model.sortDirection == 1) ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down' : '';
 			$th_row.append('<th class="'+v.class+'" data-column="'+v.label.toLowerCase()+'">'+v.label+' <span class="sorter glyphicon '+icon+'"></span></th>');
 		}, this);
-		$(this.el).append($th_row);
+		$thead.append($th_row);
+		$(this.el).append($thead);
+		var $tbody = $('<tbody>');
 		_.each(this.model.models, function(v,k,l){
-			$(this.el).append(new RandomTableShort({model:v}).render().el);
+			$tbody.append(new RandomTableShort({model:v}).render().el);
     	}, this);
-    	
+    	$(this.el).append($tbody);
     	this.filter_rows();
 	  	this.filter_caption();
 
@@ -1185,7 +1197,7 @@ var RTable_List = Backbone.View.extend(
 	 * @returns {String} caption html
 	 */
 	defaultCaption: function() {
-		return '<form class="form-inline"><div class="form-group"><label for="rtable_keyword">Filter by Keyword</label><input type="text" class="form-control" name="rtable_keyword" id="rtable_keyword" value="" /></div></form> <span class="divider">or</span> Click a Tag';
+		return '<form class="form-inline"><div class="form-group"><label for="rtable_keyword">Filter by Keyword</label> <input type="text" class="form-control" name="rtable_keyword" id="rtable_keyword" value="'+this.kwquery+'" /></div></form> <span class="divider">or</span> Click a Tag';
 	}
 	
 });
