@@ -49,7 +49,7 @@
 								<li><a href="#names" data-toggle="tab">Names</a></li>
 							</ul>
 						</li>
-						
+						<li><a href="#mission" data-toggle="tab">Mission</a></li>
 						<li><a href="#wilderness" data-toggle="tab">Wilderness</a></li>
 						<li><a href="#dungeon" data-toggle="tab">Dungeon</a></li>
 
@@ -109,6 +109,19 @@
 					<div class="col-sm-12">
 						<section id="name-results">
 						</section>
+					</div>
+				</div>
+			</div>
+			
+			<div class="tab-pane hidden-print" id="mission">
+				<!-- Some other generator here. -->
+				<div class="alert alert-info">Create a framework for a mission/job/adventurer.</div>
+				<div class="row">
+					<div class="col-sm-8">
+						<section id=mission-results></section>
+					</div>
+					<div class="col-sm-4 hidden-print">
+						<section id=mission-form></section>
 					</div>
 				</div>
 			</div>
@@ -323,11 +336,14 @@
 	<script src="data/monsters.json"></script>
 	<script src="data/randomtables.json"></script>
 	<script src="data/treasure.json"></script>
+	<script src="data/colonial.json"></script>
+	<script src="data/colonial_mission.json"></script>
 	<script src="data/custom/index.json"></script>
 	
 	<script src="js/app/app.js"></script>
 	<script src="js/app/tables.js"></script>
 	<script src="js/app/npc.js"></script>
+	<script src="js/app/mission.js"></script>
 	<script src="js/app/wilderness.js"></script>
 	<script src="js/app/dungeon.js"></script>
 	<script src="js/app/treasure.js"></script>

@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+v0.8 - 2014-xx-xx
+-----------------
+
+* Added a standalone name generator (separate from the NPC generator) that creates lists of names.
+* Added Japanese and Turkish names to the default data.
+* 
+
 v0.7 - 2014-03-23
 -----------------
 

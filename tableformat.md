@@ -285,4 +285,6 @@ You can also use tokens to generate random numbers or results from other tables 
 
 ##### Roll on other tables
 
-_Still need to get this working well._
+`{{table:general.color}}` in a result will generate a random color. Also available in the general category is "direction", "ordinal", and "season".
+
+_Still need to get this working well for user added tables._

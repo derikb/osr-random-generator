@@ -230,7 +230,9 @@ var Character = Backbone.Model.extend(
 		var charclass = this.get('charclass');
 		if (charclass == 'none') {
 			var t = app.rtables.getByTitle(app.AppSettings.get('occupation_type'));
+			console.log(this.get('occupation'));
 			var occ = t.findObject(this.get('occupation'));
+			if (typeof occ == "undefined" ) { return ''; }
 			if (typeof occ.armor == 'undefined') { return ''; }
 			if (occ.armor == false) { return ''; }
 		}
@@ -795,6 +797,12 @@ var CharacterEditView = Backbone.View.extend(
 			});
 			this.model.set(fdata, { open: true });
 			//this.model.save(fdata);
+		} else if (this.field == 'personality' || this.field == 'appearance' || this.field == 'goals') {
+			//make sure if the data is in array format (conversion necessary if there is only 1 use of the field)
+			if (_.isString(formdata[this.field])) {
+				formdata[this.field] = [formdata[this.field]];
+			}
+			this.model.set(formdata, { open: true });
 		} else {
 			this.model.set(formdata, { open: true });
 			//this.model.save(formdata, {wait: true});
@@ -811,10 +819,10 @@ var CharacterEditView = Backbone.View.extend(
 		var inputtarget = $(e.target).attr('data-targetfield');
 		var list = $(e.target).attr('data-list');
 		
-		if (this.field == 'personality' || this.field == 'appearance' || this.field == 'goals') {
+		if (this.field == 'personality' || this.field == 'appearance' || this.field == 'goals' || this.field == 'occupation') {
 			var t = app.rtables.getByTitle(list);
 			t.generateResult();
-			$('#'+inputtarget).val(t.niceString());
+			$('#'+inputtarget).val(t.niceString(true));
 		} else if (this.field == 'name') {
 			
 			var newval = this.model.generateName(list);
@@ -874,7 +882,8 @@ var CharacterEditView = Backbone.View.extend(
 			
 				break;
 			
-			case 'occupation':
+			/*
+case 'occupation':
 				form += '<div class="form-group"><label for="occupation" class="control-label">Occupation</label><select class="form-control" id="occupation" name="occupation">';
 					var t = app.rtables.getByTitle(app.AppSettings.get('occupation_type'));
 					_.each(t.selectList('default'), function(v) {
@@ -885,10 +894,12 @@ var CharacterEditView = Backbone.View.extend(
 					form += '</select><div class="help-block"></div></div>';
 			
 				break;
+*/
 			
 			case 'personality':
 			case 'appearance':
 			case 'goals':
+			case 'occupation':
 				
 				var cur = this.model.get(field);
 				if (typeof cur == 'string') {

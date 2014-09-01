@@ -91,10 +91,10 @@ var RandomTable = Backbone.Model.extend(
 	 */
 	generateResult: function(start) {
 		if (typeof start == "undefined") {
-			start = '';
+			var start = '';
 		}
 		//we look in the start table for what to roll if the start wasn't explicitly set in the call
-		sequence = (start == '') ? this.get('sequence') : start;
+		var sequence = (start == '') ? this.get('sequence') : start;
 		if (sequence == '') {
 			//if no start attribute
 			//try for "default" table

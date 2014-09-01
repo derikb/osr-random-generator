@@ -7,7 +7,7 @@ appdata.tables.medieval_occupations = {
 	"author": "Christopher Adams",
 	"source": "<a href=\"http://thegruenextdoor.blogspot.com/2013/12/characters-in-flesh.html\">Christopher Adams</a>; some additions by Derik Badman",
 	"description": "",
-	"tags": ['npcs'],
+	"tags": [ "npcs", "occupation" ],
 	"table": [
 		{ "label": "Acater", "description": "Food provisioner" },
 		{ "label": "Accomptant", "description": "Accountant" },

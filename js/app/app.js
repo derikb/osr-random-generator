@@ -29,7 +29,7 @@ var AppRouter = Backbone.Router.extend(
 		
 		
 		//console.log(this);
-		
+		$('#mission-form').append(new MissionForm({ model: this.AppSettings }).render().el);
 		
 		$('#wilderness-form').append(new WildernessForm({ model: this.AppSettings }).render().el);
 		
@@ -54,6 +54,11 @@ var AppRouter = Backbone.Router.extend(
 		
 		this.names = new Names();
 		$('#name-form').html(new NameForm({ model: this.names  }).render().el);
+		
+		this.missionlist = new MissionCollection();
+        this.missionlistview = new MissionList({model:this.missionlist});
+		this.missionlist.fetch({silent: true});
+        $('#mission-results').html(this.missionlistview.render().el);
        			
 		this.wildlist = new WildernessCollection();
         this.wildlistview = new WildernessList({model:this.wildlist});
@@ -175,10 +180,10 @@ var AppSettings = Backbone.Model.extend(
 			id: 'settings',
 			version: '',
 			rules_set: 'lotfp',
-			personality_type: 'onewordtraits',
-			appearance_type: 'onthenpc_appearance',
-			goals_type: 'character_goals',
-			occupation_type: 'medieval_occupations',
+			personality_type: 'colonial_personality',
+			appearance_type: 'colonial_appearance',
+			goals_type: 'colonial_goals',
+			occupation_type: 'colonial_occupations',
 			personality_count: 2,
 			appearance_count: 2,
 			chargroup: [],
@@ -490,7 +495,7 @@ var AppRandomizer = function() {
 	
 	/**
 	 * Perform token replacement.  Only table and roll actions are accepted
-	 * @param {String} token A value passed from {@link AppRandomizer#findToken} containing a token(s) {{SOME OPERATION}} Tokens are {{table:SOMETABLE}} {{table:SOMETABLE:SUBTABLE}} {{table:SOMETABLE*3}} (roll that table 3 times) {{roll:1d6+2}} (etc)
+	 * @param {String} token A value passed from {@link AppRandomizer#findToken} containing a token(s) {{SOME OPERATION}} Tokens are {{table:SOMETABLE}} {{table:SOMETABLE:SUBTABLE}} {{table:SOMETABLE*3}} (roll that table 3 times) {{roll:1d6+2}} (etc) (i.e. {{table:tables.colonial_occupations:laborer}} {{table:general.color}} 
 	 * @returns {String} The value with the token(s) replaced by the operation
 	 */
 	this.convertToken = function(token) {
@@ -514,7 +519,7 @@ var AppRandomizer = function() {
 				for(i=0;i<subtables.length;i++) {
 					vlist += '.'+subtables[i];
 				}
-				eval('table = '+vlist+';');
+				eval('var table = '+vlist+';');
 				var t = new RandomTable(table);
 				
 				if (typeof parts[2] !== 'undefined' && parts[2].indexOf('*') !== -1) {

@@ -1,0 +1,230 @@
+appdata = (typeof appdata == "undefined") ? {} : appdata;
+appdata.tables = (typeof appdata.tables == "undefined") ? {} : appdata.tables;
+
+appdata.personality_options.unshift(
+	{ "option": "colonial_personality", "label": "Personality (Colonial)" }
+);
+
+appdata.appearance_options.unshift(
+	{ "option": "colonial_appearance", "label": "Appearance (Colonial)" }
+);
+
+appdata.tables.colonial_personality = {
+  "title": "Personality Traits (Colonial)",
+  "author": "Derik Badman",
+  "tags": [
+    "personality",
+    "npcs",
+    "colonial"
+  ],
+  "tables": {
+    "default": [
+      { "label": "Talkative/Gossip" },
+      { "label": "Shy/Reticent/Secretive" },
+      { "label": "Inquisitive" },
+      { "label": "Boisterous/Proud" },
+      { "label": "Meek" },
+      { "label": "Greedy/Miserly" },
+      { "label": "Charitable" },
+      { "label": "Flirtatious/Charming" },
+      { "label": "Modest/Chaste" },
+      { "label": "Manic" },
+      { "label": "Depressed" },
+      { "label": "Friendly" },
+      { "label": "Aloof" },
+      { "label": "Angry/Grouchy" },
+      { "label": "Cheerful/Happy" },
+      { "label": "Apathetic" },
+      { "label": "Idealistic" },
+      { "label": "Enthusiastic/Driven/Zealous" },
+      { "label": "Judgmental/Moralistic" },
+      { "label": "Jocular/Goofy" },
+      { "label": "Naive" },
+      { "label": "Worldly" },
+      { "label": "Pious" },
+      { "label": "Narrowminded/Prejudiced" },
+      { "label": "Reckless" },
+      { "label": "Rude/Tactless" },
+      { "label": "Polite/Tactful" },
+      { "label": "Snobbish" },
+      { "label": "Insane" },
+      { "label": "Paranoid"
+      }
+    ]
+  }
+};
+
+
+appdata.tables.colonial_appearance = {
+  "title": "Appearance/Behavior (Colonial)",
+  "author": "Derik Badman",
+  "tags": [
+    "colonial",
+    "npc",
+    "appearance"
+  ],
+  "tables": {
+    "default": [
+      { "label": "Missing limb/eye/ear" },
+      { "label": "Tattooed / Scarred" },
+      { "label": "Lots of Jewelry" },
+      { "label": "Very Short" },
+      { "label": "Very Tall" },
+      { "label": "Extremely Skinny" },
+      { "label": "Large / Fat" },
+      { "label": "Muscular" },
+      { "label": "Smokes / chews / snorts" },
+      { "label": "Twitchy" },
+      { "label": "Elegant" },
+      { "label": "Disheveled" },
+      { "label": "Filthy" },
+      { "label": "Hands on (touchy)" },
+      { "label": "Maintains constant personal bubble" },
+      { "label": "Always has a pet(s) with them" },
+      { "label": "Drunk/High" },
+      { "label": "Laughs nervously" },
+      { "label": "Shifty eyes" },
+      { "label": "Constantly fingers weapon/holy symbol/charm/jewelry" },
+      { "label": "Hairy" },
+      { "label": "Hairless" },
+      { "label": "Spits/coughs/sneezes/sniffles/belches" },
+      { "label": "Hard of hearing" },
+      { "label": "Poor vision/blind" },
+      { "label": "Stutters/mumbles" },
+      { "label": "Hunched over / hunchbacked" },
+      { "label": "Flamboyant" },
+      { "label": "Itchy" },
+      { "label": "Constantly eating / drinking"
+      }
+    ]
+  }
+};
+
+appdata.tables.colonial_goals = {
+  "title": "Goals (Colonial)",
+  "author": "Derik Badman",
+  "tags": [
+    "npc",
+    "colonial",
+    "goals"
+  ],
+  "tables": {
+    "default": [
+      { "label": "Furtherance of Science / Studies / Art / Craft / Skill" },
+      { "label": "Wealth / Business" },
+      { "label": "Earthly Pleasures" },
+      { "label": "To be loved / comradeship / romance" },
+      { "label": "Power over others" },
+      { "label": "Fame" },
+      { "label": "Rank / Class Mobility" },
+      { "label": "Preservation of the Status Quo / Order" },
+      { "label": "Preservation of Nature" },
+      { "label": "Glory / Risk Taking" },
+      { "label": "Collecting" },
+      { "label": "Religious Service" },
+      { "label": "Freedom" },
+      { "label": "Mystic Power" },
+      { "label": "Patriotism" },
+      { "label": "Discovery / Curiosity" },
+      { "label": "Charity / Welfare of Others" },
+      { "label": "Cruelty / Destruction" },
+      { "label": "Self-Discipline" },
+      { "label": "Revenge"
+      }
+    ]
+  }
+};
+
+
+appdata.tables.colonial_occupations = {
+  "title": "Occupations (Colonial)",
+  "author": "Derik Badman",
+  "tags": [
+    "npcs",
+    "colonial",
+    "occupation"
+  ],
+  "tables": {
+    "default": [
+      { "label": "Laborer",
+        "subtable": "laborer", "print": false },
+      { "label": "Criminal",
+        "subtable": "criminal", "print": false },
+      { "label": "Artisan",
+        "subtable": "artisan", "print": false },
+      { "label": "Professional",
+        "subtable": "professional", "print": false }
+    ],
+    "laborer": [
+      { "label": "Farmer" },
+      { "label": "Factory Worker (shipyard, textiles, brewery)" },
+      { "label": "Servant" },
+      { "label": "Soldier" },
+      { "label": "Sailor" },
+      { "label": "Hunter/Trapper" },
+      { "label": "Stevedore" },
+      { "label": "Beggar" },
+      { "label": "Mercenary" },
+      { "label": "Housewife" },
+      { "label": "Prostitute" },
+      { "label": "Unemployed" }
+    ],
+    "criminal": [
+      { "label": "Pickpocket" },
+      { "label": "Burglar" },
+      { "label": "Smuggler" },
+      { "label": "Fence" },
+      { "label": "Spy (?)" },
+      { "label": "Thug" },
+      { "label": "Adventurer" },
+      { "label": "Revolutionary" }
+    ],
+    "artisan": [
+      { "label": "Scribe / Cartographer" },
+      { "label": "Miller" },
+      { "label": "Blacksmith / gunsmith / weapon smith" },
+      { "label": "Chandler (candles)" },
+      { "label": "Cooper (barrel/cask maker)" },
+      { "label": "Wheelwright / Coachmaker" },
+      { "label": "Trader/merchant/Peddler" },
+      { "label": "Tavern keeper / barkeep" },
+      { "label": "Apprentice (of some craft/art)" },
+      { "label": "Cobbler" },
+      { "label": "Tailor  / Milliner (clothes maker)" },
+      { "label": "Printer/newspaperman" },
+      { "label": "Silversmith" },
+      { "label": "Animal handler / livery? / ?" },
+      { "label": "Teacher" },
+      { "label": "Furrier" },
+      { "label": "Apothecary / Doctor" },
+      { "label": "Basketmaker" },
+      { "label": "Brick maker" },
+      { "label": "Carpenter/Joiner/Cabinetmaker" },
+      { "label": "Weaver" },
+      { "label": "Cutler" },
+      { "label": "Barber" },
+      { "label": "Ropemaker" },
+      { "label": "Tanner / Saddler" },
+      { "label": "Sawyer" },
+      { "label": "Bureaucrat / Accountant" },
+      { "label": "Exciseman" },
+      { "label": "Brewer" },
+      { "label": "Importer/Exporter" },
+      { "label": "Actor/Dancer/Musician" },
+      { "label": "Coach driver" },
+      { "label": "Messenger/Postal Carrier" }
+    ],
+    "professional": [
+      { "label": "Priest / Religious Official" },
+      { "label": "Judge/Sheriff" },
+      { "label": "Lawyer" },
+      { "label": "Magician" },
+      { "label": "Politician" },
+      { "label": "Noble" },
+      { "label": "Ship Captain" },
+      { "label": "Military Leader" },
+      { "label": "Company Leader" },
+      { "label": "Faction Leader" }
+    ]
+  }
+};

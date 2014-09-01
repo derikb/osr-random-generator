@@ -40,20 +40,12 @@ var Dungeon = Backbone.Model.extend(
 	 * @returns {Object} error information
 	 */
 	validate: function(attributes, options) {
-		//console.log(attributes);
 		var error = { fields: [], general: '' };
 
 		if (attributes.title == '') {
 			error.fields.push({ field: 'title', message: 'Title cannot be blank' });
 			error.general += 'Title cannot be blank. ';
 		}
-
-		/*
-if (!_.isNumber(attributes.room_count)) {
-			error.fields.push({ field: 'room_count', message: 'Room Count must be a number.' });
-			error.general += 'Room Count must be a number. ';
-		}
-*/
 		
 		if (!_.isEmpty(error.fields) || !_.isEmpty(error.general)) {
 			return error;
@@ -81,17 +73,12 @@ if (!_.isNumber(attributes.room_count)) {
 	 */
 	generateRoom: function(roomnumber) {
 		var room = { number: roomnumber, content: 'Empty', monster_type: '', trap_type: '', special_type: '', treasure_type: '' };
-		//room.content = app.randomizer.rollRandom(appdata.dungeon.rooms.content);
-		//room.treasure = app.randomizer.rollRandom(appdata.dungeon.rooms.content[room.content].treasure);
 		
 		var ctable = app.rtables.getByTitle(app.AppSettings.get('dungeon').stocking_table);
 		ctable.generateResult();
-		//console.log(ctable.get('result'));
 		
 		room.content = ctable.findResultElem('content').result;
 		room.treasure = ctable.findResultElem('treasure').result;
-		
-		//console.log(room);
 		
 		if (room.content == 'monster') {
 			var mon = app.randomizer.rollRandom(this.generateMonsterList());

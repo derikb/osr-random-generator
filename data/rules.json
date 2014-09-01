@@ -504,5 +504,117 @@ appdata.rules = {
 			{ "name": "Shield", "ac_base": 0, "ac_bonus": 1 },
 			{ "name": "No Armor", "ac_base": 10, "ac_bonus": 0 }
 		]
-	}
+	},
+	//!dnd 5e
+	"lotfp": {
+		"label": "D&D 5e",
+		"ability_scores": {
+			"str": "strength",
+			"int": "intelligence",
+			"wis": "wisdom",
+			"dex": "dexterity",
+			"con": "constitution",
+			"cha": "charisma"
+		},
+		"ability_scores_mod": {
+			"general": {
+				"3": -4,
+				"4": -3,
+				"5": -3,
+				"6": -2,
+				"7": -2,
+				"8": -1,
+				"9": -1,
+				"10": 0,
+				"11": 0,
+				"12": 1,
+				"13": 1,
+				"14": 2,
+				"15": 2,
+				"16": 3,
+				"17": 3,
+				"18": 4
+			}
+		},
+		"armorclass": {
+			"base": 10,
+			"method": "asc",	
+		},
+		"race_as_class": false,
+		"races": {
+			"human": {
+				"label": "Human"
+			},
+			"dwarf": {
+				"label": "Dwarf",
+				"ability_scores": [ { "name": "con", "score": 0, "modifier": 1 } ]
+			},
+			"elf": {
+				"label": "Elf",
+				"ability_scores": []
+			},
+			"halfling": {
+				"label": "Halfling",
+				"ability_scores": [ { "name": "dex", "score": 0, "modifier": 1 } ]
+			},
+		},
+		"classes": {
+			"none": {
+				"label": "0-level",
+				"hd": 8,
+				"attack": function(lvl) { return 2; },
+				"spellcaster": false,
+				"armor": [],
+				"weapon": ["Weapon, Minor", "Weapon, Small", "Pistol"]
+			},
+			"fighter": {
+				"label": "Fighter",
+				"hd": 10,
+				"attack": function(lvl) { return Math.ceil(lvl/4) + 1; },
+				"spellcaster": false,
+				"armor": ["Buff Coat", "Leather Armor", "Pikeman Armor", "Chainmail"],
+			},
+			"magic-user": {
+				"label": "Magic-User",
+				"hd": 6,
+				"attack": function(lvl) { return Math.ceil(lvl/4) + 1; },
+				"spellcaster": true,
+				"spelllist": "spells_magicuser",
+				"spells": [ [1], [2], [2,1], [2,2], [3,2,1], [3,2,2], [3,3,2,1], [4,3,2,2], [4,3,3,2,1] ],
+				"armor": ["No Armor"]
+			},
+			"cleric": {
+				"label": "Cleric",
+				"hd": 8,
+				"attack": function(lvl) { return Math.ceil(lvl/4) + 1; },
+				"spellcaster": true,
+				"spelllist": "spells_cleric",
+				"spells": [ [1], [2], [3], [3,1], [3,2,1], [3,3,2], [4,3,3,1], [4,3,3,2], [4,3,3,3,1] ],
+				"armor": ["Buff Coat", "Leather Armor"],
+			},
+			"rogue": {
+				"label": "Rogue",
+				"hd": 8,
+				"attack": function(lvl) { return Math.ceil(lvl/4) + 1; },
+				"spellcaster": false,
+				"armor": ["Buff Coat", "Leather Armor"],
+			},
+			"random": {
+				"label": "Random Selection",
+				"options": ["fighter", "rogue", "cleric", "magic-user"],
+				"weight": [6,6,4,4]
+			}
+		},
+		"armor": [
+			{ "name": "Buff Coat", "ac_base": 0, "ac_bonus": 1 },
+			{ "name": "Leather Armor", "ac_base": 14, "ac_bonus": 0 },
+			{ "name": "Pikeman Armor", "ac_base": 14, "ac_bonus": 0 },
+			{ "name": "Chainmail", "ac_base": 16, "ac_bonus": 0 },
+			{ "name": "Morion", "ac_base": 0, "ac_bonus": 1 },
+			{ "name": "Shield", "ac_base": 0, "ac_bonus": 1 },
+			{ "name": "No Armor", "ac_base": 12, "ac_bonus": 0 }
+		]
+		
+	},
+
 }
