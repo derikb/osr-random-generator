@@ -108,7 +108,7 @@ var RandomTable = Backbone.Model.extend(
 		} else if (typeof sequence == 'string') {
 			this.set('result', this.selectFromTable(sequence), { silent: true });
 		} else {
-			result = [];
+			var result = [];
 			_.each(sequence, function(v){
 				if (_.isString(v)) {
 					r = this.selectFromTable(v);
@@ -122,7 +122,7 @@ var RandomTable = Backbone.Model.extend(
 					result = result.concat(r);
 				}
 			}, this);
-			//console.log(result);
+
 			this.set('result', result, { silent: true });
 		}
 		
@@ -153,7 +153,6 @@ var RandomTable = Backbone.Model.extend(
 				o.push({ table: table, result: result, desc: '' });
 				return o
 			}
-			//console.log(r);
 			var result_print = (typeof r['print'] == 'undefined') ? true : r['print'];
 		} else {
 			var r = t[result];
@@ -161,22 +160,17 @@ var RandomTable = Backbone.Model.extend(
 		}
 		//r is now the result object
 		
-		//console.log(t[result]);
 		//if print==false we suppress the output from this table (good for top-level tables)
 		if (result_print === true) {
 			//add the description if there is one
 			var desc = (_.isString(r['description'])) ? r['description'] : '';
-			
-			t_result = app.randomizer.findToken(result);
-			
+			//var t_result = this.findToken(result);
+			var t_result = app.randomizer.findToken(result, this.get('key'));
 			o.push({ table: table, result: t_result, desc: desc });
 		}
-		//console.log(result);
 		
 		//are there subtables to roll on?
-		//var subtable = this.get('tables')[table][result].subtable;
 		var subtable = r.subtable;
-		//console.log(subtable);
 		if (typeof subtable == 'undefined') {
 			//no subtables
 			return o;
@@ -189,15 +183,13 @@ var RandomTable = Backbone.Model.extend(
 			_.each(subtable, function(v){
 				var r = this.selectFromTable(v);
 				o = o.concat(r);
-				//console.log(o);
 			}, this);
 		} else if (_.isObject(subtable)) {
 			//subtable is object assume embedded table(s)
 			//loop over keys
 			var k = _.keys(subtable);
 			_.each(k, function(kx){
-				result = app.randomizer.rollRandom(subtable[kx]);
-				//console.log(result);
+				var result = app.randomizer.rollRandom(subtable[kx]);
 				var desc = '';
 				if (_.isUndefined(subtable[kx][result])) {
 					var r = _.findWhere(subtable[kx], { label: result });
@@ -207,7 +199,9 @@ var RandomTable = Backbone.Model.extend(
 				} else {
 					desc = (_.isString(subtable[kx][result]['description'])) ? subtable[kx][result]['description'] : '';
 				}
-				result = app.randomizer.findToken(result);
+				//result = this.findToken(result);
+				result = app.randomizer.findToken(result, this.get('key'));
+				
 				o.push({ table: kx, result: result, desc: desc });
 				
 			}, this);
@@ -215,9 +209,7 @@ var RandomTable = Backbone.Model.extend(
 		}
 		
 		return o;
-	},
-
-	
+	},	
 	/**
 	 * Show the results as a string
 	 * @todo make this nicer/clearer #23
@@ -230,7 +222,6 @@ var RandomTable = Backbone.Model.extend(
 			simple = false;
 		}
 		var r = this.get('result');
-		console.log(r);
 		if (r == '') { return ''; }
 		//console.log(r);
 		if (_.isString(r)) { return r; }
@@ -458,7 +449,6 @@ var RandomTable = Backbone.Model.extend(
 	 	if (typeof table == 'undefined' || table == '') {
 		 	table = 'default';
 	 	}
-	 	//console.log(_.findWhere(this.get('result'), { table: table }));
 		return _.findWhere(this.get('result'), { table: table });		 
 	 }
 	

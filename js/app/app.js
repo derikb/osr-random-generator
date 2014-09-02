@@ -408,8 +408,6 @@ var AppRandomizer = function() {
 	this.getWeightedRandom = function (values, weights){ 
 	    n = 0; 
 	    num = _.random(1, this.arraySum(weights));
-	    //console.log('roll '+num);
-	    //console.log('values'+values);
 	    for(var i = 0; i < values.length; i++) {
 	        n = n + weights[i]; 
 	        if(n >= num){
@@ -432,7 +430,6 @@ var AppRandomizer = function() {
 			
 		if ($.isArray(data)) {
 			_.each(data, function(v,k,l){
-				//console.log(typeof v);
 				if (typeof v == 'object') {
 					if (typeof v.weight !== 'undefined') {
 						weights.push(v.weight);
@@ -456,8 +453,6 @@ var AppRandomizer = function() {
 				values.push(k);
 			}, this);
 		}
-		//console.log(values);
-		//console.log(weights);
 		return this.getWeightedRandom(values, weights);
 	}
 	
@@ -470,24 +465,16 @@ var AppRandomizer = function() {
 	 * @returns {Number} Number rolled (die*number [mod_op][modifier])
 	 */
 	this.roll = function(die, number, modifier, mod_op) {
-		//console.log(arguments);
-		if (typeof modifier == 'undefined') {
-			var modifier = 0;
-		} else {
-			modifier = parseInt(modifier);
-		}
+		var modifier = (typeof modifier == 'undefined') ? 0 : parseInt(modifier);
+		var die = (typeof die == 'undefined') ? 6 : parseInt(die);
+		var mod_op = (typeof mod_op == 'undefined') ? '+' : mod_op;
+
 		if (typeof number == 'undefined') {
 			var number = 1;
+		} else if (number == 0) {
+			number = 1;
 		} else {
 			number = parseInt(number);
-		}
-		if (typeof die == 'undefined') {
-			var die = 6;
-		} else {
-			die = parseInt(die);
-		}
-		if (typeof mod_op == 'undefined') {
-			var mod_op = '+';
 		}
 		
 		sum = 0;
@@ -533,14 +520,16 @@ var AppRandomizer = function() {
 	
 	/**
 	 * Perform token replacement.  Only table and roll actions are accepted
-	 * @param {String} token A value passed from {@link AppRandomizer#findToken} containing a token(s) {{SOME OPERATION}} Tokens are {{table:SOMETABLE}} {{table:SOMETABLE:SUBTABLE}} {{table:SOMETABLE*3}} (roll that table 3 times) {{roll:1d6+2}} (etc) (i.e. {{table:tables.colonial_occupations:laborer}} {{table:general.color}} 
+	 * @param {String} token A value passed from {@link AppRandomizer#findToken} containing a token(s) {{SOME OPERATION}} Tokens are {{table:SOMETABLE}} {{table:SOMETABLE:SUBTABLE}} {{table:SOMETABLE*3}} (roll that table 3 times) {{roll:1d6+2}} (etc) (i.e. {{table:tables.colonial_occupations:laborer}} {{table:general.color}} also generate names with {{name:flemish}} (surname only) {{name:flemish:male}} {{name:dutch:female}}
+	 * 
+	 * Note: this function runs out of scope (?) via the replace function, so "this" does not refer to the randomizer object
+	 *
 	 * @returns {String} The value with the token(s) replaced by the operation
 	 */
-	this.convertToken = function(token) {
-		token = token.replace('{{', '').replace('}}', '');
-		string = '';
-		
-		parts = token.split(':');
+	this.convertToken = function(token, curtable) {
+		var token = token.replace('{{', '').replace('}}', '');
+		var string = '';
+		var parts = token.split(':');
 		if (parts.length == 0) { return ''; }
 		
 		//Only table and roll actions are accepted
@@ -552,14 +541,23 @@ var AppRandomizer = function() {
 					parts[1] = x[0];
 					multiplier = x[1];
 				}
-				var subtables = parts[1].split('.');
-				vlist = 'appdata';
-				for(i=0;i<subtables.length;i++) {
-					vlist += '.'+subtables[i];
-				}
-				eval('var table = '+vlist+';');
-				var t = new RandomTable(table);
 				
+				//what table do we roll on
+				if (parts[1] == 'this') {
+					//reroll on same tables
+					var t = app.rtables.getByTitle(curtable);
+					//$.extend(true, {}, model.toJSON());
+					//var t = _.clone(app.rtables.getByTitle(this.get('key')));
+					//var t = new RandomTable(_.clone(app.rtables.getByTitle(this.get('key')).attributes));
+				} else {
+					var subtables = parts[1].split('.');
+					var vlist = 'appdata';
+					for(i=0;i<subtables.length;i++) {
+						vlist += '.'+subtables[i];
+					}
+					eval('var table = '+vlist+';');
+					var t = new RandomTable(table);
+				}
 				if (typeof parts[2] !== 'undefined' && parts[2].indexOf('*') !== -1) {
 					var x = parts[2].split('*');
 					parts[2] = x[0];
@@ -569,7 +567,7 @@ var AppRandomizer = function() {
 				
 				for(var i=1; i<=multiplier; i++) {
 					t.generateResult(subtable);
-					string += t.niceString()+', ';
+					string += t.niceString(true)+', ';
 				}
 				string = $.trim(string);
 				string = string.replace(/,$/, '');
@@ -577,6 +575,16 @@ var AppRandomizer = function() {
 				break;
 			case "roll":
 				string = app.randomizer.parseDiceNotation(parts[1]);
+				break;
+			case "name":
+				var n = new Names();
+				if (typeof parts[2] == 'undefined') {
+					string = n.generateSurname(parts[1]);
+				} else if (parts[2] == 'male') {
+					string = n.generateName(parts[1], 'male');
+				} else if (parts[2] == 'female') {
+					string = n.generateName(parts[1], 'female');
+				}
 				break;
 			default:
 				string = '';
@@ -589,34 +597,33 @@ var AppRandomizer = function() {
 	 * @param {String} string usually a result from a RandomTable
 	 * @returns {String} String with tokens replaced (if applicable)
 	 */
-	this.findToken = function(string) {
-		//console.log('findToken');
+	this.findToken = function(string, curtable) {
+		if (typeof curtable == 'undefined') { var curtable = ''; }
 		regexp = new RegExp('(\{{2}.+?\}{2})', 'g');
-		newstring = string.replace(regexp, this.convertToken);
+		var that = this;
+		newstring = string.replace(regexp, function(token) {
+			return that.convertToken(token, curtable);
+		});
 		return newstring;
 	},
 	
 	/**
-	 * takes a string like '3d6+2', parses it, and puts it through {@link AppRandomizer#roll}
+	 * takes a string like '3d6+2', 'd6', '2d6', parses it, and puts it through {@link AppRandomizer#roll}
 	 * @params {String} string a die roll notation
 	 * @returns {Number} the result of the roll
 	 */
 	this.parseDiceNotation = function(string) {
-		//
-		var m = string.match(/^([0-9]+)d([0-9]+)$/);
+		var m = string.match(/^([0-9]*)d([0-9]+)(?:([\+\-\*\/])([0-9]+))*$/);
 		if (m) {
-			//console.log(m);
-			return this.roll(parseInt(m[2]), parseInt(m[1]));
+			console.log(m);
+			if (typeof m[4] == 'undefined') { m[4] = 0; }
+			if (m[1] !== '') {
+				return this.roll(parseInt(m[2]), parseInt(m[1]), parseInt(m[4]), m[3]);
+			} else {
+				return this.roll(parseInt(m[2]), '1', parseInt(m[4]), m[3]);
+			}
 		}
-		
-		var m = string.match(/^([0-9]+)d([0-9]+)([\+\-\*\/])([0-9]+)$/);
-		if (m) {
-			//console.log(m);
-			return this.roll(parseInt(m[2]), parseInt(m[1]), parseInt(m[4]), m[3]);
-		}
-		
 		return '';
-		
 	}
 	
 		
