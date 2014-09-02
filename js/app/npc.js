@@ -117,35 +117,7 @@ var Character = Backbone.Model.extend(
 		a = _.findWhere(this.get('ability_scores'), { name: att});
 		return a.modifier;
 	},
-	
-	/**
-	 * Generate a Holmes name
-	 * @param {String} gender Gender to user
-	 * @returns {String} name
-	 */
-/*
-	holmesname: function(gender) {
-		var name = '';
-		scount = app.randomizer.getWeightedRandom(appdata.name.holmesian_scount.values, appdata.name.holmesian_scount.weights);
-	
-		for (i=1; i<=scount; i++) {
-			name += app.randomizer.rollRandom(appdata.name.holmesian_syllables); //array
-			if (i<scount) {
-				name += app.randomizer.getWeightedRandom(['',' ','-'],[3,2,2]);
-			}
-		}
-		name = name.toLowerCase().capitalize();
-		name += ' '+app.randomizer.rollRandom(appdata.name.holmesian_title);
 		
-		name = app.randomizer.findToken(name);
-		
-		name = name.replace(/[\s\-]([a-z]{1})/g, function(match) {
-			return match.toUpperCase();
-		});
-		return name;
-	},
-*/
-	
 	/**
 	 * Create a name
 	 * @param {String} name_type What name list/process to use
@@ -157,23 +129,6 @@ var Character = Backbone.Model.extend(
 		var NameM = new Names();
 		
 		name = NameM.generateName(name_type, gender);
-		
-/*
-		switch (name_type) {
-		 	case "holmesian":
-				name = this.holmesname(gender);
-				break;
-			case "cornish":
-			case "flemish":
-			default:
-				name = app.randomizer.rollRandom(appdata.name[name_type][gender]);
-				if (typeof appdata.name[name_type]['surname'] !== 'undefined') {
-					name += ' '+app.randomizer.rollRandom(appdata.name[name_type]['surname']);
-				}
-				name = app.randomizer.findToken(name);
-				break;
-		}
-*/
 		return name;
 	},
 	
@@ -1460,10 +1415,9 @@ var Names = Backbone.Model.extend(
 	
 	/**
 	 * Generate a Holmes name
-	 * @param {String} gender Gender to user
 	 * @returns {String} name
 	 */
-	holmesname: function(gender) {
+	holmesname: function() {
 		var name = '';
 		scount = app.randomizer.getWeightedRandom(appdata.name.holmesian_scount.values, appdata.name.holmesian_scount.weights);
 	
@@ -1493,15 +1447,35 @@ var Names = Backbone.Model.extend(
 		var name = '';
 		switch (name_type) {
 		 	case "holmesian":
-				name = this.holmesname(gender);
+				name = this.holmesname();
 				break;
 			case "cornish":
 			case "flemish":
+			case "dutch":
+			case "turkish":
 			default:
 				name = app.randomizer.rollRandom(appdata.name[name_type][gender]).capitalize();
 				if (typeof appdata.name[name_type]['surname'] !== 'undefined') {
 					name += ' '+app.randomizer.rollRandom(appdata.name[name_type]['surname']).capitalize();
 				}
+				name = app.randomizer.findToken(name);
+				break;
+		}
+		return name;
+	},
+	
+	generateSurname: function(name_type) {
+		var name = '';
+		switch (name_type) {
+		 	case "holmesian":
+				name = this.holmesname();
+				break;
+			case "cornish":
+			case "flemish":
+			case "dutch":
+			case "turkish":
+			default:
+				name = app.randomizer.rollRandom(appdata.name[name_type]['surname']).capitalize();
 				name = app.randomizer.findToken(name);
 				break;
 		}
