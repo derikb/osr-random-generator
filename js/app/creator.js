@@ -191,7 +191,7 @@ var CreatorForm = Backbone.View.extend(
 		
 		f += '</div>';
 		
-		f += '<div class="form-group"><label for="tabledata" class="control-label">Default Table Data</label><textarea class="form-control" name="tabledata" id="tabledata">'+tabledata+'</textarea><div class="help-block">By default this table is rolled on first.</div></div>';
+		f += '<div class="form-group"><label for="tabledata" class="control-label">Default Table Data</label><textarea class="form-control" name="tabledata" id="tabledata" rows=6>'+tabledata+'</textarea><div class="help-block">By default this table is rolled on first.</div></div>';
 
 		
 		if (this.edit){
@@ -261,7 +261,7 @@ var CreatorForm = Backbone.View.extend(
 		
 		f += '</div>';
 		
-		f += '<div class="form-group"><label for="subt'+this.subt+'" class="control-label">Subtable '+this.subt+' Data</label><textarea class="form-control" name="subt'+this.subt+'" id="subt'+this.subt+'">'+table+'</textarea><div class="help-block">Reference this subtable in other (sub)tables via it\'s title.</div></div>';
+		f += '<div class="form-group"><label for="subt'+this.subt+'" class="control-label">Subtable '+this.subt+' Data</label><textarea class="form-control" name="subt'+this.subt+'" id="subt'+this.subt+'" rows=6>'+table+'</textarea><div class="help-block">Reference this subtable in other (sub)tables via it\'s title.</div></div>';
 		
 		return f;
 	},
@@ -654,6 +654,9 @@ var CreatePreview = Backbone.View.extend(
 	model: RandomTable,
 	tagName: 'pre',
 	id: 'create_preview',
+	events:{
+        "click": "selectCode",
+    },
 	
 	/**
 	 * This is the view for a Random Table create code preview
@@ -671,6 +674,15 @@ var CreatePreview = Backbone.View.extend(
     	$(this.el).html(html);
         return this;
     },
+    
+    selectCode: function() {
+	    selection = window.getSelection();        
+        range = document.createRange();
+        range.selectNodeContents( $(this.el)[0] );
+        selection.removeAllRanges();
+        selection.addRange(range);
+	    
+    }
 	
 	
 });
