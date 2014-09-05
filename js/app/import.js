@@ -37,6 +37,7 @@ var ExportForm = Backbone.View.extend(
 		'npcs': { label: 'NPCs' },
 		'dungeons': { label: 'Dungeons' },
 		'wilderness': { label: 'Wilderness' },
+		'missions': { label: 'Missions' },
 		'all': { label: 'All ' }	
 	},
 	
@@ -95,11 +96,14 @@ var ExportForm = Backbone.View.extend(
 			exportdata.dungeons = app.dungeonlist.exportOutput('');
 		} else if (type == 'wilderness') {
 			exportdata.wilderness = app.wildlist.exportOutput('');
+		} else if (type == 'missions') {
+			exportdata.missions = app.missionlist.exportOutput('');
 		} else if (type == 'all') {
 			exportdata.tables = app.rtables.exportOutput('user');
 			exportdata.npcs = app.charlist.exportOutput('');
 			exportdata.dungeons = app.dungeonlist.exportOutput('');
 			exportdata.wilderness = app.wildlist.exportOutput('');
+			exportdata.missions = app.missionlist.exportOutput('');
 		}
 
 		text = (compress) ? JSON.stringify(exportdata) : JSON.stringify(exportdata, null, 2);
@@ -133,6 +137,7 @@ var Importer = Backbone.Model.extend(
 		'npcs': { label: 'NPCs' },
 		'dungeons': { label: 'Dungeons' },
 		'wilderness': { label: 'Wilderness' },
+		//'missions': { label: 'Missions' },
 		'all': { label: 'All ' }	
 	},
 	
@@ -241,6 +246,26 @@ var Importer = Backbone.Model.extend(
 					app.wildlist.add(t);
 					imported.wilderness++;
 				}
+			}, this);
+			
+		}
+		
+		if (this.importdata.missions) {
+			imported.missions = 0;
+			//console.log(this.importdata.missions);
+			_.each(this.importdata.missions, function(v,k,l){
+				if (_.isEmpty(v)) { return; }
+				t = new Mission(v);
+				t.set('id', ''); //just in case an id stuck around
+				t.save({ error: function(m,r,o){ console.log(m); console.log(r); }, success: function(m,r,o){ console.log(m); console.log(r); app.missionlist.add(m); imported.missions++; } });
+				
+				/*
+if (t.save()) {		
+					console.log(t);
+					app.missionlist.add(t);
+					imported.missions++;
+				}
+*/
 			}, this);
 			
 		}
