@@ -27,6 +27,7 @@ var Wilderness = Backbone.Model.extend({
 	 * @todo make it customizable what tables get used
 	 */
 	create: function() {
+		
 		this.set('hexdressing', this.getHexDressing(app.AppSettings.get('wilderness').hexdressing_count) );
 		this.set('encounters', this.getEncounters(app.AppSettings.get('wilderness').encounter_count) );
 	},
@@ -58,11 +59,23 @@ var Wilderness = Backbone.Model.extend({
 	getHexDressing: function(ct) {
 		var o = [];
 		//var dressing_t = app.rtables.getByTitle(app.AppSettings.get('wilderness').hexdressing_default);
-		var dressing_t = app.rtables.getByTitle('hex_dressing');
-		for(var i=1;i<=ct;i++) {
-			dressing_t.generateResult();
-			o.push(dressing_t.niceString());
+		var tables = app.AppSettings.get('encounter_tables');
+		var encounter_t = app.rtables.getByTitle(tables[this.get('terrain')]);
+		if (encounter_t.get('tables').hexdressing) {
+			for(var i=1;i<=ct;i++) {
+				encounter_t.generateResult('hexdressing');
+				o.push(encounter_t.niceString(true));
+			}
+		} else {
+			var dressing_t = app.rtables.getByTitle('hex_dressing');
+			for(var i=1;i<=ct;i++) {
+				dressing_t.generateResult();
+				o.push(dressing_t.niceString());
+			}
 		}
+		
+		//var dressing_t = app.rtables.getByTitle('hex_dressing');
+		
 		return o;
 	},
 	
@@ -74,8 +87,10 @@ var Wilderness = Backbone.Model.extend({
 	 */
 	getEncounters: function(ct) {
 		var o = [];
-
-		var encounter_t = new RandomTable(appdata.encounters[this.get('terrain')]);
+		
+		var tables = app.AppSettings.get('encounter_tables');
+		
+		var encounter_t = app.rtables.getByTitle(tables[this.get('terrain')]);
 		for(var i=1;i<=ct;i++){
 			encounter_t.generateResult();
 			o.push(encounter_t.niceString());
@@ -258,9 +273,9 @@ var WildernessDetails = Backbone.View.extend({
 		
 			temp += '<dl class="dl-horizontal clearfix"><dt data-field="title">Title</dt><dd data-field="title"><%= title %></dd><dt data-field="terrain">Terrain</dt><dd data-field="terrain"><%= terrain %></dd></dl>';
 			
-			temp += '<dl><dt>Hex Dressing</dt><% _.each(hexdressing, function(v,k,l){ %><dd data-field="hexdressing"><%= v %></dd><% }); %></dl>';
+			temp += '<dl><dt>Hex Dressing</dt><dd data-field="hexdressing"><ol><% _.each(hexdressing, function(v,k,l){ %><li data-field="hexdressing"><%= v %></li><% }); %></ol></dd>';
 			
-			temp += '<dl><dt>Encounters</dt><dd data-field="encounters"><ol><% _.each(encounters, function(v,k,l){ %><li data-field="encounters"><%= v %></li><% }); %></ol></dd></dl>';
+			temp += '<dt>Encounters</dt><dd data-field="encounters"><ol><% _.each(encounters, function(v,k,l){ %><li data-field="encounters"><%= v %></li><% }); %></ol></dd></dl>';
 						
 		temp += '</div>';
 		
@@ -310,12 +325,13 @@ var WildernessEditView = Backbone.View.extend({
 		formdata = $(e.target).serializeObject();
 		//console.log(formdata);
 		
-		if (this.field == 'something') {
-			
-
+		if (this.field == 'hexdressing' || this.field == 'encounters') {
+			_.each(formdata[this.field], function(v,k,l){
+				l[k] = v.nl2br();
+			}, this);
+			this.model.set(formdata, { open: true });
 		} else {
 			this.model.set(formdata, { open: true });
-			//this.model.save(formdata, {wait: true});
 		}
 		//this.model.save();
 		$('#editmodal').modal('hide');
@@ -324,16 +340,18 @@ var WildernessEditView = Backbone.View.extend({
 	},
 	
 	loadRandom: function(e) {
-		
 		//console.log(e);
-		var inputtarget = $(e.target).attr('data-targetfield');
+		var inputtarget = $(e.currentTarget).attr('data-targetfield');
 		var list = $(e.target).attr('data-list');
 		
 		if (this.field == 'hexdressing') {
 			var newval = this.model.getHexDressing(1);
-			$('#'+inputtarget).val(newval[0]);
+			$('#'+inputtarget).val(newval[0].br2nl());
+		} else if (this.field == 'encounters') {
+			var newval = this.model.getEncounters(1);
+			$('#'+inputtarget).val(newval[0].br2nl());
 		} else if (this.field == 'terrain') {
-			var newval = app.randomizer.rollRandom(appdata.wilderness.terrain);
+			var newval = app.randomizer.rollRandom( _.keys(app.AppSettings.get('encounter_tables')) );
 			$('#'+inputtarget).val(newval);
 		}
 		
@@ -349,14 +367,16 @@ var WildernessEditView = Backbone.View.extend({
 		switch (field) {
 						
 			case 'hexdressing':
+			case 'encounters':
 				
 				var cur = this.model.get(field);
 				
 				for(var i=0; i<cur.length; i++) {
 					var num = i+1;
-					form += '<div class="form-group"><label class="control-label" for="edit'+field+'_'+i+'">'+field.capitalize()+' '+num+'</label><div class="input-group"><input type=text class="form-control" id="edit'+field+'_'+i+'" name="'+field+'" value="'+cur[i]+'" />';
+					var textvalue = cur[i].br2nl();
+					form += '<div class="form-group"><label class="control-label" for="edit'+field+'_'+i+'">'+field.capitalize()+' '+num+'</label><textarea class="form-control" rows=3 id="edit'+field+'_'+i+'" name="'+field+'">'+textvalue+'</textarea>';
 					
-					form += '<div class="input-group-btn"><button type="button" class="btn btn-default randomize" data-targetfield="edit'+field+'_'+i+'" data-list="'+field+'">Randomly Replace</button></div></div></div>';
+					form += '<div class="clearfix"><button type="button" class="btn btn-default randomize pull-right" data-targetfield="edit'+field+'_'+i+'" data-list="'+field+'"><span class="glyphicon glyphicon-random"></span></button></div></div>';
 					
 				}
 			
@@ -475,12 +495,14 @@ var WildernessForm = Backbone.View.extend({
 		$mess.empty();
 		
 		formdata = $(e.target).serializeObject();
+		if (formdata.title == '') {
+			formdata.title = 'Wilderness '+app.randomizer.roll(10000);
+		}
     	var wild = new Wilderness(formdata);
     	wild.create();
     	if (!wild.isValid()) {
     		$mess.html(app.showAlert(wild.validationError.general, { atype: 'danger' }));
 			$mess[0].scrollIntoView(true);
-	    	//console.log(wild.validationError);
 	    	return;
     	}
     	wild.save();
@@ -498,12 +520,12 @@ var WildernessForm = Backbone.View.extend({
 		
 		html += '<div class="messages"></div>';
 		
-		html += '<div class="form-group"><label for=title class="control-label">Title</label><input type="text" class="form-control" name="title" id="title" value=""/><div class="help-block">Just a way to identify it later.</div></div>';	
+		html += '<div class="form-group"><label for=title class="control-label">Title</label><input type="text" class="form-control" name="title" id="title" value=""/></div>';	
 		html += '<div class="form-group"><label for=terrain class="control-label">Terrain</label><select class="form-control" name="terrain" id="terrain">';
-			_.each(appdata.wilderness.terrain, function (v,k){
-				html += '<option value="'+k+'">'+v.label+'</option>';
+			_.each(app.AppSettings.get('encounter_tables'), function (v,k){
+				html += '<option value="'+k+'">'+k.capitalize()+'</option>';
 			}, this);
-		html += '</select><div class="help-block">Just a way to identify it later.</div></div>';
+		html += '</select><div class="help-block">Will decide what tables to use for encounters and hex dressing.</div></div>';
 		
 		html += '<div class="form-group"><button type=submit class="btn btn-primary">Generate</button></div>';
 		

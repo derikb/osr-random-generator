@@ -69,7 +69,8 @@ Made with: <a href="http://jquery.com">jQuery</a>, <a href="http://getbootstrap.
 * <a href="http://www.swordsandwizardry.com/">Swords &amp; Wizardry</a> rules by Matthew J. Finch</a>
 * Goals list primarily taken from <a href="http://blog.retroroleplaying.com/2013/03/tarnhelms-terrible-tome-house-rules-for.html">Tarnheim's Terrible Tome</a> by Randall S Stukey
 * Labyrinth Lord monster data adapted from <a href="http://www.wizardawn.com/rpg/tool_data.php">Wizardawn's Data files</a>.
-* Dungeon generator "special" results from: <a href=\"http://rolesrules.blogspot.com/2014/02/download-bag-of-tricks-2-now-easier.html\">Bag of Tricks 2</a> by Roger S.G. Sorolla
+* Dungeon generator "special" results from: <a href="http://rolesrules.blogspot.com/2014/02/download-bag-of-tricks-2-now-easier.html">Bag of Tricks 2</a> by Roger S.G. Sorolla
+* 5e Monster List collected by Morgan Gilbert (via his <a href="http://www.enworld.org/forum/showthread.php?358299-So-I-made-an-Encounter-Builder-and-Monster-Index">Encounter Builder and Monster Index</a>
 
 ### Notes
 

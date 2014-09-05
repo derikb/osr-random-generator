@@ -31,6 +31,14 @@ this.AppSettingsView = new AppSettingsView({ model: this.AppSettings });
 		
 		
 		//console.log(this);
+		
+	},
+	
+	/**
+	 * Retrieve saved data and list out all RandomTables
+	 */
+    list: function () {
+
 		$('#mission-form').append(new MissionForm({ model: this.AppSettings }).render().el);
 		
 		$('#wilderness-form').append(new WildernessForm({ model: this.AppSettings }).render().el);
@@ -40,12 +48,6 @@ this.AppSettingsView = new AppSettingsView({ model: this.AppSettings });
 		this.creator = new Creator();
 		this.exporter = new Exporter();
 		this.importer = new Importer();
-	},
-	
-	/**
-	 * Retrieve saved data and list out all RandomTables
-	 */
-    list: function () {
 
 		this.charlist = new CharCollection();
         this.charlistview = new CharList({model:this.charlist});
@@ -217,13 +219,22 @@ var AppSettings = Backbone.Model.extend(
 				special_table: 'bag_tricks_2',
 			},
 			
-			
 			wilderness: {
 				hexdressing_count: 3,
 				encounter_count: 5,
+				
 				hexdressing_default: 'hex_dressing'
-			}
+			},
 			
+			encounter_tables: {
+				road: '',
+				forest: '',
+				swamp: '',
+				settlement: '',
+				rivers: '',
+				town: ''
+			}
+		
 			
 		}	
 	},
@@ -279,10 +290,29 @@ var AppSettingsView = Backbone.View.extend(
 	
 	/**
 	 * Save the settings
+	 * @todo validate this a bit as bad data could break the whole app
 	 */
 	editSettings: function(e) {
 		e.preventDefault();
-		formdata = $(e.target).serializeObject();		
+		formdata = $(e.target).serializeObject();
+		
+		//convert encounter settings into an object
+		formdata.encounter_tables = {};
+		var encounter_tables = this.model.get('encounter_tables');
+		_.each(encounter_tables, function(v,k) {
+			if (formdata['encounters_'+k]) {
+				formdata.encounter_tables[k] = formdata['encounters_'+k];
+				delete(formdata['encounters_'+k]);
+			}
+		}, this);
+		
+		formdata.wilderness = this.model.get('wilderness');
+		formdata.wilderness.encounter_count = formdata.wilderness_encounter_count;
+		delete(formdata.wilderness_encounter_count);
+		formdata.wilderness.hexdressing_count = formdata.wilderness_hexdressing_count;
+		delete(formdata.wilderness_hexdressing_count);
+		
+		//console.log(formdata);
 		this.model.save(formdata);
 		var $alert = $('<div class="alert alert-success fade in"><a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>Settings Saved.</div>');
 		$(this.el).prepend($alert);
@@ -381,6 +411,31 @@ var AppSettingsView = Backbone.View.extend(
 		
 		form += '<div class="form-group"><button type=submit class="btn btn-primary">Save Settings</button></div>';
 		
+		form += '</div>';
+		
+		form += '<div class="col-sm-6">';
+			form += '<fieldset><legend>Wilderness Settings</legend>';
+			
+			form += '<div class="row"><div class="form-group col-sm-6"><label for=wilderness_encounter_count class="control-label">Encounters to Generate</label><input type="number" class="form-control" id="wilderness_encounter_count" name="wilderness_encounter_count" value="'+this.model.get('wilderness').encounter_count+'" /></div>';
+			
+			form += '<div class="form-group col-sm-6"><label for=wilderness_hexdressing_count class="control-label">Hexdressing to Generate</label><input type="number" class="form-control" id="wilderness_hexdressing_count" name="wilderness_hexdressing_count" value="'+this.model.get('wilderness').hexdressing_count+'" /></div>';
+			
+			form += '</div>'; //.row
+			
+			var encounter_tables = this.model.get('encounter_tables');
+			
+			_.each(encounter_tables, function(v,k){
+				
+				form += '<div class="form-group"><label for=encounters_'+k+' class="control-label">'+k.capitalize()+' Encounters</label><select class="form-control" id="encounters_'+k+'" name="encounters_'+k+'">';			
+					_.each(app.rtables.getByTags('encounters'), function(t){
+						var sel = (t.get('key') == v) ? 'selected=selected' : '';
+						form += '<option value='+t.get('key')+' '+sel+'>'+t.get('title')+'</option>';
+					}, this);		
+				form += '</select><div class="help-block">Tag a table with "encounters" and reload to see it in this list.</div></div>';
+				
+			}, this);
+			
+			form += '</fieldset>';
 		form += '</div>';
 		
 		form += '</div>';
@@ -615,7 +670,6 @@ var AppRandomizer = function() {
 	this.parseDiceNotation = function(string) {
 		var m = string.match(/^([0-9]*)d([0-9]+)(?:([\+\-\*\/])([0-9]+))*$/);
 		if (m) {
-			console.log(m);
 			if (typeof m[4] == 'undefined') { m[4] = 0; }
 			if (m[1] !== '') {
 				return this.roll(parseInt(m[2]), parseInt(m[1]), parseInt(m[4]), m[3]);

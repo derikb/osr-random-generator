@@ -1,6 +1,20 @@
 Change Log
 ==========
 
+v0.85 - 2014-09-05
+------------------
+
+* Some fixes for using tokens in results.
+    * You can now use {{table:this:subtable}} to roll a result on a subtable of the current table. (Handy for creating concatenations from subtables, i.e. "The {{table:this:adjectives}} {{table:this:nouns}}".)
+    * Fixed roll token so it can be used as {{roll:d20}} without an integer preceding the "d".
+* Added monster tab that lists out monsters.
+	* Currently offers a 5e monster list/index for available monsters.
+* Improvements to the Wilderness feature.
+    * You can pick different tables (tagged "encounters") for different terrain types. They will also be used for hexdressing if there is a "hexdressing" subtable.
+* Improvements to the Mission generator.
+* Added a bunch of tables related to my in-progress colonial america-esque setting.
+* A few more CSS changes to make things easier to use on narrow screens (tablet/phone). (Still testing Android app.)
+
 v0.8 - 2014-09-01
 -----------------
 

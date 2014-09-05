@@ -198,4 +198,8 @@ appdata.monsters.dnd5e = [
 	{ "cr": 13, "type": "Undead", "name": "Vampire", "source": "HDQ:20" },
 	{ "cr": 16, "type": "Dragon", "name": "Adult Blue Dragon", "source": "HDQ:04" },
 	{ "cr": 17, "type": "Dragon", "name": "Adult Red Dragon", "source": "B:08" },
+	{ "cr": 1, "type": "Fiend", "name": "Imp", "source": "PH:306" },
+	{ "cr": 1/4, "type": "Dragon", "name": "Pseudodragon", "source": "PH:308" },
+	{ "cr": 1, "type": "Fiend", "name": "Quasit", "source": "PH:309" },
+	{ "cr": 1/4, "type": "Fey", "name": "Sprite", "source": "PH:310" },
 ];

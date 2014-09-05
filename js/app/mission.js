@@ -12,6 +12,7 @@ var Mission = Backbone.Model.extend({
 			action: '',
 			patron: {},
 			antagonist: {},
+			reward: '',
 			complication: '',
 			notes: '',
 		}
@@ -35,6 +36,7 @@ var Mission = Backbone.Model.extend({
 		this.set('patron', this.getPatron());
 		this.set('antagonist', this.getAntagonist());		
 		this.set('complication', this.getComplication());
+		this.set('reward', this.getReward());
 	},
 	
 	/**
@@ -70,7 +72,6 @@ var Mission = Backbone.Model.extend({
 			'action': action_t.get('result')[1]['result'],
 			'target': action_t.get('result')[0]['result']
 		}
-		console.log(o);
 		return o;
 	},
 	
@@ -85,9 +86,8 @@ var Mission = Backbone.Model.extend({
 			case 'Person':
 				var t = app.rtables.getByTitle('mission_person');
 				t.generateResult();
-				console.log(t.attributes);
 				return t.get('result')[1].result.capitalize() + ' ' + t.get('result')[0].result.capitalize();
-				return t.niceString();
+				//return t.niceString();
 				break;
 			case 'Place':
 				var t = app.rtables.getByTitle('mission_place');
@@ -143,22 +143,15 @@ var Mission = Backbone.Model.extend({
 		t.generateResult();
 		return t.niceString();	
 	},
-
+	
 	/**
-	 * Get encounter results
-	 * @todo have the tables be customizable
-	 * @param {Number} ct how many results to return
-	 * @returns {Array} of strings
+	 * Generate Reward
+	 *
 	 */
-	getEncounters: function(ct) {
-		var o = [];
-
-		var encounter_t = new RandomTable(appdata.encounters[this.get('terrain')]);
-		for(var i=1;i<=ct;i++){
-			encounter_t.generateResult();
-			o.push(encounter_t.niceString());
-		}
-		return o;	
+	getReward: function(){
+		var t = app.rtables.getByTitle('mission_reward');
+		t.generateResult();
+		return t.niceString();	
 	},
 	
 	/**
@@ -338,7 +331,7 @@ var MissionDetails = Backbone.View.extend({
 			
 			temp += '<h5>Patron</h5><dl class="dl-horizontal clearfix"><dt data-field="patron">Occupation</dt><dd data-field="patron"><%= patron.occupation %></dd><dt data-field="patron">Goal</dt><dd data-field="patron"><%= patron.goal %></dd></dl>';
 			
-			temp += '<dl class="dl-horizontal clearfix"><dt data-field="antagonist">Antagonist</dt><dd data-field="antagonist"><%= antagonist %></dd></dl>'; 
+			temp += '<dl class="dl-horizontal clearfix"><dt data-field="reward">Reward</dt><dd data-field="reward"><%= reward %></dd><dt data-field="antagonist">Antagonist</dt><dd data-field="antagonist"><%= antagonist %></dd></dl>'; 
 			
 			temp += '<h5 data-field="notes">Notes</h5><div data-field="notes"><%= notes %></div>';
 						
@@ -392,7 +385,6 @@ var MissionEditView = Backbone.View.extend({
 		
 		if (this.field == 'patron' || this.field == 'target') {
 			this.model.set(this.field, formdata, { open: true });
-			console.log(formdata);
 		} else if (this.field == 'notes') {
 			formdata.notes = formdata.notes.nl2br();
 			this.model.set(formdata, { open: true });
@@ -428,6 +420,8 @@ var MissionEditView = Backbone.View.extend({
 			$('#'+inputtarget).val(this.model.getComplication());
 		} else if (this.field == 'antagonist') {
 			$('#'+inputtarget).val(this.model.getAntagonist());
+		} else if (this.field == 'reward') {
+			$('#'+inputtarget).val(this.model.getReward());
 		}
 		
 	},
@@ -456,6 +450,7 @@ var MissionEditView = Backbone.View.extend({
 			
 			case 'complication':
 			case 'antagonist':
+			case 'reward':
 				var i=0;
 				
 				form += '<div class="form-group"><label class="control-label" for="edit'+field+'_'+i+'">'+field.capitalize()+'</label><div class="input-group"><input type=text class="form-control" id="edit'+field+'_'+i+'" name="'+field+'" value="<%= '+field+' %>" />';
@@ -465,7 +460,7 @@ var MissionEditView = Backbone.View.extend({
 				break;
 			
 			case 'notes':
-				form += '<div class="form-group"><label class="control-label" for="edit'+field+'">'+field.capitalize()+'</label><textarea class="form-control" id="edit'+field+'" name="'+field+'"><% var converted = '+field+'.br2nl() %><%= converted %></textarea><span class="help-block"></span></div>';
+				form += '<div class="form-group"><label class="control-label" for="edit'+field+'">'+field.capitalize()+'</label><textarea class="form-control" id="edit'+field+'" name="'+field+'" rows="6"><% var converted = '+field+'.br2nl() %><%= converted %></textarea><span class="help-block"></span></div>';
 				break;
 											
 			default:

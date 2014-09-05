@@ -16,8 +16,7 @@ appdata.tables.mission_action = {
       { "label": "Place", "weight": 2,
         "subtable": "action_place" },
       { "label": "Thing", "weight": 3,
-        "subtable": "action_thing"
-      }
+        "subtable": "action_thing" }
     ],
     "action_people": [
       { "label": "Rescue" },
@@ -82,8 +81,7 @@ appdata.tables.mission_place = {
         "subtable": "wilderness_type" },
       { "label": "Ruins",
         "weight": 2,
-        "subtable": "ruins_type"
-      }
+        "subtable": "ruins_type" }
     ],
     "settlement_type": [
       { "label": "Homestead" },
@@ -164,8 +162,7 @@ appdata.tables.mission_thing = {
       { "label": "Natural Resources (wood, furs, minerals, metals)" },
       { "label": "Object d’Art (icons, statues, paintings)" },
       { "label": "Documents (papers, books, diaries, letters, contracts, maps)" },
-      { "label": "Clothing/Textiles"
-      }
+      { "label": "Clothing/Textiles" }
     ],
     "tag": [
       { "label": "Damaged" },
@@ -295,8 +292,7 @@ appdata.tables.mission_antagonist = {
       { "label": "Settlement" },
       { "label": "NPC (already met)" },
       { "label": "Friendly Acquaintance of a PC (Friend/Family/Business/Patron)" },
-      { "label": "{{table:tables.colonial_occupations}}"
-      }
+      { "label": "{{table:tables.colonial_occupations}}" }
     ]
   }
 };
@@ -310,54 +306,46 @@ appdata.tables.mission_complication = {
   ],
   "tables": {
     "default": [
-      {
-        "label": "Patron is lying"
-      },
-      {
-        "label": "Patron is misinformed"
-      },
-      {
-        "label": "Object of mission is dead/destroyed."
-      },
-      {
-        "label": "Someone else was already hired for the mission"
-      },
-      {
-        "label": "Reward is nonexistent."
-      },
-      {
-        "label": "Antagonist has powerful backing."
-      },
-      {
-        "label": "Someone else is after the same person/place/object but with a different/opposing goal."
-      },
-      {
-        "label": "Object of mission has moved locations."
-      },
-      {
-        "label": "None"
-      },
-      {
-        "label": "Tight deadline"
-      },
-      {
-        "label": "A new patron wants to hire the PCs for a conflicting mission"
-      },
-      {
-        "label": "Patron is attacked/killed"
-      },
-      {
-        "label": "Patron is pretending to be someone else"
-      },
-      {
-        "label": "Bizarre/Weird/Magical"
-      },
-      {
-        "label": "Someone is also after the PCs"
-      },
-      {
-        "label": "A rival faction is involved."
-      }
+      {  "label": "Patron is lying" },
+      {  "label": "Patron is misinformed" },
+      {  "label": "Object of mission is dead/destroyed." },
+      {  "label": "Someone else was already hired for the mission" },
+      {  "label": "Reward is nonexistent." },
+      {  "label": "Antagonist has powerful backing." },
+      {  "label": "Someone else is after the same person/place/object but with a different/opposing goal." },
+      {  "label": "Object of mission has moved locations." },
+      {  "label": "None" },
+      {  "label": "Tight deadline" },
+      {  "label": "A new patron wants to hire the PCs for a conflicting mission" },
+      {  "label": "Patron is attacked/killed" },
+      {  "label": "Patron is pretending to be someone else" },
+      {  "label": "Bizarre/Weird/Magical" },
+      {  "label": "Someone is also after the PCs" },
+      {  "label": "A rival faction is involved." }
     ]
   }
-}
+};
+
+
+appdata.tables.mission_reward = {
+  "title": "Mission Rewards",
+  "author": "Derik Badman",
+  "tags": [
+    "mission"
+  ],
+  "tables": {
+    "default": [
+      { "label": "Blackmailed" },
+      { "label": "Favor" },
+      { "label": "Information" },
+      { "label": "Goods" },
+      { "label": "Minor Magic Item" },
+      { "label": "Property" },
+      { "label": "Further employment" },
+      { "label": "Discount on future services/goods" },
+      { "label": "Fame" },
+      { "label": "Services" },
+      { "label": "Money", "weight": 2 }
+    ]
+  }
+};

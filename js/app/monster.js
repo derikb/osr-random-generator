@@ -400,7 +400,7 @@ var Monster_Collection = Backbone.Collection.extend(
 	 * @returns {Object} the randomtable model
 	 */
 	getByName: function(name) {
-		if (typeof name == 'undefined' || title == '') {
+		if (typeof name == 'undefined' || name == '') {
 			return {};
 		}
 		//console.log(title);

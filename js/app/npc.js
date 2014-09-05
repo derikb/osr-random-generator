@@ -185,7 +185,7 @@ var Character = Backbone.Model.extend(
 		var charclass = this.get('charclass');
 		if (charclass == 'none') {
 			var t = app.rtables.getByTitle(app.AppSettings.get('occupation_type'));
-			console.log(this.get('occupation'));
+			//console.log(this.get('occupation'));
 			var occ = t.findObject(this.get('occupation'));
 			if (typeof occ == "undefined" ) { return ''; }
 			if (typeof occ.armor == 'undefined') { return ''; }

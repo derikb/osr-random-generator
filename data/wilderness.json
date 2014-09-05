@@ -1,46 +1,4 @@
 appdata = (typeof appdata == "undefined") ? {} : appdata;
-
-appdata.wilderness = {
-	"zone": {
-		"temperate": {},
-		"tropical": {},
-		"arctic": {},
-	},
-	"terrain": {
-		"road": { "label": "Road" },
-		"swamp": { "label": "Swamp" },
-		//"forest": { "label": "Forest" },
-				//"mountains": { "label": "Mountains" },
-		"sea": { "label": "Sea" },
-	},
-	"weather": {
-		"season": {
-			"spring": {},
-			"summer": {},
-			"autumn": {},
-			"winter": {},
-		},
-		"temperature": [
-			{ "v": "Freezing", "r": 0 },
-			{ "v": "Cold", "r": 1 },
-			{ "v": "Cool", "r": 3 },
-			{ "v": "Warm", "r": 5 },
-			{ "v": "Hot", "r": 6 },
-		],
-		"precipitation": [
-			"clear", //0-1
-			"cloudy", //2-3
-			"light precipitation", //4
-			"moderate precipitation", //5
-			"heavy precipitation", //6-8
-			"extreme weather" //9
-		],
-		"special": [
-			""
-		]
-	},
-}
-
  
 appdata.encounters = (typeof appdata.encounters == "undefined") ? {} : appdata.encounters;
 appdata.encounters.swamp = {

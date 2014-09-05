@@ -107,11 +107,26 @@ var Dungeon = Backbone.Model.extend(
 	 */
 	generateMonsterList: function() {
 		if (typeof this.get('monsters') !== 'undefined') { return this.get('monsters'); }
-		var m = appdata.monsters.labyrinthlord;
+		//var m = appdata.monsters.labyrinthlord;
+		var m = appdata.monsters[app.AppSettings.get('monster_table')];
 		var monsters = {};
 		_.each(m, function(v,k,l) {
-			if (v.level == this.get('level') && _.contains(v.terrain, 'DG')) {
-				monsters[k] = v;
+			if (v.terrain) {
+				if (v.cr == this.get('level') && _.contains(v.terrain, 'DG')) {
+					if (_.isNumber(k)) {
+						monsters[v.name] = v;
+					} else {
+						monsters[k] = v;
+					}
+				}
+			} else {
+				if (v.cr == this.get('level')) {
+					if (_.isNumber(k)) {
+						monsters[v.name] = v;
+					} else {
+						monsters[k] = v;
+					}
+				}
 			}
 		}, this);		
 		this.set('monsters', monsters);
@@ -147,23 +162,28 @@ var Dungeon = Backbone.Model.extend(
 		var o = '';
 		
 		if (room.monster_type !== '') {
-			monster = appdata.monsters.labyrinthlord[room.monster_type];
-			ttype = monster.statblock.TRS;
-			if (ttype == "None") {
-				return 'None';
-			}
-			//console.log('treasure type '+ttype);
-			if (ttype.indexOf(',') !== -1) {
-				//multiple
-				types = ttype.split(',');
-				
-				_.each(types, function(v) {
-					v = v.trim();
-					o += t.generateHoard(v);
-				}, this);
-				
+			//monster = appdata.monsters.labyrinthlord[room.monster_type];
+			var monster = app.monsters.getByName(room.monster_type);
+			if (monster.statblock) {
+				ttype = monster.statblock.TRS;
+				if (ttype == "None") {
+					return 'None';
+				}
+				//console.log('treasure type '+ttype);
+				if (ttype.indexOf(',') !== -1) {
+					//multiple
+					types = ttype.split(',');
+					
+					_.each(types, function(v) {
+						v = v.trim();
+						o += t.generateHoard(v);
+					}, this);
+					
+				} else {
+					o += t.generateHoard(ttype);
+				}
 			} else {
-				o += t.generateHoard(ttype);
+				o += t.generateHoard(this.get('level'));
 			}
 		} else {
 			o += t.generateHoard(this.get('level'));
@@ -634,6 +654,9 @@ var DungeonForm = Backbone.View.extend(
 		$mess.empty();
 		
 		formdata = $(e.target).serializeObject();
+		if (formdata.title == '') {
+			formdata.title = 'Dungeon '+app.randomizer.roll(10000);
+		}
 		
 		formdata.room_count = parseFloat(formdata.room_count);
     	var dungeon = new Dungeon(formdata);
