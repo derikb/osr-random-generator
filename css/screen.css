@@ -4,7 +4,6 @@
 .panel-title>a { padding: 10px 15px; display: block; }
 .panel-heading .btn { margin: 8px 10px; }
 
-textarea.form-control { min-height: 150px; }
 textarea.form-control.textarea-tall { min-height: 400px; }
 
 #app_alert { margin-top: 10px; }
@@ -144,14 +143,18 @@ fieldset fieldset legend {
 
 	.panel-title { font-size: 20px; }
 	.panel-title>a { padding: 15px; }
-	.btn { font-size: 18px; margin: 0px 5px 5px 5px; padding: 6px 12px;  }
+	.btn { font-size: 20px; margin: 0px 5px 5px 5px; padding: 8px 12px 6px 12px;  }
 	.panel-heading .btn { font-size: 16px; }
 	.modal-header .close { font-size: 30px; }
-	.badge { font-size: 14px; margin: 5px; }
+	.badge { font-size: 16px; margin: 5px; padding: 8px; }
 	.label { font-size: 100%; }
-	caption a { font-size: 20px; }
+	caption a { font-size: 24px; }
 	
 	.dungeon-form button { margin-top: 0px; }
+	
+	.navbar-nav>li>a { font-size: 22px; padding-top: 12px; padding-bottom: 12px; line-height: normal; } 
+	.navbar-nav .open .dropdown-menu>li>a { font-size: 22px; padding-top: 12px; padding-bottom: 12px; line-height: normal; padding-left: 40px; }
+	.navbar-collapse {  max-height: none; }
 
 
 }
