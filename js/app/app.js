@@ -5,7 +5,7 @@ var AppRouter = Backbone.Router.extend(
 	/** @lends AppRouter.prototype */
 {
 	
-	version: '0.6', 
+	version: '0.85', 
 
     routes:{
         "":"list",
@@ -19,17 +19,7 @@ var AppRouter = Backbone.Router.extend(
 	 * @constructs
 	 */
     initialize: function () {
-		this.randomizer = new AppRandomizer();
-		//this.loadCustomData();
-		this.AppSettings = new AppSettings({ version: this.version });
-		this.AppSettings.fetch();
-		this.AppSettings.checkVersionUpdate();
-		/*
-this.AppSettingsView = new AppSettingsView({ model: this.AppSettings });
-		$('#settings').html(this.AppSettingsView.render().el);
-*/
-		
-		
+		this.randomizer = new AppRandomizer();		
 		//console.log(this);
 		
 	},
@@ -39,7 +29,11 @@ this.AppSettingsView = new AppSettingsView({ model: this.AppSettings });
 	 */
     list: function () {
 
-		$('#mission-form').append(new MissionForm({ model: this.AppSettings }).render().el);
+		this.AppSettings = new AppSettings({ version: this.version });
+		this.AppSettings.fetch();
+		this.AppSettings.checkVersionUpdate();
+
+		$('#mission-form').html(new MissionForm({ model: this.AppSettings }).render().el);
 		
 		$('#wilderness-form').append(new WildernessForm({ model: this.AppSettings }).render().el);
 		
@@ -93,20 +87,10 @@ this.AppSettingsView = new AppSettingsView({ model: this.AppSettings });
 		this.rtables.add(load_tables);
         $('#rtable-list').html(this.rtablelist.render().el);
 
-		//load up monsters, first saved ones then hardcoded ones
 		this.monsters = new Monster_Collection();
-		this.monsters.fetch({silent: true});
         this.monsterslist = new Monster_List({model:this.monsters});
-		var load_monsters = [];
-		_.each(appdata.monsters[this.AppSettings.get('monster_table')], function(v, k){
-			if (typeof v.name == 'undefined') {
-				v.name = k;
-			}
-			v.key = k;
-			load_monsters.push(v);
-		}, this);
-		this.monsters.add(load_monsters);
-        $('#monster-list').html(this.monsterslist.render().el);
+        this.monsters.loadMonsters();
+		$('#monster-list').html(this.monsterslist.render().el);
 
 		this.AppSettingsView = new AppSettingsView({ model: this.AppSettings });
 		$('#settings').html(this.AppSettingsView.render().el);
@@ -266,6 +250,7 @@ var AppSettingsView = Backbone.View.extend(
 	/** @lends AppSettingsView.prototype */
 	{
 	
+	model: AppSettings,
 	tagName: 'form',
 	
 	attributes : function () {
@@ -312,8 +297,8 @@ var AppSettingsView = Backbone.View.extend(
 		formdata.wilderness.hexdressing_count = formdata.wilderness_hexdressing_count;
 		delete(formdata.wilderness_hexdressing_count);
 		
-		//console.log(formdata);
 		this.model.save(formdata);
+		
 		var $alert = $('<div class="alert alert-success fade in"><a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>Settings Saved.</div>');
 		$(this.el).prepend($alert);
 		$alert.delay(3 * 1000).fadeOut()
@@ -409,8 +394,6 @@ var AppSettingsView = Backbone.View.extend(
 		
 		form += '</fieldset>';
 		
-		form += '<div class="form-group"><button type=submit class="btn btn-primary">Save Settings</button></div>';
-		
 		form += '</div>';
 		
 		form += '<div class="col-sm-6">';
@@ -439,6 +422,8 @@ var AppSettingsView = Backbone.View.extend(
 		form += '</div>';
 		
 		form += '</div>';
+		
+		form += '<div class="form-group"><button type=submit class="btn btn-primary">Save Settings</button></div>';
 	
 		$(this.el).html(form);
 		return this;

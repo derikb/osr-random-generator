@@ -310,7 +310,25 @@ var Monster_Collection = Backbone.Collection.extend(
 	 * @constructs
 	 */
 	initialize: function(){
-		
+		this.listenTo(app.AppSettings, 'change:monster_table', this.loadMonsters);
+	},
+
+	/**
+	 * Load the monsters from the set list
+	 */
+	loadMonsters: function(){
+		//console.log('loadMonsters');
+		this.reset();
+		this.fetch({silent: true});
+		var load_monsters = [];
+		_.each(appdata.monsters[app.AppSettings.get('monster_table')], function(v, k){
+			if (typeof v.name == 'undefined') {
+				v.name = k;
+			}
+			v.key = k;
+			load_monsters.push(v);
+		}, this);
+		this.add(load_monsters);	
 	},
 	
 	/**
