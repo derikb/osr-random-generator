@@ -2,7 +2,7 @@
     <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
         id          = "com.madinkbeard.osr-random-generator"
-        version     = "0.1.1" >
+        version     = "0.1.2" >
 
     <name>OSR Random Generator</name>
 
