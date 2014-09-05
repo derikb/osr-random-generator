@@ -9,10 +9,10 @@ var Wilderness = Backbone.Model.extend({
 		return {
 			title: '[Untitled]',
 			terrain: '',
-			hexdressing_count: app.AppSettings.get('hexdressing_count'),
+			hexdressing_count: 6,
 			hexdressing: [],
 			encounters: [],
-			encounter_count: app.AppSettings.get('encounter_count'),
+			encounter_count: 6,
 			weather: {},
 		}
 	},

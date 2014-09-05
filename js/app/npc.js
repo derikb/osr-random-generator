@@ -836,21 +836,7 @@ var CharacterEditView = Backbone.View.extend(
 				form += '</select><div class="help-block">Updating class will automatically update hp, spells, and attack bonus.</div></div>';
 			
 				break;
-			
-			/*
-case 'occupation':
-				form += '<div class="form-group"><label for="occupation" class="control-label">Occupation</label><select class="form-control" id="occupation" name="occupation">';
-					var t = app.rtables.getByTitle(app.AppSettings.get('occupation_type'));
-					_.each(t.selectList('default'), function(v) {
-						var sel = (v.label == this.model.get(field)) ? 'selected=selected' : '';
-						form += '<option value="'+v.label+'" '+sel+'>'+v.label.capitalize()+'</option>';
 						
-					}, this)
-					form += '</select><div class="help-block"></div></div>';
-			
-				break;
-*/
-			
 			case 'personality':
 			case 'appearance':
 			case 'goals':
