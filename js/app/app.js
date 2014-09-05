@@ -324,7 +324,7 @@ var AppSettingsView = Backbone.View.extend(
 	 */
 	render: function() {
 		var form = '';
-		form += '<div class="alert alert-info">Settings will be saved to your local browser storage for re-use.</div>';
+		form += '<div class="alert alert-info"><p>Settings will be saved to your local browser storage for re-use.</p><p>To see the effects of settings changes you should reload after changing them.</div>';
 		form += '<div class="row">';
 		form += '<div class="col-sm-6">';
  		form += '<div class="form-group"><label for=rules_set class="control-label">Rules</label><select class="form-control" id="rules_set" name="rules_set">';
