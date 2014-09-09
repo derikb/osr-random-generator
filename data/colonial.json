@@ -1,14 +1,6 @@
 appdata = (typeof appdata == "undefined") ? {} : appdata;
 appdata.tables = (typeof appdata.tables == "undefined") ? {} : appdata.tables;
 
-appdata.personality_options.unshift(
-	{ "option": "colonial_personality", "label": "Personality (Colonial)" }
-);
-
-appdata.appearance_options.unshift(
-	{ "option": "colonial_appearance", "label": "Appearance (Colonial)" }
-);
-
 //!colonial_personality
 appdata.tables.colonial_personality = {
   "title": "Personality Traits (Colonial)",
@@ -233,6 +225,13 @@ appdata.tables.colonial_companies = {
   "title": "Companies (Colonial)",
   "author": "Derik Badman",
   "description": "Quick company.",
+  "print": {
+	  "name": { "hide_table": 1 },
+	  "name_1": { "hide_table": 1 },
+	  "name_2": { "hide_table": 1 },
+	  "name_3": { "hide_table": 1 },
+	  "name_place": { "hide_table": 1 }
+  },
   "tags": [
     "colonial",
     "factions"
@@ -364,6 +363,15 @@ appdata.tables.colonial_encounters_road = {
     "colonial",
     "encounters"
   ],
+  "print": {
+	  "actions_men": { "hide_table": 1 },
+	  "actions_animal": { "hide_table": 1 },
+	  "men": { "hide_table": 1 },
+	  "animals": { "hide_table": 1 },
+	  "monsters": { "hide_table": 1 },
+	  "other": { "hide_table": 1 },
+	  "weather": { "hide_table": 1 }
+  },
   "tables": {
     "default": [
       { "label": "Animal", "weight": 2, "print": false, "subtable": "animals" },
@@ -490,6 +498,15 @@ appdata.tables.colonial_encounters_forest = {
     "colonial",
     "encounters"
   ],
+  "print": {
+	  "actions_men": { "hide_table": 1 },
+	  "actions_animal": { "hide_table": 1 },
+	  "men": { "hide_table": 1 },
+	  "animals": { "hide_table": 1 },
+	  "monsters": { "hide_table": 1 },
+	  "other": { "hide_table": 1 },
+	  "weather": { "hide_table": 1 }
+  },
   "tables": {
     "default": [
       { "label": "Animal", "weight": 2, "print": false, "subtable": "animals" },
@@ -646,6 +663,15 @@ appdata.tables.colonial_encounters_rivers = {
     "colonial",
     "encounters"
   ],
+  "print": {
+	  "actions_men": { "hide_table": 1 },
+	  "actions_animal": { "hide_table": 1 },
+	  "men": { "hide_table": 1 },
+	  "animals": { "hide_table": 1 },
+	  "monsters": { "hide_table": 1 },
+	  "other": { "hide_table": 1 },
+	  "weather": { "hide_table": 1 }
+  },
   "tables": {
     "default": [
       { "label": "Animal", "weight": 2, "print": false, "subtable": "animals" },
@@ -737,6 +763,15 @@ appdata.tables.colonial_encounters_swamp = {
     "colonial",
     "encounters"
   ],
+  "print": {
+	  "actions_men": { "hide_table": 1 },
+	  "actions_animal": { "hide_table": 1 },
+	  "men": { "hide_table": 1 },
+	  "animals": { "hide_table": 1 },
+	  "monsters": { "hide_table": 1 },
+	  "other": { "hide_table": 1 },
+	  "weather": { "hide_table": 1 }
+  },
   "tables": {
     "default": [
       { "label": "Animal", "weight": 2, "print": false, "subtable": "animals" },
@@ -860,6 +895,15 @@ appdata.tables.colonial_encounters_town = {
     "encounters",
     "colonial"
   ],
+  "print": {
+	  "actions_men": { "hide_table": 1 },
+	  "actions_animal": { "hide_table": 1 },
+	  "men": { "hide_table": 1 },
+	  "animals": { "hide_table": 1 },
+	  "monsters": { "hide_table": 1 },
+	  "other": { "hide_table": 1 },
+	  "weather": { "hide_table": 1 }
+  },
   "tables": {
     "default": [
       { "label": "{{table:tables.colonial_occupations:laborer}}",

@@ -377,14 +377,14 @@ var AppSettingsView = Backbone.View.extend(
     			var sel = (v.get('key') == this.model.get('occupation_type')) ? 'selected=selected' : '';
 	    		form += '<option value="'+v.get('key')+'" '+sel+'>'+v.get('title')+'</option>';
     		}, this);
-		form += '</select><div class="help-block">For 0 level NPCs.</div></div></div>';
+		form += '</select><div class="help-block">For 0 level NPCs. Tag a table with "occupation" to have it appear here.</div></div></div>';
 		
 		form += '<div class="row"><div class="form-group col-sm-9"><label for="personality_type" class="control-label">Personality List</label><select class="form-control" id="personality_type" name="personality_type">';
-    		_.each(appdata.personality_options, function(v){
-    			var sel = (v.option == this.model.get('personality_type')) ? 'selected=selected' : '';
-	    		form += '<option value="'+v.option+'" '+sel+'>'+v.label+'</option>';
+    		_.each(app.rtables.getByTags('personality'), function(v){
+    			var sel = (v.get('key') == this.model.get('personality_type')) ? 'selected=selected' : '';
+	    		form += '<option value="'+v.get('key')+'" '+sel+'>'+v.get('title')+'</option>';
     		}, this);
-		form += '</select><div class="help-block">For added color.</div></div>';
+		form += '</select><div class="help-block">For added color. Tag a table with "personality" to have it appear here.</div></div>';
 		
 		form += '<div class="form-group col-sm-3"><label for="personality_count" class="control-label"># Traits</label><select class="form-control" id="personality_count" name="personality_count">';
 			for(var i=0;i<=4;i++) {
@@ -394,11 +394,11 @@ var AppSettingsView = Backbone.View.extend(
 		form += '</select><div class="help-block"></div></div></div>';
 		
 		form += '<div class="row"><div class="form-group col-sm-9"><label for="appearance_type" class="control-label">Appearance List</label><select class="form-control" id="appearance_type" name="appearance_type">';
-    		_.each(appdata.appearance_options, function(v){
-    			var sel = (v.option == this.model.get('appearance_type')) ? 'selected=selected' : '';
-	    		form += '<option value="'+v.option+'" '+sel+'>'+v.label+'</option>';
+    		_.each(app.rtables.getByTags('appearance'), function(v){
+    			var sel = (v.get('key') == this.model.get('appearance_type')) ? 'selected=selected' : '';
+	    		form += '<option value="'+v.get('key')+'" '+sel+'>'+v.get('title')+'</option>';
     		}, this);
-		form += '</select><div class="help-block">For added color.</div></div>';
+		form += '</select><div class="help-block">For added color. Tag a table with "appearance" to have it appear here.</div></div>';
 		
 		form += '<div class="form-group col-sm-3"><label for="appearance_count" class="control-label"># Traits</label><select class="form-control" id="appearance_count" name="appearance_count">';
 			for(var i=0;i<=4;i++) {
@@ -438,7 +438,7 @@ var AppSettingsView = Backbone.View.extend(
 					var sel = (t.get('key') == hexdressing_default) ? 'selected=selected' : '';
 					form += '<option value='+t.get('key')+' '+sel+'>'+t.get('title')+'</option>';
 				}, this);			
-			form += '</select><div class="help-block">If a hex_dressing table is not defined for the terrain encounter table then this table will be used instead.</div></div>';
+			form += '</select><div class="help-block">If a hex_dressing table is not defined for the terrain encounter table then this table will be used instead. Tag a table with "hexdressing" to have it appear here.</div></div>';
 			
 			
 			var encounter_tables = this.model.get('encounter_tables');

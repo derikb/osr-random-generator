@@ -153,7 +153,7 @@ var Importer = Backbone.Model.extend(
 			dungeons: [],
 			wilderness: [],
 			missions: [],
-			settings: [], /** @todo setting export/import? */
+			settings: [],
 		}
 	},
 	
@@ -388,7 +388,7 @@ var ImportForm = Backbone.View.extend(
 			temp_data = JSON.parse(data.importdata);
 		} catch (e) {
 			//console.error("Parsing error:", e);
-			$('#import_error').html('<p>Invalid JSON: '+e+'</p><p>Usually that means you either:</p><ul><li>Didn\'t add a backslah before a double-quote.</li><li>Didn\'t put a comma after a quoted value.</li><li>Didn\'t properly close a double-quote, bracket, or brace.</li><li>Have a comma after the list entry in a list.</li></ul><p>If the error is an "Unexpected token" then the letter after that message is the point in the data where something went wrong. Sorry, at this point that\'s the best I can tell you. You can always paste the data into <a href="http://jsonlint.com/">JSONLint</a> to get specifics.</p>').removeClass('hidden');
+			$('#import_error').html('<p>Invalid JSON: '+e+'</p><p>Usually that means you either:</p><ul><li>Didn\'t add a backslah before a double-quote.</li><li>Didn\'t put a comma after a quoted value.</li><li>Didn\'t properly close a double-quote, bracket, or brace.</li><li>Have a comma after the last entry in a list.</li></ul><p>If the error is an "Unexpected token" then the letter after that message is the point in the data where something went wrong. Sorry, at this point that\'s the best I can tell you. You can always paste the data into <a href="http://jsonlint.com/">JSONLint</a> to get specifics.</p>').removeClass('hidden');
 			return;
 		}
 
