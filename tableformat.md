@@ -19,7 +19,7 @@ Table data should be formatted as:
 * _(optional)_ You can cause a roll on a subtable if the result is selected by adding two pounds signs and the title of a table to the end of a line: `Bandits##bandit_types` where "bandit_types" is the title of a subtable.
 * _(optional)_ You can insert tokens into the results to perform actions like generating numbers or rolling on other random tables. For instance:
     * Roll a number: `{{roll:3d6+1}}` in the results will generate a new random number every time that result comes up. The section after the semi-colon should accept any form of `[A Number or Blank]d[Another number][An arithmatic operator: +, -, *, or /][Another number]` such as `{{roll:d6}}` `{{roll:d6*2}}` `{{roll:2d10+10}}`.
-    * Select from a table: `{{table:general.color}}` will randomly select a color. You can reference any other table in the app, but I still need to improve the table references (how to reference them and where to find those names).
+    * Select from a table: `{{table:color}}` will randomly select a color. You can reference any other table in the app, but I still need to improve the table references (how to reference them and where to find those names).
     
 Alternately, you can paste in HTML (select the "html" format option). In this case tags will be stripped and line breaks will be added at the end of list item `<li>`, table rows `<tr>`, div `<div>`, br `<br>`, and paragraph tags `<p>` (that should cover most of what people would use).
 
@@ -285,6 +285,8 @@ You can also use tokens to generate random numbers or results from other tables 
 
 ##### Roll on other tables
 
-`{{table:general.color}}` in a result will generate a random color. Also available in the general category is "direction", "ordinal", and "season".
+`{{table:color}}` in a result will generate a random color. Also available in the general category is "direction", "ordinal", and "season".
+
+`{{table:TABLE}}` and `{{table:TABLE:SUBTABLE}}` will generate a result on the names table/subtable (using the table title).
 
 _Still need to get this working well for user added tables._

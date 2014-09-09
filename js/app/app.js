@@ -602,7 +602,7 @@ var AppRandomizer = function() {
 	
 	/**
 	 * Perform token replacement.  Only table and roll actions are accepted
-	 * @param {String} token A value passed from {@link AppRandomizer#findToken} containing a token(s) {{SOME OPERATION}} Tokens are {{table:SOMETABLE}} {{table:SOMETABLE:SUBTABLE}} {{table:SOMETABLE*3}} (roll that table 3 times) {{roll:1d6+2}} (etc) (i.e. {{table:tables.colonial_occupations:laborer}} {{table:general.color}} also generate names with {{name:flemish}} (surname only) {{name:flemish:male}} {{name:dutch:female}}
+	 * @param {String} token A value passed from {@link AppRandomizer#findToken} containing a token(s) {{SOME OPERATION}} Tokens are {{table:SOMETABLE}} {{table:SOMETABLE:SUBTABLE}} {{table:SOMETABLE*3}} (roll that table 3 times) {{roll:1d6+2}} (etc) (i.e. {{table:colonial_occupations:laborer}} {{table:color}} also generate names with {{name:flemish}} (surname only) {{name:flemish:male}} {{name:dutch:female}}
 	 * 
 	 * Note: this function runs out of scope (?) via the replace function, so "this" does not refer to the randomizer object
 	 *
@@ -626,19 +626,10 @@ var AppRandomizer = function() {
 				
 				//what table do we roll on
 				if (parts[1] == 'this') {
-					//reroll on same tables
+					//reroll on same table
 					var t = app.rtables.getByTitle(curtable);
-					//$.extend(true, {}, model.toJSON());
-					//var t = _.clone(app.rtables.getByTitle(this.get('key')));
-					//var t = new RandomTable(_.clone(app.rtables.getByTitle(this.get('key')).attributes));
 				} else {
-					var subtables = parts[1].split('.');
-					var vlist = 'appdata';
-					for(i=0;i<subtables.length;i++) {
-						vlist += '.'+subtables[i];
-					}
-					eval('var table = '+vlist+';');
-					var t = new RandomTable(table);
+					var t = app.rtables.getByTitle(parts[1]);
 				}
 				if (typeof parts[2] !== 'undefined' && parts[2].indexOf('*') !== -1) {
 					var x = parts[2].split('*');

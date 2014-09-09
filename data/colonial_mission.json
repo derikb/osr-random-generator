@@ -203,10 +203,10 @@ appdata.tables.mission_person = {
     "default": [
       { "label": "Child" },
       { "label": "Family" },
-      { "label": "{{table:tables.colonial_occupations:laborer}}" },
-      { "label": "{{table:tables.colonial_occupations:artisan}}" },
-      { "label": "{{table:tables.colonial_occupations:criminal}}" },
-      { "label": "{{table:tables.colonial_occupations:professional}}" },
+      { "label": "{{table:colonial_occupations:laborer}}" },
+      { "label": "{{table:colonial_occupations:artisan}}" },
+      { "label": "{{table:colonial_occupations:criminal}}" },
+      { "label": "{{table:colonial_occupations:professional}}" },
       { "label": "Newspaperman" },
       { "label": "Merchant" },
       { "label": "Politician" },
@@ -249,10 +249,10 @@ appdata.tables.mission_patron = {
   ],
   "tables": {
     "default": [
-      { "label": "{{table:tables.colonial_occupations:laborer}}" },
-      { "label": "{{table:tables.colonial_occupations:artisan}}" },
-      { "label": "{{table:tables.colonial_occupations:criminal}}" },
-      { "label": "{{table:tables.colonial_occupations:professional}}" },
+      { "label": "{{table:colonial_occupations:laborer}}" },
+      { "label": "{{table:colonial_occupations:artisan}}" },
+      { "label": "{{table:colonial_occupations:criminal}}" },
+      { "label": "{{table:colonial_occupations:professional}}" },
       { "label": "Newspaperman" },
       { "label": "Merchant" },
       { "label": "Politician" },
@@ -292,7 +292,7 @@ appdata.tables.mission_antagonist = {
       { "label": "Settlement" },
       { "label": "NPC (already met)" },
       { "label": "Friendly Acquaintance of a PC (Friend/Family/Business/Patron)" },
-      { "label": "{{table:tables.colonial_occupations}}" }
+      { "label": "{{table:colonial_occupations}}" }
     ]
   }
 };

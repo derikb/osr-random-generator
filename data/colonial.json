@@ -345,7 +345,7 @@ appdata.tables.colonial_factions = {
     
     ],
     "faction_company": [
-    	{ "label": "{{table:tables.colonial_companies:name}}" }
+    	{ "label": "{{table:colonial_companies:name}}" }
     ],
     "faction_individual": [
     	{ "label": "Noble Family" },
@@ -403,8 +403,8 @@ appdata.tables.colonial_encounters_road = {
       { "label": "Eating/Drinking/Playing" }
     ],
     "men": [
-      { "label": "Group from: {{table:tables.colonial_factions}}", "subtable": "actions_men" },
-      { "label": "Individual from {{table:tables.colonial_factions}}", "subtable": "actions_men" },
+      { "label": "Group from: {{table:colonial_factions}}", "subtable": "actions_men" },
+      { "label": "Individual from {{table:colonial_factions}}", "subtable": "actions_men" },
       { "label": "Peddler and cart", "subtable": "actions_men" },
       { "label": "A group of soldiers on patrol", "subtable": "actions_men" },
       { "label": "A wagon/carriage transporting people", "subtable": "actions_men" },
@@ -712,14 +712,14 @@ appdata.tables.colonial_encounters_rivers = {
       { "label": "Native canoes" },
       { "label": "Dwarven raiders" },
       { "label": "Bathers" },
-      { "label": "A camp on the shore for {{table:tables.colonial_factions}}" }
+      { "label": "A camp on the shore for {{table:colonial_factions}}" }
     ],
     "animals": [
       { "label": "Fish", "subtable": "actions_animal" },
       { "label": "Turtle", "subtable": "actions_animal" },
       { "label": "Snake", "subtable": "actions_animal" },
       { "label": "Frog", "subtable": "actions_animal" },
-      { "label": "{{table:tables.colonial_encounters_forest:animals}} drinking" }
+      { "label": "{{table:colonial_encounters_forest:animals}} drinking" }
     ],
 	"monsters": {
 		"???": { "subtable": "actions_animal" },
@@ -906,15 +906,15 @@ appdata.tables.colonial_encounters_town = {
   },
   "tables": {
     "default": [
-      { "label": "{{table:tables.colonial_occupations:laborer}}",
+      { "label": "{{table:colonial_occupations:laborer}}",
         "subtable": "actions_men" },
-      { "label": "{{table:tables.colonial_occupations:artisan}}",
+      { "label": "{{table:colonial_occupations:artisan}}",
         "subtable": "actions_men" },
-      { "label": "{{table:tables.colonial_occupations:criminal}}",
+      { "label": "{{table:colonial_occupations:criminal}}",
         "subtable": "actions_men" },
-      { "label": "{{table:tables.colonial_occupations:professional}}",
+      { "label": "{{table:colonial_occupations:professional}}",
         "subtable": "actions_men" },
-      { "label": "Member(s) of {{table:tables.colonial_factions}}",
+      { "label": "Member(s) of {{table:colonial_factions}}",
         "subtable": "actions_men" },
       { "label": "Farmer",
         "subtable": "actions_men" },
@@ -975,7 +975,7 @@ appdata.tables.colonial_settlement_locations = {
       { "label": "Tavern" },
       { "label": "General Store" },
       { "label": "Commons" },
-      { "label": "Artisan Shop: {{table:tables.colonial_occupations:artisan}}" },
+      { "label": "Artisan Shop: {{table:colonial_occupations:artisan}}" },
       { "label": "Merchant" },
       { "label": "Meeting House (for club/society)" },
       { "label": "Barracks" },
@@ -1048,7 +1048,7 @@ appdata.tables.colonial_settlement_riled = {
   "tables": {
     "default": [
       { "label": "New tax on alcohol sales." },
-      { "label": "Excise tax on {{table:tables.mission_thing:default}}" },
+      { "label": "Excise tax on {{table:mission_thing:default}}" },
       { "label": "Popular adventurer to be hanged on charges of treason." },
       { "label": "Additional troops have been billeted in local homes." },
       { "label": "New curfew instituted." },
@@ -1056,7 +1056,7 @@ appdata.tables.colonial_settlement_riled = {
       { "label": "Religious crackdown on minor sects." },
       { "label": "Popular preacher jailed for vagrancy/impiety." },
       { "label": "Attack by natives on nearby settlement" },
-      { "label": "Shortage of {{table:tables.mission_thing:default}}" },
+      { "label": "Shortage of {{table:mission_thing:default}}" },
       { "label": "Epidemic of sickness" },
       { "label": "Political scandal" }
     ]
