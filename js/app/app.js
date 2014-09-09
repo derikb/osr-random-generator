@@ -407,6 +407,12 @@ var AppSettingsView = Backbone.View.extend(
 			}
 		form += '</select><div class="help-block"></div></div></div>';
 		
+		form += '<div class="row"><div class="form-group col-sm-12"><label for="goals_type" class="control-label">Goals List</label><select class="form-control" id="goals_type" name="goals_type">';
+    		_.each(app.rtables.getByTags('goals'), function(v){
+    			var sel = (v.get('key') == this.model.get('goals_type')) ? 'selected=selected' : '';
+	    		form += '<option value="'+v.get('key')+'" '+sel+'>'+v.get('title')+'</option>';
+    		}, this);
+		form += '</select><div class="help-block">Tag a table with "goals" to have it appear here.</div></div></div>';
 				
 		form += '</fieldset>';
 		

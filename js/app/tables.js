@@ -223,7 +223,7 @@ var RandomTable = Backbone.Model.extend(
 		}
 		var r = this.get('result');
 		if (r == '') { return ''; }
-		console.log(r);
+		//console.log(r);
 		if (_.isString(r)) { return r; }
 		if (simple) { return r[0]['result']; }
 		var o = '';

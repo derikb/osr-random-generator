@@ -348,7 +348,7 @@ var Character = Backbone.Model.extend(
 	 * Select/Set goals traits
 	 */
 	selectGoals: function() {
-		var g = app.rtables.getByTitle('character_goals');
+		var g = app.rtables.getByTitle(app.AppSettings.get('goals_type'));
 		g.generateResult();
 		return  g.niceString();
 	},
