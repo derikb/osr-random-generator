@@ -438,7 +438,7 @@ appdata.tables.hex_dressing = {
 	"author": "Various",
 	"source": "Compiled from: <a href=\"http://greyhawkgrognard.blogspot.com/2011/03/wilderness-dressing.html\">Joseph Bloch</a>; <a href=\"http://www.roleplayingtips.com/readissue.php?number=301#T1\">Chris Buono and the GMMastery Yahoo group</a>; <a href=\"http://poleandrope.blogspot.com/2010/02/hex-dressing.html\">Michael Curtis</a>",
 	"description": "Small details to add to a wilderness hex.",
-	"tags": ["wilderness", "hex_dressing"],
+	"tags": ["wilderness", "hexdressing"],
 	"table": [
 		"Stone building foundation, 20'x30'",
 		"Stone wall, 3-4' high, 7' long",

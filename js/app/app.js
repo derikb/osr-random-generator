@@ -206,7 +206,6 @@ var AppSettings = Backbone.Model.extend(
 			wilderness: {
 				hexdressing_count: 3,
 				encounter_count: 5,
-				
 				hexdressing_default: 'hex_dressing'
 			},
 			
@@ -240,6 +239,31 @@ var AppSettings = Backbone.Model.extend(
 		if (changed.version) {
 			//console.log(changed)
 		}
+		
+	},
+	
+	/**
+	 * Export the saved settings
+	 * @param {String} [which] placeholder
+	 * @param {Boolean} [compress=false] if true JSON will not be indented with tabs/lines
+	 * @returns {Array} Array of  objects ? 
+	 */
+	exportOutput: function(which, compress) {
+		if (typeof which == 'undefined') {
+			which = '';
+		}
+		if (typeof compress == 'undefined') {
+			compress = false;
+		}
+		
+		var att = _.clone(this.attributes);
+		// _.each(att, function(v,k,l){
+// 			if (!editmode && _.isEmpty(v)) {
+// 				delete l[k];
+// 			}
+// 		}, this);
+		delete att.id;
+		return att;
 		
 	}
 	
@@ -291,11 +315,14 @@ var AppSettingsView = Backbone.View.extend(
 			}
 		}, this);
 		
+		//convert wilderness fields to object
 		formdata.wilderness = this.model.get('wilderness');
 		formdata.wilderness.encounter_count = formdata.wilderness_encounter_count;
 		delete(formdata.wilderness_encounter_count);
 		formdata.wilderness.hexdressing_count = formdata.wilderness_hexdressing_count;
 		delete(formdata.wilderness_hexdressing_count);
+		formdata.wilderness.hexdressing_default = formdata.wilderness_hexdressing_default;
+		delete(formdata.wilderness_hexdressing_default);
 		
 		this.model.save(formdata);
 		
@@ -404,6 +431,15 @@ var AppSettingsView = Backbone.View.extend(
 			form += '<div class="form-group col-sm-6"><label for=wilderness_hexdressing_count class="control-label">Hexdressing to Generate</label><input type="number" class="form-control" id="wilderness_hexdressing_count" name="wilderness_hexdressing_count" value="'+this.model.get('wilderness').hexdressing_count+'" /></div>';
 			
 			form += '</div>'; //.row
+			
+			var hexdressing_default = this.model.get('wilderness').hexdressing_default; 
+			form += '<div class="form-group"><label for="wilderness_hexdressing_default" class="control-label">Default Hexdressing Table</label><select class="form-control" id="wilderness_hexdressing_default" name="wilderness_hexdressing_default">';
+				_.each(app.rtables.getByTags('hexdressing'), function(t){
+					var sel = (t.get('key') == hexdressing_default) ? 'selected=selected' : '';
+					form += '<option value='+t.get('key')+' '+sel+'>'+t.get('title')+'</option>';
+				}, this);			
+			form += '</select><div class="help-block">If a hex_dressing table is not defined for the terrain encounter table then this table will be used instead.</div></div>';
+			
 			
 			var encounter_tables = this.model.get('encounter_tables');
 			

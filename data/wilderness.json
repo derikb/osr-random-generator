@@ -293,7 +293,7 @@ appdata.encounters.sea = {
 
 appdata.tables.hexdressing_sea = {
 	"title": "Hex Dressing: Sea",
-	
+	"tags": ["hexdressing"],
 	"tables": {
 		"general": [
 			"Large group of crabs swarming the beach",

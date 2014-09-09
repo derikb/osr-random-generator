@@ -38,6 +38,7 @@ var ExportForm = Backbone.View.extend(
 		'dungeons': { label: 'Dungeons' },
 		'wilderness': { label: 'Wilderness' },
 		'missions': { label: 'Missions' },
+		'settings': { label: 'Settings' },
 		'all': { label: 'All ' }	
 	},
 	
@@ -98,7 +99,10 @@ var ExportForm = Backbone.View.extend(
 			exportdata.wilderness = app.wildlist.exportOutput('');
 		} else if (type == 'missions') {
 			exportdata.missions = app.missionlist.exportOutput('');
+		} else if (type == 'settings') {
+			exportdata.settings = app.AppSettings.exportOutput('');
 		} else if (type == 'all') {
+			exportdata.settings = app.AppSettings.exportOutput('');
 			exportdata.tables = app.rtables.exportOutput('user');
 			exportdata.npcs = app.charlist.exportOutput('');
 			exportdata.dungeons = app.dungeonlist.exportOutput('');
@@ -137,7 +141,8 @@ var Importer = Backbone.Model.extend(
 		'npcs': { label: 'NPCs' },
 		'dungeons': { label: 'Dungeons' },
 		'wilderness': { label: 'Wilderness' },
-		//'missions': { label: 'Missions' },
+		'missions': { label: 'Missions' },
+		'settings': { label: 'Settings' },
 		'all': { label: 'All ' }	
 	},
 	
@@ -147,6 +152,7 @@ var Importer = Backbone.Model.extend(
 			npcs: [],
 			dungeons: [],
 			wilderness: [],
+			missions: [],
 			settings: [], /** @todo setting export/import? */
 		}
 	},
@@ -196,8 +202,8 @@ var Importer = Backbone.Model.extend(
 			imported.rtables = 0;
 			_.each(this.importdata.rtables, function(v,k,l){
 				if (_.isEmpty(v)) { return; }
+				if (v.id) { v.id = ''; }
 				t = new RandomTable(v);
-				t.set('id', ''); //just in case an id stuck around
 				if (t.save()) {
 					app.rtables.import(t);
 					imported.rtables++;
@@ -210,8 +216,8 @@ var Importer = Backbone.Model.extend(
 			//console.log(this.importdata.npcs);
 			_.each(this.importdata.npcs, function(v,k,l){
 				if (_.isEmpty(v)) { return; }
+				if (v.id) { v.id = ''; }
 				t = new Character(v);
-				t.set('id', ''); //just in case an id stuck around
 				if (t.save()) {
 					app.charlist.add(t);
 					imported.npcs++;
@@ -225,8 +231,8 @@ var Importer = Backbone.Model.extend(
 			//console.log(this.importdata.dungeons);
 			_.each(this.importdata.dungeons, function(v,k,l){
 				if (_.isEmpty(v)) { return; }
+				if (v.id) { v.id = ''; }
 				t = new Dungeon(v);
-				t.set('id', ''); //just in case an id stuck around
 				if (t.save()) {
 					app.dungeonlist.add(t);
 					imported.dungeons++;
@@ -240,8 +246,8 @@ var Importer = Backbone.Model.extend(
 			//console.log(this.importdata.wilderness);
 			_.each(this.importdata.wilderness, function(v,k,l){
 				if (_.isEmpty(v)) { return; }
+				if (v.id) { v.id = ''; }
 				t = new Wilderness(v);
-				t.set('id', ''); //just in case an id stuck around
 				if (t.save()) {
 					app.wildlist.add(t);
 					imported.wilderness++;
@@ -254,19 +260,25 @@ var Importer = Backbone.Model.extend(
 			imported.missions = 0;
 			//console.log(this.importdata.missions);
 			_.each(this.importdata.missions, function(v,k,l){
-				if (_.isEmpty(v)) { return; }
+				if (_.isEmpty(v)) { console.log('empty?'); return; }
+				if (v.id) { v.id = ''; }
 				t = new Mission(v);
-				t.set('id', ''); //just in case an id stuck around
-				t.save({ error: function(m,r,o){ console.log(m); console.log(r); }, success: function(m,r,o){ console.log(m); console.log(r); app.missionlist.add(m); imported.missions++; } });
-				
-				/*
-if (t.save()) {		
-					console.log(t);
+				if (t.save()) {		
 					app.missionlist.add(t);
 					imported.missions++;
+				} else {
+					console.log('import save failed');
 				}
-*/
+
 			}, this);
+		}
+		
+		if (this.importdata.settings) {
+			console.log(this.importdata.settings);
+			
+			app.AppSettings.save(this.importdata.settings);
+			app.AppSettingsView.render();
+			imported.settings = '';
 			
 		}
 		
@@ -376,7 +388,7 @@ var ImportForm = Backbone.View.extend(
 			temp_data = JSON.parse(data.importdata);
 		} catch (e) {
 			//console.error("Parsing error:", e);
-			$('#import_error').html('<p>Invalid JSON: '+e+'</p><p>Usually that means you either:</p><ul><li>Didn\'t add a backslah before a double-quote.</li><li>Didn\'t put a comma after a quoted value.</li><li>Didn\'t properly close a double-quote, bracket, or brace.</li></ul><p>If the error is an "Unexpected token" then the letter after that message is the point in the data where something went wrong. Sorry, at this point that\'s the best I can tell you. You can always paste the data into <a href="http://jsonlint.com/">JSONLint</a> to get specifics.</p>').removeClass('hidden');
+			$('#import_error').html('<p>Invalid JSON: '+e+'</p><p>Usually that means you either:</p><ul><li>Didn\'t add a backslah before a double-quote.</li><li>Didn\'t put a comma after a quoted value.</li><li>Didn\'t properly close a double-quote, bracket, or brace.</li><li>Have a comma after the list entry in a list.</li></ul><p>If the error is an "Unexpected token" then the letter after that message is the point in the data where something went wrong. Sorry, at this point that\'s the best I can tell you. You can always paste the data into <a href="http://jsonlint.com/">JSONLint</a> to get specifics.</p>').removeClass('hidden');
 			return;
 		}
 
@@ -461,7 +473,6 @@ var ImportPreview = Backbone.View.extend(
 			
 		}, this);
 		$container.append($table);
-		//$(this.el).find('.rtables').prepend('<button id="rtables-button" class="btn btn-primary pull-right">Import All</button>');
 		
 	}
 
