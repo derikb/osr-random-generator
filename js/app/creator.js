@@ -513,7 +513,7 @@ var CreatorForm = Backbone.View.extend(
 		if (typeof blob !== 'undefined') {
 			_.each(blob, function(x,k,l){
 				var tablename = '';
-				if (_.isArray(blobheading)) {
+				if (typeof blobheading !== 'undefined' && _.isArray(blobheading)) {
 					if (blobheading[k] && blobheading[k][0] !== '') {
 						tablename = blobheading[k][0];
 					}
