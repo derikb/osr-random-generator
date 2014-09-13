@@ -293,7 +293,7 @@ appdata.encounters.sea = {
 
 appdata.tables.hexdressing_sea = {
 	"title": "Hex Dressing: Sea",
-	
+	"tags": ["hexdressing"],
 	"tables": {
 		"general": [
 			"Large group of crabs swarming the beach",
@@ -301,7 +301,13 @@ appdata.tables.hexdressing_sea = {
 			"A school of dolphins surface off the bow",
 			"A sail in the distance",
 			"The smell of rotting fish",
-			"",
+			"Thunderclouds in the distance",
+			"A large piece of driftwood floats by",
+			"A whale surfaces off the starboard bow, shooting up a fine spray",
+			"Choppy seas",
+			"A gull perches on the mast",
+			"A tiny island, no more than a large rock surrounded by water",
+			"A tiny island of rocks and scrub"
 		]
 	}	
 };

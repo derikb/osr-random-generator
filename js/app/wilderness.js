@@ -24,7 +24,6 @@ var Wilderness = Backbone.Model.extend({
 	
 	/**
 	 * Generate the starting results
-	 * @todo make it customizable what tables get used
 	 */
 	create: function() {
 		
@@ -51,14 +50,12 @@ var Wilderness = Backbone.Model.extend({
 	},
 	
 	/**
-	 * Get hex dressing result
-	 * @todo have this be based on terrain (with a default fallback)
+	 * Get hex dressing result either from a table called hexdressing in the current terrain encounter table or fallback to the default hexdressing table
 	 * @param {Number} ct how many results to return
 	 * @returns {Array} of strings
 	 */
 	getHexDressing: function(ct) {
 		var o = [];
-		//var dressing_t = app.rtables.getByTitle(app.AppSettings.get('wilderness').hexdressing_default);
 		var tables = app.AppSettings.get('encounter_tables');
 		var encounter_t = app.rtables.getByTitle(tables[this.get('terrain')]);
 		if (encounter_t.get('tables').hexdressing) {
@@ -67,21 +64,17 @@ var Wilderness = Backbone.Model.extend({
 				o.push(encounter_t.niceString(true));
 			}
 		} else {
-			var dressing_t = app.rtables.getByTitle('hex_dressing');
+			var dressing_t = app.rtables.getByTitle(app.AppSettings.get('wilderness').hexdressing_default);
 			for(var i=1;i<=ct;i++) {
 				dressing_t.generateResult();
 				o.push(dressing_t.niceString());
 			}
-		}
-		
-		//var dressing_t = app.rtables.getByTitle('hex_dressing');
-		
+		}		
 		return o;
 	},
 	
 	/**
 	 * Get encounter results
-	 * @todo have the tables be customizable
 	 * @param {Number} ct how many results to return
 	 * @returns {Array} of strings
 	 */
@@ -340,13 +333,15 @@ var WildernessEditView = Backbone.View.extend({
 	},
 	
 	loadRandom: function(e) {
+		e.preventDefault();
 		//console.log(e);
 		var inputtarget = $(e.currentTarget).attr('data-targetfield');
 		var list = $(e.target).attr('data-list');
 		
 		if (this.field == 'hexdressing') {
-			var newval = this.model.getHexDressing(1);
-			$('#'+inputtarget).val(newval[0].br2nl());
+			var t = app.rtables.getByTitle(list);
+			t.generateResult();
+			$('#'+inputtarget).val(t.niceString(true).br2nl());
 		} else if (this.field == 'encounters') {
 			var newval = this.model.getEncounters(1);
 			$('#'+inputtarget).val(newval[0].br2nl());
@@ -366,7 +361,6 @@ var WildernessEditView = Backbone.View.extend({
 		form += '<div class="modal-body">';
 		switch (field) {
 						
-			case 'hexdressing':
 			case 'encounters':
 				
 				var cur = this.model.get(field);
@@ -380,6 +374,27 @@ var WildernessEditView = Backbone.View.extend({
 					
 				}
 			
+				break;
+			
+			case 'hexdressing':
+				
+				var cur = this.model.get(field);
+				
+				for(var i=0; i<cur.length; i++) {
+					var num = i+1;
+					var textvalue = cur[i].br2nl();
+					form += '<div class="form-group"><label class="control-label" for="edit'+field+'_'+i+'">'+field.capitalize()+' '+num+'</label><textarea class="form-control" rows=3 id="edit'+field+'_'+i+'" name="'+field+'">'+textvalue+'</textarea>';
+					
+					form += '<div class="clearfix"><div class="btn-group pull-right"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Randomly Replace from... <span class="caret"></span></button><ul class="dropdown-menu pull-right">';
+						var options = app.rtables.getByTags(field);
+						_.each(options, function(v,k){
+							form += '<li><a class="randomize" href="#" data-targetfield="edit'+field+'_'+i+'" data-list="'+v.get('key')+'">'+v.get('title')+'</a></li>';
+						});			
+					form += '</ul></div></div>';
+					
+					form += '</div>';
+				}
+				
 				break;
 			
 			case 'terrain':

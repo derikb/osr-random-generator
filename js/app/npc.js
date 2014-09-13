@@ -348,7 +348,7 @@ var Character = Backbone.Model.extend(
 	 * Select/Set goals traits
 	 */
 	selectGoals: function() {
-		var g = app.rtables.getByTitle('character_goals');
+		var g = app.rtables.getByTitle(app.AppSettings.get('goals_type'));
 		g.generateResult();
 		return  g.niceString();
 	},
@@ -1078,13 +1078,15 @@ var CharList = Backbone.View.extend(
     		return char.get('chargroup');
     	});
     	k = _.keys(ord).sort(); //sort by group name
+		if (k.length == 0) {
+			k = [''];
+		}
 
     	_.each(k, function(group) {
     		var grouplabel = (group == '') ? '[no group]' : group;
     	 	$(this.el).append('<h2 class="npc-group-header">'+grouplabel+'</h2>');
     	 	var ghtml = group.replace(/[\s\.:'"]/g, '_');
     	 		var $glist = $('<div id="npc-list-'+ghtml+'" class="panel-group"></div>');
-    	 		//var $glist = $('<ul class="list-unstyled"></ul>');
 		 		_.each(ord[group], function(char){
         			$glist.append(new CharacterBlock({model:char}).render().el);
         		}, this);
