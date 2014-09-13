@@ -35,9 +35,9 @@ var AppRouter = Backbone.Router.extend(
 
 		$('#mission-form').html(new MissionForm({ model: this.AppSettings }).render().el);
 		
-		$('#wilderness-form').append(new WildernessForm({ model: this.AppSettings }).render().el);
+		$('#wilderness-form').html(new WildernessForm({ model: this.AppSettings }).render().el);
 		
-		$('#dungeon-form').append(new DungeonForm({ model: this.AppSettings }).render().el);
+		$('#dungeon-form').html(new DungeonForm({ model: this.AppSettings }).render().el);
 		
 		this.creator = new Creator();
 		this.exporter = new Exporter();
@@ -595,6 +595,7 @@ var AppRandomizer = function() {
 					for(i=0;i<subtables.length;i++) {
 						vlist += '.'+subtables[i];
 					}
+					//@todo rewrite this to not use eval... we should be able to set all tables up so rtables.getByTitle() works.
 					eval('var table = '+vlist+';');
 					var t = new RandomTable(table);
 				}
