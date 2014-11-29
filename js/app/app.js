@@ -216,6 +216,13 @@ var AppSettings = Backbone.Model.extend(
 				settlement: '',
 				rivers: '',
 				town: ''
+			},
+			
+			mission_tables: {
+				complication: '',
+				antagonist: '',
+				patron: '',
+				reward: ''
 			}
 		
 			
@@ -299,7 +306,6 @@ var AppSettingsView = Backbone.View.extend(
 	
 	/**
 	 * Save the settings
-	 * @todo validate this a bit as bad data could break the whole app
 	 */
 	editSettings: function(e) {
 		e.preventDefault();
@@ -312,6 +318,16 @@ var AppSettingsView = Backbone.View.extend(
 			if (formdata['encounters_'+k]) {
 				formdata.encounter_tables[k] = formdata['encounters_'+k];
 				delete(formdata['encounters_'+k]);
+			}
+		}, this);
+		
+		//convert mission settings into an object
+		formdata.mission_tables = {};
+		var mission_tables = this.model.get('mission_tables');
+		_.each(mission_tables, function(v,k) {
+			if (formdata['mission_'+k]) {
+				formdata.mission_tables[k] = formdata['mission_'+k];
+				delete(formdata['mission_'+k]);
 			}
 		}, this);
 		
@@ -430,6 +446,25 @@ var AppSettingsView = Backbone.View.extend(
 		form += '</div>';
 		
 		form += '<div class="col-sm-6">';
+			
+			form += '<fieldset><legend>Mission Settings</legend>';
+						
+			var mission_tables = this.model.get('mission_tables');
+			
+			_.each(mission_tables, function(v,k){
+				
+				form += '<div class="form-group"><label for=mission_'+k+' class="control-label">Mission '+k.capitalize()+'</label><select class="form-control" id="mission_'+k+'" name="mission_'+k+'">';			
+					_.each(app.rtables.getByTags('mission_'+k), function(t){
+						var sel = (t.get('key') == v) ? 'selected=selected' : '';
+						form += '<option value='+t.get('key')+' '+sel+'>'+t.get('title')+'</option>';
+					}, this);		
+				form += '</select><div class="help-block">Tag a table with "mission_'+k+'" and reload to see it in this list.</div></div>';
+				
+			}, this);
+			
+			form += '</fieldset>';
+		
+		
 			form += '<fieldset><legend>Wilderness Settings</legend>';
 			
 			form += '<div class="row"><div class="form-group col-sm-6"><label for=wilderness_encounter_count class="control-label">Encounters to Generate</label><input type="number" class="form-control" id="wilderness_encounter_count" name="wilderness_encounter_count" value="'+this.model.get('wilderness').encounter_count+'" /></div>';
@@ -444,7 +479,7 @@ var AppSettingsView = Backbone.View.extend(
 					var sel = (t.get('key') == hexdressing_default) ? 'selected=selected' : '';
 					form += '<option value='+t.get('key')+' '+sel+'>'+t.get('title')+'</option>';
 				}, this);			
-			form += '</select><div class="help-block">If a hex_dressing table is not defined for the terrain encounter table then this table will be used instead. Tag a table with "hexdressing" to have it appear here.</div></div>';
+			form += '</select><div class="help-block">If a subtable called "hexdressing" is not defined for the terrain encounter table then this table will be used instead. Tag a table with "hexdressing" to have it appear here.</div></div>';
 			
 			
 			var encounter_tables = this.model.get('encounter_tables');
