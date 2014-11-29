@@ -589,33 +589,33 @@ if (this.model.isNew()) {
     	
     	if (character_display == 'soft') {
 	    	
-	    	temp += '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %></dd><% } %><dt data-field="race">Race</dt><dd data-field="race"><% var r = race.capitalize() %><%= r %></span></dd><dt data-field="chargroup">Group</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
+	    	temp += '<div class="row"><div class="col-xs-6"><dl class="clearfix"><dt>Name:</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation:</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class:</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %></dd><% } %><dt data-field="race">Race:</dt><dd data-field="race"><% var r = race.capitalize() %><%= r %></span></dd><dt data-field="chargroup">Group:</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
 	    	
 	    	temp += '</div><div class="col-xs-6">';
     	
-			temp += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goals">Goals</dt><dd><span data-field="goals"><%= goals %></span></dd></dl>';
+			temp += '<dl class="character-traits clearfix"><dt data-field="personality">Personality:</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance:</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goals">Goals:</dt><dd><span data-field="goals"><%= goals %></span></dd></dl>';
 			
     	} else {
     	
-    		temp += '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %>, <span data-field="level">Lvl <%= level %></span></dd><% } %><dt data-field="race">Race</dt><dd data-field="race"><% var r = race.capitalize() %><%= r %></span></dd></dl>';
+    		temp += '<div class="row"><div class="col-xs-6"><dl class="clearfix"><dt>Name:</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation:</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class:</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %>, <span data-field="level">Lvl <%= level %></span></dd><% } %><dt data-field="race">Race:</dt><dd data-field="race"><% var r = race.capitalize() %><%= r %></span></dd></dl>';
     	
 	    	if (app.AppSettings.get('ability_display') == 'minimal') {
 		    	
-		    	temp += '<dl class="dl-inline clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); if (v.modifier !== 0) { %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %>&nbsp;(<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span> </dd><% } }); %></dl>';
+		    	temp += '<dl class="dl-inline clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); if (v.modifier !== 0) { %><dt><%= a %>:</dt><dd>&nbsp;<span data-field="ability_scores.<%= v.name %>"><%= v.score %>&nbsp;(<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span>&nbsp; </dd><% } }); %></dl>';
 		    	
 	    	} else {
-	    		temp += '<dl class="dl-inline clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %>&nbsp;(<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span> </dd><% }); %></dl>';
+	    		temp += '<dl class="dl-inline clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); %><dt><%= a %>:</dt><dd>&nbsp;<span data-field="ability_scores.<%= v.name %>"><%= v.score %>&nbsp;(<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span>&nbsp; </dd><% }); %></dl>';
 	    	}
 			
 			//data.attack.melee = data.attack.melee.replace('-', '&#8209;');
 			
-    		temp += '<dl class="dl-inline clearfix"><dt>HP</dt><dd><span data-field="hp"><%= hp %></span> </dd><dt>AC</dt><dd><%= ac %><% if (armor !== "") { %> (<span data-field="armor"><%= armor %></span>)<% } %> </dd><dt>Attack&nbsp;Bonus</dt><% if (attack.melee == attack.missile) { %><dd><span class="nobreak"><%= attack.melee %></span> </dd><% } else { %><dd><span class="nobreak"><%= attack.melee %></span>&nbsp;Melee </dd><dd><span class="nobreak"><%= attack.missile %></span>&nbsp;Missile </dd><% } %><dt>Reaction</dt><dd><%= reaction_roll %> </dd></dl>';
+    		temp += '<dl class="dl-inline clearfix"><dt>HP:</dt><dd>&nbsp;<span data-field="hp"><%= hp %></span>&nbsp; </dd><dt>AC:</dt><dd>&nbsp;<%= ac %><% if (armor !== "") { %> (<span data-field="armor"><%= armor %></span>)<% } %>&nbsp; </dd><dt>Attack&nbsp;Bonus:</dt><% if (attack.melee == attack.missile) { %><dd>&nbsp;<span class="nobreak"><%= attack.melee %></span>&nbsp; </dd><% } else { %><dd>&nbsp;<span class="nobreak"><%= attack.melee %></span>&nbsp;Melee&nbsp; </dd><dd><span class="nobreak"><%= attack.missile %></span>&nbsp;Missile&nbsp; </dd><% } %></dl>';
     	
 			temp += '</div><div class="col-xs-6">';
     	
-    		temp += '<dl class="dl-horizontal clearfix"><dt data-field="chargroup">Group</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
+    		temp += '<dl class="dl-horizontal clearfix"><dt data-field="chargroup">Group:</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
     	
-    		temp += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goals">Goals</dt><dd><span data-field="goals"><%= goals %></span></dd></dl>';
+    		temp += '<dl class="character-traits clearfix"><dt data-field="reaction">Reaction:</dt><dd>&nbsp;<span data-field="reaction"><%= reaction_roll %></span>&nbsp; </dd><dt data-field="personality">Personality:</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance:</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goals">Goals:</dt><dd><span data-field="goals"><%= goals %></span></dd></dl>';
     	
     		temp += '<% if (spellcaster == true) { %><section><h4 data-field="spells">Spells</h4><dl class=""><% _.each(spells, function(v,k) { %><dt data-field="spells"><%= k %></dt><% _.each(v, function(y,x) { %><dd class="spell" data-spell="<%= y %>"><%= y %> <span class="glyphicon glyphicon-info-sign"></span></dd><% }); }); %></dl></section><% } %>'; //spells
 		
