@@ -24,16 +24,15 @@ appdata.name.TYPE = {
 
 
 appdata.name = {
-	"options": [
-		{ option: "flemish", label: "Flemish" },
-		{ option: "dutch", label: "Dutch" },
-		{ option: "cornish", label: "Cornish" },
-		{ option: "japanese", label: "Japanese" },
-		{ option: "turkish", label: "Turkish" },
-		{ option: "native american", label: "Native American" },
-		{ option: "holmesian", label: "Holmesian" },
-		{ option: "none", label: "No Name" }
-	],
+	"options": {
+		"flemish": "Flemish",
+		"dutch": "Dutch",
+		"cornish": "Cornish",
+		"japanese": "Japanese",
+		"turkish": "Turkish",
+		"native american": "Native American",
+		"holmesian": "Holmesian"
+	},
 	//!Holmesian names
 	//from Zenopus Archives http://zenopusarchives.blogspot.com/2013/07/random-names-one-sheet.html
 	"holmesian_syllables":	[

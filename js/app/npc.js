@@ -1170,8 +1170,8 @@ var CharForm = Backbone.View.extend(
     	
     	form += '<div class="row">';
 	    	form += '<div class="form-group col-sm-6"><label for="name_type" class="control-label">Name Type</label><select class="form-control" id="name_type" name="name_type">';
-	    		_.each(appdata.name.options, function(v){
-		    		form += '<option value="'+v.option+'">'+v.label+'</option>';
+	    		_.each(appdata.name.options, function(v,k){
+		    		form += '<option value="'+k+'">'+v+'</option>';
 	    		});
 			form += '</select><div class="help-block"></div></div>';
 			
@@ -1428,11 +1428,27 @@ var Names = Backbone.Model.extend(
 	
 	/**
 	 * Create a name
-	 * @param {String} name_type What name list/process to use
+	 * @param {String} name_type What name list/process to use else random
+	 * @param {String} gender male, female, random, ''
+	 * @param {String} style first=first name only, else full name
 	 * @returns {String} a name
 	 */
-	generateName: function(name_type, gender) {
+	generateName: function(name_type, gender, style) {
 		var name = '';
+		
+		if (typeof name_type == 'undefined' || name_type == '' || name_type == 'random') {
+			//randomize a type...
+			var name_type = app.randomizer.rollRandom(_.keys(appdata.name.options));
+		}
+		if (typeof gender == 'undefined' || gender == 'random') {
+			//randomize a gender...
+			var gender = app.randomizer.rollRandom(['male', 'female']);
+		}
+		if (typeof style == 'undefined' || style !== 'first') {
+			//randomize a gender...
+			var style = '';
+		}
+		
 		switch (name_type) {
 		 	case "holmesian":
 				name = this.holmesname();
@@ -1443,17 +1459,25 @@ var Names = Backbone.Model.extend(
 			case "turkish":
 			default:
 				name = app.randomizer.rollRandom(appdata.name[name_type][gender]).capitalize();
-				if (typeof appdata.name[name_type]['surname'] !== 'undefined') {
+				if (typeof appdata.name[name_type]['surname'] !== 'undefined' && style !== 'first') {
 					name += ' '+app.randomizer.rollRandom(appdata.name[name_type]['surname']).capitalize();
 				}
-				name = app.randomizer.findToken(name);
+				name = app.randomizer.findToken(name).trim();
 				break;
 		}
 		return name;
 	},
-	
+	/**
+	 * Create a sur/last name only
+	 * @param {String} name_type what list/process to use, else random
+	 * @returns {Strung} a name
+	 */
 	generateSurname: function(name_type) {
 		var name = '';
+		if (typeof name_type == 'undefined' || name_type == '' || name_type == 'random') {
+			//randomize a type...
+			var name_type = app.randomizer.rollRandom(_.keys(appdata.name.options));
+		}
 		switch (name_type) {
 		 	case "holmesian":
 				name = this.holmesname();
@@ -1468,7 +1492,7 @@ var Names = Backbone.Model.extend(
 				break;
 		}
 		return name;
-	},
+	}
 	
 		
 	}
@@ -1504,9 +1528,8 @@ var NameForm = Backbone.View.extend(
     	form += '<div class="messages"></div>';
     	form += '<div class="form-group">';
     	form += '<fieldset><legend>Name Types</legend>';
-    		_.each(appdata.name.options, function(v){
-    			if (v.option == 'none') { return; }
-    			form += '<label for="'+v.option+'" class="checkbox-inline"><input type="checkbox" name="nametype" id="'+v.option+'" value="'+v.option+'" checked=checked> '+v.label+'</label>';
+    		_.each(appdata.name.options, function(v,k){
+    			form += '<label for="'+k+'" class="checkbox-inline"><input type="checkbox" name="nametype" id="'+k+'" value="'+k+'" checked=checked> '+v+'</label>';
 			});
     	form += '</fieldset>';
     	form += '</div>';

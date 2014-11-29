@@ -686,12 +686,20 @@ var AppRandomizer = function() {
 				break;
 			case "name":
 				var n = new Names();
+				if (typeof parts[1] == 'undefined' || parts[1]=='' || parts[1]=='random') {
+					parts[1] = '';
+				}
+				if (typeof parts[3] == 'undefined' || parts[3] !== 'first') {
+					parts[3] = '';
+				}
 				if (typeof parts[2] == 'undefined') {
 					string = n.generateSurname(parts[1]);
 				} else if (parts[2] == 'male') {
-					string = n.generateName(parts[1], 'male');
+					string = n.generateName(parts[1], 'male', parts[3]);
 				} else if (parts[2] == 'female') {
-					string = n.generateName(parts[1], 'female');
+					string = n.generateName(parts[1], 'female', parts[3]);
+				} else if (parts[2] == 'random') {
+					string = n.generateName(parts[1], 'random', parts[3]);
 				}
 				break;
 			default:
