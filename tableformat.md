@@ -267,7 +267,7 @@ This table adds information about the table which helps with finding it in the t
 	
 ### Other options
 
-The `sequence` property can be used to set what table or tables should be rolled on by default. This can be a single table name or a list of table names.
+The `sequence` property can be used to set what table or tables should be rolled on by default. This can be a single table name or a list of table names. If you set `sequence` to `rollall` all the tables will be rolled in order.
 
 Results within (sub)tables can have a variety of properties:
 
@@ -285,8 +285,14 @@ You can also use tokens to generate random numbers or results from other tables 
 
 ##### Roll on other tables
 
-`{{table:color}}` in a result will generate a random color. Also available in the general category is "direction", "ordinal", and "season".
+`{{table:color}}` in a result will generate a random color. Also available in a more general category are "direction", "ordinal", and "season".
 
 `{{table:TABLE}}` and `{{table:TABLE:SUBTABLE}}` will generate a result on the names table/subtable (using the table title).
 
+To roll on subtables of the current table use `{{table:this:SUBTABLE_NAME}}`
+
 _Still need to get this working well for user added tables._
+
+##### Generate a Name
+
+`{{name:NAMETYPE:GENDER:STYLE}}` will insert a name into the table. `nametype` is required and should be one of the name lists (flemish, dutch, holmesian) or "random". `gender` is optional and can be male, female, or random. If left blank, only a surname will be generated. `style` is optional and only accepts the value "first", in which case only a first name will be generated.

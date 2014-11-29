@@ -95,6 +95,12 @@ var RandomTable = Backbone.Model.extend(
 		}
 		//we look in the start table for what to roll if the start wasn't explicitly set in the call
 		var sequence = (start == '') ? this.get('sequence') : start;
+		
+		if (sequence == 'rollall') {
+			//roll all the tables in order
+			sequence = _.keys(this.get('tables'));
+		}
+		
 		if (sequence == '') {
 			//if no start attribute
 			//try for "default" table
