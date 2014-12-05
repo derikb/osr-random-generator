@@ -667,3 +667,389 @@ appdata.tables.reaction = {
 		{ "label": "Helpful", "weight": 1 }
 	]
 };
+
+
+
+appdata.tables.clangenerator = {
+  "title": "Noble Clan Generator",
+  "author": "M. Diaz",
+  "source": "Secret Santicore 2013, v.2",
+  "sequence": [ "Name", "Secret", "Source of Power", "Leader", "Relationship", "Stronghold", "Wealth", "Dubious Allies"],
+  "tables": {
+	"Name": [
+		{ "label": "{{name:random}}" },
+	],
+    "Secret": [
+      { "label": "Bound to a demon by pacts most ancient and foul" },
+      { "label": "Caper and cavort in wicked midnight bacchanals" },
+      { "label": "Prophesied to bring about terrible catastrophe" },
+      { "label": "Ruled by a cabal of vampires" },
+      { "label": "Plan to overturn the rightful ruler of the land" },
+      { "label": "Participating in a conspiracy of centennial length and ecumenical proportions" },
+      { "label": "Desire to resurrect their inhuman clan progenitor" },
+      { "label": "Bloodline bears a terrible disease" },
+      { "label": "Dream every night of mighty conflagration and unending flood" },
+      { "label": "Patriarch is actually a woman" }
+    ],
+    "Source of Power": [
+      { "label": "Ties to Church" },
+      { "label": "Sheer privilege" },
+      { "label": "Scholarly talent" },
+      { "label": "Organized crime" },
+      { "label": "Ties to government" },
+      { "label": "Military might" },
+      { "label": "Sorcery" },
+      { "label": "Popular support" },
+      { "label": "Banking" },
+      { "label": "Business" }
+    ],
+    "Leader": [
+      { "label": "Ruled by grotesque appetites and uncanny predilections" },
+      { "label": "Cheerfully inbred moron" },
+      { "label": "Avuncular, seasoned statesman; loves them some prostitutes" },
+      { "label": "Oscillates between mostly kindly pragmatism and frothing psychopathy" },
+      { "label": "Megalomaniacal genius with childlike sensibilities" },
+      { "label": "Child kept on short leash by manipulative handlers" },
+      { "label": "Seized by Byronic melancholy; addicted to opium; writes terrible poetry" },
+      { "label": "A sorcerer of prodigious talent and boundless ambition" },
+      { "label": "Saintly sense of morals with sinister bearing; is squeaky clean despite everyone’s suspicions" },
+      { "label": "Innumerable, public affairs make for endless rumor-mill grist; loathed by spouse" }
+    ],
+    "Relationship": [
+      { "label": "Longtime allies of..." },
+      { "label": "Leader in love with head of..." },
+      { "label": "Ancient rivals of..." },
+      { "label": "Shadow war with..." },
+      { "label": "Secret treaty with..." },
+      { "label": "Wants a political marriage with..." },
+      { "label": "Seeks to utterly destroy..." },
+      { "label": "Attempting hostile takeover of..." },
+      { "label": "Owes a big favor to..." },
+      { "label": "Petty grudge against..." }
+    ],
+    "Stronghold": [
+      { "label": "Gilt palace riddled with chapels" },
+      { "label": "Decrepit manor surrounded by toiling peasants" },
+      { "label": "Frigid northern castle" },
+      { "label": "Contemporary urban estate" },
+      { "label": "Dour converted abbey" },
+      { "label": "Imposing mountain fortress" },
+      { "label": "Gothic monstrosity out in the forest" },
+      { "label": "Abominably gauche rococo estate" },
+      { "label": "Classical lakeside villa" },
+      { "label": "Sepulcral subterranean complex" }
+    ],
+    "Wealth": [
+      { "label": "Valuable but illiquid holdings" },
+      { "label": "Wealthy, but not for long" },
+      { "label": "Massive reserves, little income" },
+      { "label": "Steady cash flow" },
+      { "label": "Middling wealth, lots of embezzlement" },
+      { "label": "Razor thin margins" },
+      { "label": "Impoverished" },
+      { "label": "Nobody’s sure, exactly" },
+      { "label": "Incalculably wealthy" },
+      { "label": "Make a lot, spend a lot" }
+    ],
+    "Dubious Allies": [
+      { "label": "Elite mercenaries wearing crow’s head helmets" },
+      { "label": "The Beldame, a virtuoso assassin with a thing for needles" },
+      { "label": "The Magus Bashool, a necromancer of questionable loyalties and troubling ethics" },
+      { "label": "Pack of half-starved, semi-trained, and uncannily sapient wolves" },
+      { "label": "Red Madama, an insane butterfly demon" },
+      { "label": "King of Knots, gallows-spirit and malign ghost of a long dead monarch" },
+      { "label": "Rompa, shark-toothed sea giant who has power over ice" },
+      { "label": "Trugulore and Choss, Attorneys-At-Brawl" },
+      { "label": "No-Face Man, can crawl through mirrors and dreams" },
+      { "label": "Unnamed rogue angel; once held power over mercy, now seriously reconsidering" }
+    ]
+  }
+};
+
+
+appdata.tables.banditgenerator = {
+  "title": "Bandits!",
+  "author": "Paul Gorman",
+  "source": "Secret Santicore 2013, v.3",
+  "tags": [
+    "encounters", "factions"
+  ],
+  "sequence": [
+	"Name",
+	"Main Base",
+	"Leader",
+	"Current Entertainment of Bandits",
+	"Adventure hook"
+  ],
+  "tables": {
+    "Name": [
+      { "label": "{{table:this:name_a}} {{table:this:name_b}} {{table:this:name_c}}" }
+    ],
+    "name_a": [
+      { "label": "The", "weight": 2 },
+      { "label": "{{name:random}}'s" },
+      { "label": "{{name:random:female:first}}'s" },
+      { "label": "{{name:random:male:first}}'s" }
+    ],
+    "name_b": [
+      { "label": "Merry" },
+      { "label": "Bloody" },
+      { "label": "Vile" },
+      { "label": "{{table:this:place_a}}{{table:this:place_b}}" },
+      { "label": "Silent" },
+      { "label": "Lawless" },
+      { "label": "Righteous" },
+      { "label": "Mystery" }
+    ],
+    "name_c": [
+      { "label": "Men" },
+      { "label": "Boys" },
+      { "label": "Scoundrels" },
+      { "label": "Rebels" },
+      { "label": "Curs" },
+      { "label": "Raiders" },
+      { "label": "Outlaws" },
+      { "label": "Bandits" },
+      { "label": "Saints" },
+      { "label": "Lurkers" },
+      { "label": "Gang" },
+      { "label": "Devils" }
+    ],
+    "place_a": [
+      { "label": "Thorn" },
+      { "label": "Hinder" },
+      { "label": "Stains" },
+      { "label": "Murk" },
+      { "label": "Witch" },
+      { "label": "Barrow" },
+      { "label": "Nettle" },
+      { "label": "Fen" },
+      { "label": "Burn" },
+      { "label": "Scars" },
+      { "label": "Boos" },
+      { "label": "Chop" }
+    ],
+    "place_b": [
+      { "label": "hurst" },
+      { "label": "dale" },
+      { "label": "wood" },
+      { "label": "castle" },
+      { "label": "field" },
+      { "label": "more" },
+      { "label": "by" },
+      { "label": "fax" },
+      { "label": "thorpe" },
+      { "label": "wick" },
+      { "label": "well" },
+      { "label": "knole" }
+    ],
+    "Main Base": [
+      { "label": "Tent camp", "weight": 3 },
+      { "label": "Mountain caves", "weight": 3 },
+      { "label": "Hamlet (either a mock/temporary hamlet constructed new by the bandits, or an existing hamlet taken over by the bandits—with or without the consent of the original residents)" },
+      { "label": "Castle or keep" },
+      { "label": "Tree houses" },
+      { "label": "Neolithic stonework complex" },
+      { "label": "“Haunted” house" },
+      { "label": "Extraterrestrial facility (crashed spaceship, undersea or underground base, via teleport to space station or moon base, etc.)" }
+    ],
+    "Leader": [
+      { "label": "Commoner, {{table:this:leader_class}}, banned for {{table:this:ban_commoner}}" },
+      { "label": "Nobility, {{table:this:leader_class}}, banned for {{table:this:ban_nobility}}" }
+    ],
+    "leader_class": [
+      { "label": "Fighting-Man" },
+      { "label": "Magic-User" },
+      { "label": "Cleric" }
+    ],
+    "ban_nobility": [
+      { "label": "Refused military support for ruler" },
+      { "label": "Murdered his high-ranking uncle" },
+      { "label": "Rebellion against ruler" },
+      { "label": "Seized lands from ruler" },
+      { "label": "Murdered ruler’s uncle or nephew" },
+      { "label": "Sheltered or aided flight of a bandit or rebel" },
+      { "label": "Robbery" },
+      { "label": "Kidnapping" },
+      { "label": "Heretical beliefs" },
+      { "label": "Supported wrong side in local war" }
+    ],
+    "ban_commoner": [
+      { "label": "Kidnapping" },
+      { "label": "Robbery" },
+      { "label": "Heretical beliefs" },
+      { "label": "Hedge wizardry" },
+      { "label": "Cattle rustling" },
+      { "label": "Smuggling" },
+      { "label": "Blasphemy" },
+      { "label": "Slander" },
+      { "label": "Disobedience" },
+      { "label": "Impersonating a noble" }
+    ],
+    "Current Entertainment of Bandits": [
+      { "label": "“Trial” of tax collector" },
+      { "label": "Redistribution of wealth (coppers) to local villagers" },
+      { "label": "Archery contest" },
+      { "label": "Captures knights forced to joust mounted on pigs" },
+      { "label": "Preparing effigy of local ruler for incineration at public event" },
+      { "label": "Bandit follies. Elaborate costumes, bawdy musical numbers, and questionable “ladies”. Local personalities portrayed." },
+      { "label": "Bandit propagandist debates captive noble before jeering audience." },
+      { "label": "Sampling drugs from captured caravan" }
+    ],
+    "Adventure hook": [
+      { "label": "Investigate rumors of travelers disappearing" },
+      { "label": "Earn reward for capture of bandit leader" },
+      { "label": "Deliver treaty proposal from much harassed local ruler" },
+      { "label": "Pay bribe for safe passage of rich merchant caravan" },
+      { "label": "Rescue captive noble" },
+      { "label": "Secret map to ancient treasure leads to territory controlled by bandits" },
+      { "label": "Seek refuge from local lord the PC’s crossed" },
+      { "label": "Magical nuke fell into the bandits’ hands. They plan to use it against establishment target, or they may be eager to get rid of something they know is too hot for them to handle." },
+      { "label": "Escort disguised recently banned noble (and entourage) to join up with old ally, the bandit leader. Soldiers and bounty hunters in pursuit." },
+      { "label": "Bandits mysteriously unaffected by disease ravaging local population" },
+      { "label": "Visiting big game hunter seeks local knowledge about fearsome beast (which the bandits are eager to be rid of)" },
+      { "label": "Magic-user frantic to recover magical component of value only to him on caravan waylaid by bandits" }
+    ]
+  }
+};
+
+
+
+appdata.tables.culturegenerator = {
+  "title": "Weird Customs, Clothes, Food, Etc",
+  "author": "Derik Badman",
+  "description": "Random tables to help define a settlement or culture.",
+  "source": "Secret Santicore 2013, v.2",
+  "tags": [
+    "settlements"
+  ],
+  "sequence": "rollall",
+  "tables": {
+    "Food (prominent ingredients)": [
+      { "label": "Large/ grazing livestock (cow, goat, sheep)" },
+      { "label": "Small livestock (chicken, pig, turkey)" },
+      { "label": "Rice" },
+      { "label": "Legumes (lentils, beans)" },
+      { "label": "Grains (wheat, corn)" },
+      { "label": "Fruit (depending on climate: apples, bananas, mangos, grapes, berries)" },
+      { "label": "Game (pheasant, deer, rabbit)" },
+      { "label": "Root vegetables (potatoes, turnips)" },
+      { "label": "Greens (kale, spinach, cabbage)" },
+      { "label": "Spices (pepper, chili, cumin)" },
+      { "label": "Dairy (milk, cheese, butter)" },
+      { "label": "Fish (fresh or salt)" },
+      { "label": "Nuts (almond, peanut, chestnut, walnut)" },
+      { "label": "Mushroom/fungus" },
+      { "label": "Shelled creatures (clams, crabs, snails)" },
+      { "label": "Insects (ants, grasshoppers, roaches)" },
+      { "label": "Human(oids)" },
+      { "label": "Reptiles (snake, lizard, dinosaur, dragon)" },
+      { "label": "\"magic\" creatures (pick from your favorite monster book)" },
+      { "label": "Something inedible (like rocks or dirt)" }
+    ],
+    "Drink": [
+      { "label": "milk (cow, goat, sheep, other more exotic animal)" },
+      { "label": "wine (grape or other local fruit)" },
+      { "label": "beer" },
+      { "label": "alcohol (corn, potato, etc.)" },
+      { "label": "juice (some local fruit/vegetable)" },
+      { "label": "blood (animal, human)" }
+    ],
+    "Clothes (materials, features)": [
+      { "label": "wool (or other woven animal fur)" },
+      { "label": "cotton (or other plant)" },
+      { "label": "silk (or other insect related matieral)" },
+      { "label": "leather/hide (various animals)" },
+      { "label": "non-cloth adornment (metal, shells, flowers, bones)" },
+      { "label": "dyed (single color, multi-colors, patterns)" },
+      { "label": "woven (patterns, colors, multiple materials, quilted)" },
+      { "label": "cloth adornment (fringes, tassles, braids, veil-like layers)" },
+      { "label": "very little or no clothing worn" },
+      { "label": "loose flowing clothes (robes, kimonos, saris)" },
+      { "label": "layered clothing (light or heavy depending on climate)" },
+      { "label": "many pieces (shirts, pants, ties, jackets, vests, hats; skirts, underskirts, bodices, jackets, hats, parasols)" }
+    ],
+    "Taboos": [
+      { "label": "drinking" },
+      { "label": "eating after sunset/before sunrise" },
+      { "label": "magic" },
+      { "label": "some common local food item (they treat it like poison though it is perfectly edible)" },
+      { "label": "opiates" },
+      { "label": "non-procreative sex" },
+      { "label": "worshipping any but the single local diety" },
+      { "label": "immersion in water or crossing running water" },
+      { "label": "speaking to any non-local" },
+      { "label": "certain words" }
+    ],
+    "Customs": [
+      { "label": "ritual cannibalism" },
+      { "label": "polygamy" },
+      { "label": "collective childrearing" },
+      { "label": "communistic collectivism (shared property)" },
+      { "label": "opiates (or other drug)" },
+      { "label": "cross-dressing" },
+      { "label": "ancestor worship" },
+      { "label": "perform a religious gesture upon saying certain words or phrases" },
+      { "label": "barter only economy" },
+      { "label": "prescribed religious/ cultural clothing/ adornment" }
+    ],
+    "Factions": [
+      { "label": "Farmers" },
+      { "label": "Fishermen" },
+      { "label": "Miners" },
+      { "label": "Merchants" },
+      { "label": "Craftsmen" },
+      { "label": "Nobles" },
+      { "label": "Guards/ Militia" },
+      { "label": "Thieves" },
+      { "label": "Beggars" },
+      { "label": "Mages" },
+      { "label": "Church/ Temple (official)" },
+      { "label": "Cult" },
+      { "label": "Ruler (lord, king, etc.)" },
+      { "label": "Elders/ Mayor/ Government/Bureaucrats" },
+      { "label": "Laborers" },
+      { "label": "Slaves" },
+      { "label": "Prostitutes" },
+      { "label": "Racial group (other human or demisemi-human)" },
+      { "label": "Foreigners/Immigrants" },
+      { "label": "Students/university/school" }
+    ],
+    "Other Weirdness": [
+      { "label": "everyone is a doppelganger or other shapeshifter pretending to be human" },
+      { "label": "whole location is an incursion of the spirit world, all living things are actually ghosts, or else the spirit population is quite substantial so that the living inhabitants are used to it and treat the spirits as normal parts of the community" },
+      { "label": "ruler is a demon subtly manipulating the whole location for its own desires" },
+      { "label": "at least one god/demigod/saint/ etc is so important to this specific location that the whole location is filled with temples, relics, and other historical markers. Pilgrams are present. Don't insult the object of veneration or you are in trouble." },
+      { "label": "everyone belongs to the same religion/ cult/secret society" },
+      { "label": "currently plagued by (pick): locusts, rats, sickness, frogs, crows, werewolves, weeds, etc." },
+      { "label": "location is a pocket of consistent isolated weather patterns (it rains everyday, it never rains, it's always windy, the sun never shines, etc.)" },
+      { "label": "domesticated animals in the town talk (Cats, dogs, birds). No one thinks this is unusual." }
+    ],
+    "Recent History": [
+      { "label": "Change of ruler (1-2: death; 3-4: appointment; 5: coup; 6: election)" },
+      { "label": "attacked by other humans/humanoids. (1: fought off aided by some valiant figure; 2-3: major loses; 4-5: taken-over or completely ransacked; 6: ongoing conflict;)" },
+      { "label": "fire effecting some large or major part of the settlement" },
+      { "label": "famine or drought" },
+      { "label": "sickness/ plague" },
+      { "label": "a party of adventurers recent came through and caused a lot of trouble before leaving" },
+      { "label": "wanderer theatre troupe was recently in town (2 in 6, still in the area)" },
+      { "label": "trade caravan passed through (3 in 6, still in area)" },
+      { "label": "natural disaster (hurricane, tsunami, earthquake)" },
+      { "label": "recent war/battle from nearby nation/ culture/race/lord passed through or by the settlement. perhaps the conflict is still ongoing." },
+      { "label": "nothing" },
+      { "label": "nothing" }
+    ],
+    "Ancient History": [
+      { "label": "founded by an ancient forgotten race/peoples" },
+      { "label": "invaded by another culture/race and now the natives and invaders are assimilated (perhaps combine multiple rolls on the tables for the new mixed culture)" },
+      { "label": "curse by (mage, druids, god, evil creature, scorned wo/man, deposed leader, etc.)" },
+      { "label": "invaded by another culture/ race and natives and invaders are still at odds. perhaps invaders keep natives as slaves/ servants/ lower class, etc." },
+      { "label": "gold rush or some other event that caused a boom/bust cycle" },
+      { "label": "major natural disaster that seriously changed the geography of the area/settlement (earthquake, meteorite, tsunami, etc.)" },
+      { "label": "war with nearby culture/ race/settlement. never truly settled and the groups still hate each other." },
+      { "label": "popular uprising against lord (now a free state, or else was later conquered again)" },
+      { "label": "unknown (lost to history or some event)" },
+      { "label": "nothing (recent settlement)" }
+    ]
+  }
+};
