@@ -877,7 +877,7 @@ var CharacterEditView = Backbone.View.extend(
 				
 				form += '<div class="input-group-btn"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Randomly Generate <span class="caret"></span></button><ul class="dropdown-menu pull-right">';
 						_.each(appdata[field]['options'], function(v,k){
-							form += '<li><a class="randomize" href="#" data-targetfield="edit'+field+'" data-list="'+v.option+'">'+v.label+'</a></li>';
+							form += '<li><a class="randomize" href="#" data-targetfield="edit'+field+'" data-list="'+k+'">'+v+'</a></li>';
 						});			
 					form += '</ul></div></div>';
 				
