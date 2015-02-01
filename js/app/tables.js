@@ -244,6 +244,9 @@ var RandomTable = Backbone.Model.extend(
 				if (!print_opt[v.table].hide_result || print_opt[v.table].hide_result == 0) {
 					o += v.result.capitalize()+'<br/>';
 				}
+				if (!print_opt[v.table].hide_desc || print_opt[v.table].hide_desc == 0) {
+					if (v.desc !== '') { o += v.desc+'<br/>'; }
+				}
 					
 			} else {
 			

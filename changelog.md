@@ -1,6 +1,21 @@
 Change Log
 ==========
 
+v0.86 - 2014-11-??
+------------------
+
+* Simplified the cross-table references to just use `{{table:TABLENAME:SUBTABLENAME}}` or `{{table:this:SUBTABLENAME}}`
+* Added settings for:
+    * Mission tables.
+    * NPC goals field.
+    * Default hex dressing
+* Improved format of NPCs for better copy and pasting (as plain text).
+* Added import/export of settings.
+* Added a few new tables to the random tables list.
+* A bunch of bug fixes, minor UI improvements, and code clean-up.
+* Added `hide_desc` as an option on a table's `print` setting.
+* Added more name options
+
 v0.85 - 2014-09-05
 ------------------
 

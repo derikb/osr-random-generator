@@ -1053,3 +1053,410 @@ appdata.tables.culturegenerator = {
     ]
   }
 };
+
+
+appdata.tables.weirdflora = {
+  "title": "dZocchi Weird Flora",
+  "author": "Alex Chalk",
+  "source": "http://todistantlands.blogspot.ca/2014/04/dzocchi-weird-flora.html",
+  "tags": [
+    "monsters"
+  ],
+  "sequence": "rollall",
+  "tables": {
+    "Attitude": [
+      { "label": "Predatory" },
+      { "label": "Evasive" },
+      { "label": "Defensive" }
+    ],
+    "Growth": [
+      { "label": "Tall" },
+      { "label": "Expansive" },
+      { "label": "Deep" },
+      { "label": "Parasitic" }
+    ],
+    "Appearance": [
+      { "label": "Normal for its type" },
+      { "label": "Brightly coloured, psychedelic" },
+      { "label": "Colourless, appears dead" },
+      { "label": "Particularly lush, damp" },
+      { "label": "Bulbous, sickly" }
+    ],
+    "Mobility": [
+      { "label": "None whatsoever" },
+      { "label": "Creeps slowly, following the sun or moon" },
+      { "label": "Walks" },
+      { "label": "Prehensile leaves/branches" },
+      { "label": "Dances alluringly" },
+      { "label": "Can get up and fucking run" }
+    ],
+    "Senses": [
+      { "label": "Sensitive to light" },
+      { "label": "Sensitive to loud noises" },
+      { "label": "Reacts to being cut or plucked" },
+      { "label": "Enjoys being sung to" },
+      { "label": "Avoids humanoids" },
+      { "label": "Smells magic" },
+      { "label": "Changes its appearance indicating incoming weather patterns" }
+    ],
+    "Plant type": [
+      { "label": "Flower" },
+      { "label": "Tree – desiduous" },
+      { "label": "Tree – fruit-bearing" },
+      { "label": "Tree – evergreen" },
+      { "label": "Moss/lichen" },
+      { "label": "Shrub" },
+      { "label": "Vegetable" },
+      { "label": "Vine" }
+    ],
+    "Smell": [
+      { "label": "Sweet and sugary" },
+      { "label": "Salty and metallic" },
+      { "label": "Like a rotting corpse" },
+      { "label": "Fresh and minty" },
+      { "label": "Musty and wet" },
+      { "label": "Peppery" },
+      { "label": "Slightly sour" },
+      { "label": "Odourless" },
+      { "label": "Reeks of excrement" },
+      { "label": "Savoury, like freshly-cooked meat" }
+    ],
+    "Primary visual aspect (leaves, buds, petals, fruit) shape": [
+      { "label": "Bulbous, bell-shaped" },
+      { "label": "Spade-like" },
+      { "label": "Wet, droopy" },
+      { "label": "Thin, narrow, sharp" },
+      { "label": "Wide, bowl-like" },
+      { "label": "Semitransparent" },
+      { "label": "Round, flat" },
+      { "label": "Square" },
+      { "label": "Spherical" },
+      { "label": "Fan-shaped or conical" },
+      { "label": "Star-shaped with five points" },
+      { "label": "Long, curved" }
+    ],
+    "Texture": [
+      { "label": "Fuzzy" },
+      { "label": "Bumpy" },
+      { "label": "Soft" },
+      { "label": "Solid, brittle" },
+      { "label": "Very solid, hard to break" },
+      { "label": "Fibrous" },
+      { "label": "Rough, like sandpaper" },
+      { "label": "Smooth" },
+      { "label": "Spongy" },
+      { "label": "Covered in tiny, razor-sharp serrations" },
+      { "label": "Large, protruding spikes" },
+      { "label": "Furry and sticks like a burr" },
+      { "label": "Sticky" },
+      { "label": "Dry, bark-like" }
+    ],
+    "Colour/Pattern": [
+      { "label": "Bright red/polka dots" },
+      { "label": "Dark Green/Stripes" },
+      { "label": "White/Speckles" },
+      { "label": "Silver/Uneven patches" },
+      { "label": "Orange/Cloudy" },
+      { "label": "Yellow/Bumps" },
+      { "label": "Deep red/spots" },
+      { "label": "Dull brown" },
+      { "label": "Lush green" },
+      { "label": "Purple" },
+      { "label": "Deep, rich blue" },
+      { "label": "Pure black, no pattern, do not roll for secondary colour" },
+      { "label": "Creamy golden white" },
+      { "label": "Light green" },
+      { "label": "Bright, neon pink" },
+      { "label": "Sickly greenish yellow" }
+    ],
+    "Locals use it": [
+      { "label": "For consumption in ceremonial rites" },
+      { "label": "In potpouri" },
+      { "label": "To make tea" },
+      { "label": "to be gathered as part of a coming-of-age ritual" },
+      { "label": "As a staple food" },
+      { "label": "As a delicacy eaten in celebration of the chieftain’s birthday" },
+      { "label": "To fashion bowls and baskets" },
+      { "label": "To show off as a status symbol" },
+      { "label": "To throw at criminals during public humiliations" },
+      { "label": "As a ward against demons/evil spirits/witches" },
+      { "label": "As sacrifice to their god(s)" },
+      { "label": "As currency" },
+      { "label": "To make paints" },
+      { "label": "To decorate their homes" },
+      { "label": "To adorn important religious objects" },
+      { "label": "As a traditional offering of peace after a period of war" },
+      { "label": "To make paper" },
+      { "label": "For its alchemical application" },
+      { "label": "For medical purposes unrelated to its alchemical application; it probably doesn’t work" },
+      { "label": "To flavour their meals" }
+    ],
+    "Alchemical applications": [
+      { "label": "If smoked, it fortifies the spirit against fear and protects it from the touch of incorporeal foes" },
+      { "label": "If drunk in a warm tea, it separates mind from body and allows the user to visit another plane of existence" },
+      { "label": "If burned in incense, it intoxicates forest spirits and draws them near" },
+      { "label": "If mashed into an ointment, its odour drives away the undead" },
+      { "label": "If eaten whole, they who consumed it turns invisible for a time" },
+      { "label": "If flash-heated in water and salt, its otherwise harmless juices become a potent acid that burns through objects as green slime" },
+      { "label": "If strained and rubbed under the nose, the user may see augurs signaling things to come in the next year" },
+      { "label": "If juiced and boiled down, it produces a resin that can be used to stick any two objects together. They will be nearly impossible to separate once it dries" },
+      { "label": "If mixed with another weird plant and mashed into a chunky goop, eating it will cause fiery indigestion that purges the body of disease" },
+      { "label": "If carried as a good luck charm, it the carrier is impervious to illusions until the plant rots" },
+      { "label": "If burned slowly over the course of a few days, the ashes may be spread on one’s body to make oneself invisible to demons" },
+      { "label": "When chopped up it releases a mist, the inhalation of which causes gibbering madness and severe impairment of the motor functions" },
+      { "label": "If consumed whole and through the anus, it provides an exhilarating high that strengthens the muscles and increases stamina" },
+      { "label": "If used to plug one’s ears, mixed with a few sprigs of common grass, the user is immune to mind-control" },
+      { "label": "As long ones chews it, they are capable of speaking the language of snakes" },
+      { "label": "Bottled and buried for a month with a few flakes of gold, it produces a noxious gas the inhalation of which induces a terrible flu" },
+      { "label": "If stuffed into the mouth of a fresh corpse before burial, the body will rise as a zombie" },
+      { "label": "One may anoint oneself with its oils to pass through barriers" },
+      { "label": "If touched, it kills instantly" },
+      { "label": "If cooked into a soup with hot peppers, the eater will excrete pure gold" },
+      { "label": "Objects bathed in a mixture from the plant’s juices become stronger and more solid – it is dangerous for living beings to attempt this as their skeleton will fuse together" },
+      { "label": "If burned, the smoke will change colour when disturbed by the words of a liar" },
+      { "label": "The plant’s seeds may be placed within a small doll to give it life" },
+      { "label": "Its roots hold a record of the past – if these are eaten, one gains some of the plant’s memories" }
+    ],
+    "Special": [
+      { "label": "Its leaves are like swords and it can use them as such" },
+      { "label": "Grabbing and thrashing" },
+      { "label": "It creates seductive displays to attract and trap living pray" },
+      { "label": "It can shoot spines" },
+      { "label": "Its leaves/fruit/branches/chunks of itself can detach and attack you" },
+      { "label": "It is home to an army of killer bees" },
+      { "label": "It’s sentient" },
+      { "label": "It can shimmer hypnotically to hold you in place" },
+      { "label": "It hides underground and jumps up to surprise you" },
+      { "label": "Little humanoids grow from it" },
+      { "label": "It can hyperaccelerate its growth to entrap and overgrow enemies" },
+      { "label": "It fires out seeds – if these make their way into your mouth, they will plant in your brain and begin to grow" },
+      { "label": "It secretes a white, viscous fluid that hardens and sticks rapidly" },
+      { "label": "It secretes toxic gas" },
+      { "label": "It has no special power of its own, but is defended by an extraplanar entity that will manifest when danger is near" },
+      { "label": "It is made by a wizard; its pollen bestows a geas. The plant’s leaves/petals will turn to gold and fall off if the quest is completed" },
+      { "label": "Its bark/surface/patterning rearranges into various magical runes" },
+      { "label": "It releases a cloud of spores that cause living beings to become violent and attack one another" },
+      { "label": "It drops little explosives" },
+      { "label": "It secretes a highly flammable oil and can set off sparks; the plant itself is immune to fire" },
+      { "label": "Its roots dig down and hollow out underground chambers, which acts as pit traps" },
+      { "label": "Rather than releasing carbon at night, it collects it in sacs that grow along its surface. It can pop these when threatened" },
+      { "label": "Just your average, everyday carnivorous plant" },
+      { "label": "Herbivorous plant – its roots dig down and start eating other plants" },
+      { "label": "When the wind blows through its leaves, it sings a magical song" },
+      { "label": "It changes its appearance to predict the weather" },
+      { "label": "It messes with compasses and rearranges plants around it to get travelers lost, then continues to mislead to hide the fact that they are going around in circles" },
+      { "label": "It protects from harm any travelers who camp near it" },
+      { "label": "It lets out innocuous white noise, making it difficult to hear other creatures nearby" },
+      { "label": "The whole plant is actually the elaborate camouflage of some other creature" }
+    ]
+  },
+  "result": [
+    {
+      "table": "default",
+      "result": "Fancy Stone",
+      "desc": ""
+    }
+  ]
+};
+
+
+appdata.tables.gems = {
+  "title": "Random Gems",
+  "source": "Adapted from DMG 1st ed.",
+  "tags": [
+    "treasure"
+  ],
+  "print": {
+	  "ornamental": { "hide_table": 1 },
+	  "semi-precious": { "hide_table": 1 },
+	  "fancy": { "hide_table": 1 },
+	  "gem": { "hide_table": 1 },
+	  "ornamental value": { "hide_table": 1 },
+	  "semi-precious value": { "hide_table": 1 },
+	  "fancy value": { "hide_table": 1 },
+	  "fancy precious value": { "hide_table": 1 },
+	  "gem value": { "hide_table": 1 },
+	  "gem precious value": { "hide_table": 1 }
+  },
+  "tables": {
+    "default": [
+      { "label": "Ornamental Stone", "print": false, "subtable": ["ornamental", "ornamental value"], "weight": 25 },
+      { "label": "Semi-Precious Stone", "print": false, "subtable": ["semi-precious", "semi-precious value"], "weight": 25 },
+      { "label": "Fancy Stone", "print": false, "subtable": ["fancy", "fancy value"], "weight": 20 },
+      { "label": "Fancy Stone (precious)", "print": false, "subtable": ["fancy", "fancy precious value"], "weight": 20 },
+      { "label": "Gem Stone", "print": false, "subtable": ["gem", "gem value"], "weight": 9 },
+      { "label": "Gem Stone (Jewels)", "print": false, "subtable": ["gem", "gem precious value"] }
+    ],
+    "ornamental": [
+	    { "label": "Azurite", "description": "Opaque, mottled deep blue" },
+	    { "label": "Bonded Agate", "description": "Translucent, striped brown/blue/white/reddish" },
+	    { "label": "Blue Quartz", "description": "Transparent, pale blue" },
+	    { "label": "Eye Agate", "description": "Translucent, circles of gray/white/brown/blue/green" },
+	    { "label": "Hematite", "description": "Opaque, grey-black" },
+	    { "label": "Lapis Lazuli", "description": "Opaque, light and dark blue with yellow flecks" },
+	    { "label": "Malachite", "description": "Opaque, striated light and dark green" },
+	    { "label": "Moss Agate", "description": "Translucent, pink or yellow-white with grayish or greenish \"moss markings\"" },
+	    { "label": "Obsidian", "description": "Opaque, black" },
+	    { "label": "Rhodochrosite", "description": "Opaque, light pink" },
+	    { "label": "Tiger Eye", "description": "Translucent, rich brown with golden center under-hue" },
+	    { "label": "Turqoise", "description": "Opaque, light blue-green" }
+    ],
+    "semi-precious": [
+	    { "label": "Bloodstone", "description": "Opaque, dark grey with red flecks" },
+	    { "label": "Carnelian", "description": "Opaque, orange to reddish brown" },
+	    { "label": "Chalcedony", "description": "Opaque, white" },
+	    { "label": "Chrysoprase", "description": "Translucent, apple green to emerald green" },
+	    { "label": "Citrine", "description": "Transparent, pale yellow brown" },
+	    { "label": "Jasper", "description": "Opaque, blue, black to brown" },
+	    { "label": "Moonstone", "description": "Translucent, white with pale blue glow" },
+	    { "label": "Onyx", "description": "Opaque, bands of black and white or pure black or white" },
+	    { "label": "Rock Crystal", "description": "Transparent, clear" },
+	    { "label": "Sardonyx", "description": "Opaque, bands of red and onyx or red" },
+	    { "label": "Smoky Quartz", "description": "Transparent, gray, yellow, or blue, all light" },
+	    { "label": "Star Rose Quartz", "description": "Transparent, rose stone with white \"star\" center" },
+	    { "label": "Zircon", "description": "Transparent, clear pale blue-green" }
+    ],
+    "fancy": [
+	    { "label": "Amber", "description": "Transparent, watery gold to rich gold" },
+	    { "label": "Alexandrite", "description": "Transparent, dark green" },
+	    { "label": "Amethyst", "description": "Transparent, deep purple" },
+	    { "label": "Aquamarine", "description": "Transparent, pale blue green" },
+	    { "label": "Chrysoberyl", "description": "Transparent, yellow green to green" },
+	    { "label": "Coral", "description": "Opaque, crimson" },
+	    { "label": "Garnet", "description": "Transparent, red, brown-green, or violet" },
+	    { "label": "Jade", "description": "Translucent, light green, deep green, green and white, or white" },
+	    { "label": "Jet", "description": "Opaque, deep black" },
+	    { "label": "Pearl", "description": "Opaque, lustrous white, yellowish, pinkish, etc. to pure black" },
+	    { "label": "Peridot", "description": "Transparent, rich olive green" },
+	    { "label": "Spinel", "description": "Transparent, red, red-brown, deep green, or very deep blue" },
+	    { "label": "Topaz", "description": "Transparent, golden yellow" },
+	    { "label": "Tourmaline", "description": "Transparent, green pale, blue pale, brown pale, or reddish pale" }
+    ],
+    "gem": [
+	    { "label": "Black Opal", "description": "Translucent, dark green with black mottling and golden flecks" },
+	    { "label": "Black Sapphire", "description": "Translucent, lustrous black with glowing highlights" },
+	    { "label": "Diamond", "description": "Transparent, clear blue-white with lesser stones clear white or pale tints" },
+	    { "label": "Emerald", "description": "Transparent, deep bright green" },
+	    { "label": "Fire Opal", "description": "Translucent, fiery red" },
+	    { "label": "Jacinth", "description": "Transparent, fiery orange" },
+	    { "label": "Opal", "description": "Translucent, pale blue with green and golden mottling" },
+	    { "label": "Oriental Amethyst", "description": "Transparent, rich purple" },
+	    { "label": "Oriental Emerald", "description": "Transparent, clear bright green" },
+	    { "label": "Oriental Topaz", "description": "Transparent, fiery yellow" },
+	    { "label": "Ruby", "description": "Transparent, clear red to deep crimson" },
+	    { "label": "Sapphire", "description": "Transparent, clear to medium blue" },
+	    { "label": "Star Ruby", "description": "Translucent, ruby with white \"star\" center" },
+	    { "label": "Star Sapphire", "description": "Translucent, sapphite with white \"star\" center" }
+    ],
+    "ornamental value": [
+	    { "label": "{{table:this:semi-precious value}}", "weight": 1},
+	    { "label": "20gp", "weight": 1},
+	    { "label": "13gp", "weight": 1},
+	    { "label": "10gp", "weight": 5},
+	    { "label": "8gp", "weight": 1},
+	    { "label": "5gp", "weight": 1}
+    ],
+    "semi-precious value": [
+	    { "label": "{{table:this:fancy value}}", "weight": 1 },
+	    { "label": "100gp", "weight": 1},
+	    { "label": "65gp", "weight": 1},
+	    { "label": "50gp", "weight": 5},
+	    { "label": "40gp", "weight": 1},
+	    { "label": "{{table:this:ornamental value}}", "weight": 1 }
+    ],
+    "fancy value": [
+	    { "label": "{{table:this:fancy precious value}}", "weight": 1},
+	    { "label": "200gp", "weight": 1},
+	    { "label": "130gp", "weight": 1},
+	    { "label": "100gp", "weight": 5},
+	    { "label": "80gp", "weight": 1},
+	    { "label": "{{table:this:semi-precious value}}", "weight": 1 }
+    ],
+    "fancy precious value": [
+	    { "label": "{{table:this:gem value}}", "weight": 1},
+	    { "label": "1000gp", "weight": 1},
+	    { "label": "650gp", "weight": 1},
+	    { "label": "500gp", "weight": 5},
+	    { "label": "400gp", "weight": 1},
+	    { "label": "{{table:this:fancy value}}", "weight": 1 }
+    ],
+    "gem value": [
+	    { "label": "{{table:this:gem precious value}}", "weight": 1},
+	    { "label": "2000gp", "weight": 1},
+	    { "label": "1300gp", "weight": 1},
+	    { "label": "1000gp", "weight": 5},
+	    { "label": "800gp", "weight": 1},
+	    { "label": "{{table:this:fancy previous value}}", "weight": 1 }
+    ],
+    "gem precious value": [
+	    { "label": "25,000gp", "weight": 1 },
+	    { "label": "10,000gp", "weight": 1 },
+	    { "label": "6500gp", "weight": 1 },
+	    { "label": "5000gp", "weight": 5 },
+	    { "label": "4000gp", "weight": 1 },
+	    { "label": "{{table:this:gem value}}", "weight": 1 }
+    ],
+  }
+};
+
+
+appdata.tables.jewelry = {
+  "title": "Random Jewelry",
+  "source": "Adapted from DMG 1st ed.",
+  "tags": [
+    "treasure"
+  ],
+  "print": {
+	"type": { "hide_table": 1 },
+  	"value": { "hide_table": 1 }
+  },
+  "sequence": ["type", "value"],
+  "tables": {
+	"type": [
+	  { "label": "anklet", "weight": 2 },
+      { "label": "arm band", "weight": 4 },
+      { "label": "belt", "weight": 3 },
+      { "label": "box (small)", "weight": 3 },
+      { "label": "bracelet", "weight": 4 },
+      { "label": "brooch", "weight": 3 },
+      { "label": "buckle", "weight": 2 },
+      { "label": "chain", "weight": 5 },
+      { "label": "chalice" },
+      { "label": "choker" },
+      { "label": "clasp", "weight": 3 },
+      { "label": "coffer", "weight": 2 },
+      { "label": "collar" },
+      { "label": "comb", "weight": 2 },
+      { "label": "coronet" },
+      { "label": "crown" },
+      { "label": "decanter", "weight": 2 },
+      { "label": "diadem" },
+      { "label": "earring", "weight": 4 },
+      { "label": "fob", "weight": 2 },
+      { "label": "goblet", "weight": 5 },
+      { "label": "headband", "weight": 2 },
+      { "label": "idol", "weight": 3 },
+      { "label": "locket", "weight": 2 },
+      { "label": "medal", "weight": 3 },
+      { "label": "medallion", "weight": 6 },
+      { "label": "necklace", "weight": 7 },
+      { "label": "pendant", "weight": 3 },
+      { "label": "pin", "weight": 5 },
+      { "label": "orb" },
+      { "label": "ring", "weight": 9 },
+      { "label": "sceptre" },
+      { "label": "seal", "weight": 2 },
+      { "label": "statuette", "weight": 3 },
+      { "label": "tiara" }
+	],
+	"value": [
+	    { "label": "{{roll:1d10*100}}gp", "weight": 10, "description": "ivory or wrought silver" },
+	    { "label": "{{roll:2d6*100}}gp", "weight": 10, "description": "wrought silver and gold" },
+	    { "label": "{{roll:3d6*100}}gp", "weight": 20, "description": "wrought gold" },
+	    { "label": "{{roll:5d6*100}}gp", "weight": 10, "description": "jade, coral, or wrought platinum" },
+	    { "label": "{{roll:1d6*1000}}gp", "weight": 20, "description": "silver with gems" },
+	    { "label": "{{roll:2d4*1000}}gp", "weight": 20, "description": "gold with gems" },
+	    { "label": "{{roll:2d6*1000}}gp", "weight": 10, "description": "platinum with gems" }
+    ],  
+  }
+};

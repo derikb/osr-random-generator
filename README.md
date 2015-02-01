@@ -65,7 +65,7 @@ Made with: <a href="http://jquery.com">jQuery</a>, <a href="http://getbootstrap.
 * Appearance and Personality lists from <a href="http://www.lulu.com/shop/courtney-campbell/on-the-non-player-character/ebook/product-21094127.html">On the Non-Player Character</a> by <a href="http://hackslashmaster.blogspot.com/">Courtney Campbell</a>.
 * Personality and Quirks lists from <a href="http://www.roleplayingtips.com/articles/npc-essentials.html">GM Mastery: NPC Essentials</a> by <a href="http://www.roleplayingtips.com/">Johnn Four</a>
 * Holmesian Names are adapted from the <a href="http://zenopusarchives.blogspot.com/2013/07/random-names-one-sheet.html">Zenopus Archives' Holmesian Name Generator</a>.
-* <a href="http://jrients.blogspot.com/2011/09/random-cornish-names.html">Cornish</a> and <a href="http://jrients.blogspot.com/2012/01/medieval-flemish-names.html">Flemish</a> first names taken from Jeff Rients. Other names I compiled from various lists online.
+* <a href="http://jrients.blogspot.com/2011/09/random-cornish-names.html">Cornish</a> and <a href="http://jrients.blogspot.com/2012/01/medieval-flemish-names.html">Flemish</a> first names taken from Jeff Rients as are the <a href="http://www.random-generator.com/index.php?title=Goetic_Demon_Names">Demonic names</a>. Other names I compiled from various lists online.
 * <a href="http://www.swordsandwizardry.com/">Swords &amp; Wizardry</a> rules by Matthew J. Finch</a>
 * Goals list primarily taken from <a href="http://blog.retroroleplaying.com/2013/03/tarnhelms-terrible-tome-house-rules-for.html">Tarnheim's Terrible Tome</a> by Randall S Stukey
 * Labyrinth Lord monster data adapted from <a href="http://www.wizardawn.com/rpg/tool_data.php">Wizardawn's Data files</a>.

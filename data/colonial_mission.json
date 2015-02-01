@@ -214,7 +214,7 @@ appdata.tables.mission_person = {
       { "label": "Church leader" },
       { "label": "Noble" },
       { "label": "Military leader" },
-      { "label": "Secret Society" },
+      { "label": "{{table:colonial_societies}}" },
       { "label": "Land speculator" },
       { "label": "Magic-user / Alchemist" },
       { "label": "Company official" },
@@ -245,7 +245,8 @@ appdata.tables.mission_patron = {
   "title": "Mission Patrons",
   "author": "Derik Badman",
   "tags": [
-    "mission"
+    "mission",
+    "mission_patron"
   ],
   "tables": {
     "default": [
@@ -260,7 +261,7 @@ appdata.tables.mission_patron = {
       { "label": "Church leader" },
       { "label": "Noble" },
       { "label": "Army leader" },
-      { "label": "Secret Society" },
+      { "label": "{{table:colonial_societies}}" },
       { "label": "Land speculator" },
       { "label": "Magic-user / Alchemist" },
       { "label": "Village/Town/City (someone representing)" },
@@ -281,14 +282,15 @@ appdata.tables.mission_antagonist = {
   "title": "Mission Antagonist",
   "author": "Derik Badman",
   "tags": [
-    "mission"
+    "mission",
+    "mission_antagonist"
   ],
   "tables": {
     "default": [
       { "label": "Mechanical (traps)" },
       { "label": "Environment" },
       { "label": "Monster" },
-      { "label": "Faction" },
+      { "label": "{{table:colonial_factions}}" },
       { "label": "Settlement" },
       { "label": "NPC (already met)" },
       { "label": "Friendly Acquaintance of a PC (Friend/Family/Business/Patron)" },
@@ -302,7 +304,8 @@ appdata.tables.mission_complication = {
   "title": "Mission Complications",
   "author": "Derik Badman",
   "tags": [
-    "mission"
+    "mission",
+    "mission_complication"
   ],
   "tables": {
     "default": [
@@ -331,7 +334,8 @@ appdata.tables.mission_reward = {
   "title": "Mission Rewards",
   "author": "Derik Badman",
   "tags": [
-    "mission"
+    "mission",
+    "mission_reward"
   ],
   "tables": {
     "default": [

@@ -148,6 +148,10 @@ This table adds information about the table which helps with finding it in the t
 * `source`: Book or website where the table came from (include a url/link)
 * `description`: What is this table? What is it for?
 * `tags`: a list of tags to categorize the table (you can filter on the tags in the table list)
+* `print`: a list of objects to describe what parts of a (sub)table should be displayed in the results
+    * `hide_table` set to 1 will not show the table name
+    * `hide_result` set to 1 will not show the result on that (sub)table
+    * `hide_desc` set to 1 will not show any description for a result on that (sub)table
 * `tables`: an object made up of table names and table data
 
 ### Complex Table with Subtables
@@ -158,6 +162,10 @@ This table adds information about the table which helps with finding it in the t
 		"source": "",
 		"description": "",
 		"tags": ["swamp", "encounters"],
+		"print": {
+			"general": { "hide_table": 1, "hide_result": 1 },
+			"trap": { "hide_table": 1 },
+		},
 		"sequence": "general",	
 	 	"tables": {
 		 	"general": {

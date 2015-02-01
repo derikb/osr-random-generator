@@ -1427,6 +1427,20 @@ var Names = Backbone.Model.extend(
 	},
 	
 	/**
+	 * Demonic name
+	 * Taken from Jeff Rients, based on Goetia, as implemented here: http://www.random-generator.com/index.php?title=Goetic_Demon_Names
+	 */
+	demonname: function() {
+		var name = '';
+		var format = app.randomizer.getWeightedRandom([ ['first','last'],['first','inner','last'],['first','inner','inner','last'],['first','inner','inner','inner','last'] ], [55,35,7,3]);
+		for (i=0; i < format.length; i++) {
+			name += app.randomizer.rollRandom(appdata.name.demonic[format[i]]);
+			
+		}
+		return name;
+	},
+	
+	/**
 	 * Create a name
 	 * @param {String} name_type What name list/process to use else random
 	 * @param {String} gender male, female, random, ''
@@ -1452,6 +1466,9 @@ var Names = Backbone.Model.extend(
 		switch (name_type) {
 		 	case "holmesian":
 				name = this.holmesname();
+				break;
+			case "demonic":
+				name = this.demonname();
 				break;
 			case "cornish":
 			case "flemish":
