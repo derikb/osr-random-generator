@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-v0.86 - 2014-11-??
+v0.86 - 2015-02-15
 ------------------
 
 * Simplified the cross-table references to just use `{{table:TABLENAME:SUBTABLENAME}}` or `{{table:this:SUBTABLENAME}}`
@@ -14,7 +14,7 @@ v0.86 - 2014-11-??
 * Added a few new tables to the random tables list.
 * A bunch of bug fixes, minor UI improvements, and code clean-up.
 * Added `hide_desc` as an option on a table's `print` setting.
-* Added more name options
+* Added more name options including the option to use Markov chains to create new names based on the names list.
 
 v0.85 - 2014-09-05
 ------------------
