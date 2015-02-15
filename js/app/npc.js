@@ -348,7 +348,7 @@ var Character = Backbone.Model.extend(
 	 * Select/Set goals traits
 	 */
 	selectGoals: function() {
-		var g = app.rtables.getByTitle('character_goals');
+		var g = app.rtables.getByTitle(app.AppSettings.get('goals_type'));
 		g.generateResult();
 		return  g.niceString();
 	},
@@ -589,33 +589,33 @@ if (this.model.isNew()) {
     	
     	if (character_display == 'soft') {
 	    	
-	    	temp += '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %></dd><% } %><dt data-field="race">Race</dt><dd data-field="race"><% var r = race.capitalize() %><%= r %></span></dd><dt data-field="chargroup">Group</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
+	    	temp += '<div class="row"><div class="col-xs-6"><dl class="clearfix"><dt>Name:</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation:</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class:</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %></dd><% } %><dt data-field="race">Race:</dt><dd data-field="race"><% var r = race.capitalize() %><%= r %></span></dd><dt data-field="chargroup">Group:</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
 	    	
 	    	temp += '</div><div class="col-xs-6">';
     	
-			temp += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goals">Goals</dt><dd><span data-field="goals"><%= goals %></span></dd></dl>';
+			temp += '<dl class="character-traits clearfix"><dt data-field="personality">Personality:</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance:</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goals">Goals:</dt><dd><span data-field="goals"><%= goals %></span></dd></dl>';
 			
     	} else {
     	
-    		temp += '<div class="row"><div class="col-xs-6"><dl class="dl-horizontal clearfix"><dt>Name</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %>, <span data-field="level">Lvl <%= level %></span></dd><% } %><dt data-field="race">Race</dt><dd data-field="race"><% var r = race.capitalize() %><%= r %></span></dd></dl>';
+    		temp += '<div class="row"><div class="col-xs-6"><dl class="clearfix"><dt>Name:</dt><dd><span data-field="name"><%= name %> (<span data-field="gender"><%= gender %></span>)</span></dd><% if(charclass == "none") { %><dt>Occupation:</dt><dd><span data-field="occupation"><%= occupation %></span></dd><% } else { %><dt>Class:</dt><dd><span data-field="charclass"><% var cc = charclass.capitalize() %><%= cc %>, <span data-field="level">Lvl <%= level %></span></dd><% } %><dt data-field="race">Race:</dt><dd data-field="race"><% var r = race.capitalize() %><%= r %></span></dd></dl>';
     	
 	    	if (app.AppSettings.get('ability_display') == 'minimal') {
 		    	
-		    	temp += '<dl class="dl-inline clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); if (v.modifier !== 0) { %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %>&nbsp;(<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span> </dd><% } }); %></dl>';
+		    	temp += '<dl class="dl-inline clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); if (v.modifier !== 0) { %><dt><%= a %>:</dt><dd>&nbsp;<span data-field="ability_scores.<%= v.name %>"><%= v.score %>&nbsp;(<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span>&nbsp; </dd><% } }); %></dl>';
 		    	
 	    	} else {
-	    		temp += '<dl class="dl-inline clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); %><dt><%= a %></dt><dd><span data-field="ability_scores.<%= v.name %>"><%= v.score %>&nbsp;(<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span> </dd><% }); %></dl>';
+	    		temp += '<dl class="dl-inline clearfix"><% _.each(ability_scores, function(v,k){ var a = v.name.capitalize(); %><dt><%= a %>:</dt><dd>&nbsp;<span data-field="ability_scores.<%= v.name %>"><%= v.score %>&nbsp;(<% var mod = (v.modifier > 0) ? "+"+v.modifier : v.modifier; %><%= mod %>)</span>&nbsp; </dd><% }); %></dl>';
 	    	}
 			
 			//data.attack.melee = data.attack.melee.replace('-', '&#8209;');
 			
-    		temp += '<dl class="dl-inline clearfix"><dt>HP</dt><dd><span data-field="hp"><%= hp %></span> </dd><dt>AC</dt><dd><%= ac %><% if (armor !== "") { %> (<span data-field="armor"><%= armor %></span>)<% } %> </dd><dt>Attack&nbsp;Bonus</dt><% if (attack.melee == attack.missile) { %><dd><span class="nobreak"><%= attack.melee %></span> </dd><% } else { %><dd><span class="nobreak"><%= attack.melee %></span>&nbsp;Melee </dd><dd><span class="nobreak"><%= attack.missile %></span>&nbsp;Missile </dd><% } %><dt>Reaction</dt><dd><%= reaction_roll %> </dd></dl>';
+    		temp += '<dl class="dl-inline clearfix"><dt>HP:</dt><dd>&nbsp;<span data-field="hp"><%= hp %></span>&nbsp; </dd><dt>AC:</dt><dd>&nbsp;<%= ac %><% if (armor !== "") { %> (<span data-field="armor"><%= armor %></span>)<% } %>&nbsp; </dd><dt>Attack&nbsp;Bonus:</dt><% if (attack.melee == attack.missile) { %><dd>&nbsp;<span class="nobreak"><%= attack.melee %></span>&nbsp; </dd><% } else { %><dd>&nbsp;<span class="nobreak"><%= attack.melee %></span>&nbsp;Melee&nbsp; </dd><dd><span class="nobreak"><%= attack.missile %></span>&nbsp;Missile&nbsp; </dd><% } %></dl>';
     	
 			temp += '</div><div class="col-xs-6">';
     	
-    		temp += '<dl class="dl-horizontal clearfix"><dt data-field="chargroup">Group</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
+    		temp += '<dl class="dl-horizontal clearfix"><dt data-field="chargroup">Group:</dt><dd data-field="chargroup"><%= chargroup %></span></dd></dl>';
     	
-    		temp += '<dl class="character-traits clearfix"><dt data-field="personality">Personality</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goals">Goals</dt><dd><span data-field="goals"><%= goals %></span></dd></dl>';
+    		temp += '<dl class="character-traits clearfix"><dt data-field="reaction">Reaction:</dt><dd>&nbsp;<span data-field="reaction"><%= reaction_roll %></span>&nbsp; </dd><dt data-field="personality">Personality:</dt><% _.each(personality, function(v,k){ v.capitalize(); %><dd><span data-field="personality"><%= v %></span></dd><% }); %><dt data-field="appearance">Appearance:</dt><% _.each(appearance, function(v,k){ v.capitalize(); %><dd><span data-field="appearance"><%= v %></span></dd><% }); %><dt data-field="goals">Goals:</dt><dd><span data-field="goals"><%= goals %></span></dd></dl>';
     	
     		temp += '<% if (spellcaster == true) { %><section><h4 data-field="spells">Spells</h4><dl class=""><% _.each(spells, function(v,k) { %><dt data-field="spells"><%= k %></dt><% _.each(v, function(y,x) { %><dd class="spell" data-spell="<%= y %>"><%= y %> <span class="glyphicon glyphicon-info-sign"></span></dd><% }); }); %></dl></section><% } %>'; //spells
 		
@@ -877,7 +877,7 @@ var CharacterEditView = Backbone.View.extend(
 				
 				form += '<div class="input-group-btn"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Randomly Generate <span class="caret"></span></button><ul class="dropdown-menu pull-right">';
 						_.each(appdata[field]['options'], function(v,k){
-							form += '<li><a class="randomize" href="#" data-targetfield="edit'+field+'" data-list="'+v.option+'">'+v.label+'</a></li>';
+							form += '<li><a class="randomize" href="#" data-targetfield="edit'+field+'" data-list="'+k+'">'+v+'</a></li>';
 						});			
 					form += '</ul></div></div>';
 				
@@ -1078,13 +1078,15 @@ var CharList = Backbone.View.extend(
     		return char.get('chargroup');
     	});
     	k = _.keys(ord).sort(); //sort by group name
+		if (k.length == 0) {
+			k = [''];
+		}
 
     	_.each(k, function(group) {
     		var grouplabel = (group == '') ? '[no group]' : group;
     	 	$(this.el).append('<h2 class="npc-group-header">'+grouplabel+'</h2>');
     	 	var ghtml = group.replace(/[\s\.:'"]/g, '_');
     	 		var $glist = $('<div id="npc-list-'+ghtml+'" class="panel-group"></div>');
-    	 		//var $glist = $('<ul class="list-unstyled"></ul>');
 		 		_.each(ord[group], function(char){
         			$glist.append(new CharacterBlock({model:char}).render().el);
         		}, this);
@@ -1168,8 +1170,8 @@ var CharForm = Backbone.View.extend(
     	
     	form += '<div class="row">';
 	    	form += '<div class="form-group col-sm-6"><label for="name_type" class="control-label">Name Type</label><select class="form-control" id="name_type" name="name_type">';
-	    		_.each(appdata.name.options, function(v){
-		    		form += '<option value="'+v.option+'">'+v.label+'</option>';
+	    		_.each(appdata.name.options, function(v,k){
+		    		form += '<option value="'+k+'">'+v+'</option>';
 	    		});
 			form += '</select><div class="help-block"></div></div>';
 			
@@ -1361,190 +1363,3 @@ var CharGroupView = Backbone.View.extend(
 	
 	
 });
-
-
-//!Names model
-var Names = Backbone.Model.extend(
-	/** @lends Names.prototype */
-	{
-	
-	defaults: function() {
-		return {
-			listCount: 10	
-		}
-	},
-	
-	initialize:  function() {
-		
-	},
-	
-	
-	generateList: function(nametypes) {
-		var names = {};
-		
-		if (!_.isArray(nametypes)) {
-			nametypes = [nametypes];
-		}
-		
-		_.each(nametypes, function(v,k,l){
-			var a = { male: [], female: [] };
-			var n = this.get('listCount');
-			for(var i=1; i<=n; i++) {
-				var gender = (i <= Math.ceil(n/2)) ? 'male' : 'female';
-				a[gender].push(this.generateName(v, gender));
-			}
-			names[v] = a;
-		}, this);
-		
-		return names;
-	},
-	
-	/**
-	 * Generate a Holmes name
-	 * @returns {String} name
-	 */
-	holmesname: function() {
-		var name = '';
-		scount = app.randomizer.getWeightedRandom(appdata.name.holmesian_scount.values, appdata.name.holmesian_scount.weights);
-	
-		for (i=1; i<=scount; i++) {
-			name += app.randomizer.rollRandom(appdata.name.holmesian_syllables); //array
-			if (i<scount) {
-				name += app.randomizer.getWeightedRandom(['',' ','-'],[3,2,2]);
-			}
-		}
-		name = name.toLowerCase().capitalize();
-		name += ' '+app.randomizer.rollRandom(appdata.name.holmesian_title);
-		
-		name = app.randomizer.findToken(name);
-		
-		name = name.replace(/[\s\-]([a-z]{1})/g, function(match) {
-			return match.toUpperCase();
-		});
-		return name;
-	},
-	
-	/**
-	 * Create a name
-	 * @param {String} name_type What name list/process to use
-	 * @returns {String} a name
-	 */
-	generateName: function(name_type, gender) {
-		var name = '';
-		switch (name_type) {
-		 	case "holmesian":
-				name = this.holmesname();
-				break;
-			case "cornish":
-			case "flemish":
-			case "dutch":
-			case "turkish":
-			default:
-				name = app.randomizer.rollRandom(appdata.name[name_type][gender]).capitalize();
-				if (typeof appdata.name[name_type]['surname'] !== 'undefined') {
-					name += ' '+app.randomizer.rollRandom(appdata.name[name_type]['surname']).capitalize();
-				}
-				name = app.randomizer.findToken(name);
-				break;
-		}
-		return name;
-	},
-	
-	generateSurname: function(name_type) {
-		var name = '';
-		switch (name_type) {
-		 	case "holmesian":
-				name = this.holmesname();
-				break;
-			case "cornish":
-			case "flemish":
-			case "dutch":
-			case "turkish":
-			default:
-				name = app.randomizer.rollRandom(appdata.name[name_type]['surname']).capitalize();
-				name = app.randomizer.findToken(name);
-				break;
-		}
-		return name;
-	},
-	
-		
-	}
-);
-
-
-//!Name  creation form
-var NameForm = Backbone.View.extend(
-	/** @lends NameForm.prototype */
-	{
-		
-	model: Names,
-	tagName: 'form',
-	id: 'name-form',
-	
-    events:{
-        "submit": "showResults",
-    },
-	
-	/**
-	 * This is the view for a name creation form
-	 *
-	 * @augments external:Backbone.View
-	 * @constructs
-	 */
-    initialize:function () {
-        //this.listenTo(this.model, 'change', this.render);
-    },
-    
-    render: function () {
-    	//var rules = appdata.rules[this.model.get('rules_set')];
-    	var form = '<h1>Generate Names</h1>';
-    	form += '<div class="messages"></div>';
-    	form += '<div class="form-group">';
-    	form += '<fieldset><legend>Name Types</legend>';
-    		_.each(appdata.name.options, function(v){
-    			if (v.option == 'none') { return; }
-    			form += '<label for="'+v.option+'" class="checkbox-inline"><input type="checkbox" name="nametype" id="'+v.option+'" value="'+v.option+'" checked=checked> '+v.label+'</label>';
-			});
-    	form += '</fieldset>';
-    	form += '</div>';
-			    	
-    	form += '<div class="form-group"><button type=submit class="btn btn-primary">Generate</button></div>';
-    	//form += '</div>';
-    	$(this.el).html(form);
-        return this;
-    },
-    
-    /**
-     * Output the generated names
-     */
-    showResults: function(e) {
-    	e.preventDefault();
-    	var formdata = $(e.target).serializeObject();
-		//console.log(formdata);
-		var names = this.model.generateList(formdata.nametype);
-		//console.log(n);
-    
-	    var html = '<h1>Names</h1>';
-	    _.each(names, function(v,k,l) {
-		    html += '<section class="name-block"><h1>'+k.capitalize()+'</h1>';
-		    html += '<div class="row">';
-		    _.each(v, function(z,y){
-			    if (_.isArray(z) && z.length > 0) {
-					html += '<div class="col-sm-6"><h2>'+y.capitalize()+'</h2><ul>';
-					_.each(z, function(n){
-						html += '<li>'+n+'</li>';
-					}, this);
-					html += '</ul></div>';
-			    }
-		    }, this);
-		    html += '</div></section>';
-	    }, this);
-	    
-		$('#name-results').html(html);
-    }
-
-    
-});
-
-

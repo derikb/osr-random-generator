@@ -1,14 +1,6 @@
 appdata = (typeof appdata == "undefined") ? {} : appdata;
 appdata.tables = (typeof appdata.tables == "undefined") ? {} : appdata.tables;
 
-appdata.personality_options.unshift(
-	{ "option": "colonial_personality", "label": "Personality (Colonial)" }
-);
-
-appdata.appearance_options.unshift(
-	{ "option": "colonial_appearance", "label": "Appearance (Colonial)" }
-);
-
 //!colonial_personality
 appdata.tables.colonial_personality = {
   "title": "Personality Traits (Colonial)",
@@ -233,6 +225,13 @@ appdata.tables.colonial_companies = {
   "title": "Companies (Colonial)",
   "author": "Derik Badman",
   "description": "Quick company.",
+  "print": {
+	  "name": { "hide_table": 1 },
+	  "name_1": { "hide_table": 1 },
+	  "name_2": { "hide_table": 1 },
+	  "name_3": { "hide_table": 1 },
+	  "name_place": { "hide_table": 1 }
+  },
   "tags": [
     "colonial",
     "factions"
@@ -322,39 +321,124 @@ appdata.tables.colonial_factions = {
       { "label": "Militia" },
       { "label": "Government" },
       { "label": "Revolutionary" },
-      { "label": "Social Club / Secret Society", "subtable": "faction_society", "print": false },
-      { "label": "Church/Sect/Cult" },
+      { "label": "{{table:colonial_societies}}", "weight": 10 },
+      { "label": "Church/Sect/Cult", "subtable": "faction_church", "print": false },
       { "label": "Company", "subtable": "faction_company", "print": false },
       { "label": "Native Tribe/Confederacy" },
       { "label": "Thieves/Bandits/Pirates" },
       { "label": "Individual", "subtable": "faction_individual", "print": false }
     ],
     "faction_society": [
-    	{ "label": "Chemycal & Herbal Society", "type": "Public", "description": "Share learning and promote alchemy." },
-		{ "label": "Circle of Eser", "type": "Secret", "description": "Mages within the alchemy society." },
-		{ "label": "Sisters of Genna", "type": "Secret", "description": "Increase the power and role of women in the church of the High Lord." },
-		{ "label": "Brothers of the Hunt", "type": "Public", "description": "Companionship, camaraderie." },
-		{ "label": "Learning Man’s Society", "type": "Public", "description": "Share knowledge (primarily of the ancient civilization)." },
-		{ "label": "name", "type": "Secret", "description": "Bring back the worship of the old gods and overthrow the High Lord." },
-		{ "label": "another name", "type": "Public", "description": "Ostensibly a trade organization but really plotting independence and revolution." },
-		{ "label": "Knights of Saint Ceren", "type": "Open Secret", "description": "Within the church of the High Lord, tasked with hunting and eliminating practitioners of black magic (which is pretty much all magic to them)." },
-		{ "label": "Friends of Egbert", "type": "Public", "description": "Mapping and exploration, including natural science." },
-		{ "label": "The Lord’s Civilizers", "type": "Public", "description": "A group of Angles dedicated to wiping out all the natives in the New World." },
-		{ "label": "Coven of XXX", "type": "Secret", "description": "You gotta have witches, right?" },
+		{ "label": "{{table:colonial_societies}}" },
     ],
     "faction_church": [
-    
+    	{ "label": "{{table:colonial_religions}}" }
     ],
     "faction_company": [
-    	{ "label": "{{table:tables.colonial_companies:name}}" }
+    	{ "label": "{{table:colonial_companies:name}}" }
     ],
     "faction_individual": [
     	{ "label": "Noble Family" },
     	{ "label": "Wizard" },
-    	{ "label": "Wealthy Merchant" }
+    	{ "label": "Wealthy Merchant" },
+    	{ "label": "Smuggler" }
     ]
   }
 };
+
+//!colonial_societies
+appdata.tables.colonial_societies = {
+  "title": "Societies (colonial)",
+  "author": "Derik Badman",
+  "tags": [
+    "colonial",
+    "npcs"
+  ],
+  "tables": {
+    "default": [
+    	{ "label": "Social Club: {{table:this:goals_public}}" },
+    	{ "label": "Secret Society: {{table:this:goals_secret}}" },
+    	{ "label": "{{table:this:specific}}" }
+    ],
+    "specific": [
+    	{ "label": "Chemycal & Herbal Society", "type": "Public", "description": "Share learning and promote alchemy." },
+		{ "label": "Circle of Eser", "type": "Secret", "description": "Mages within the alchemy society." },
+		{ "label": "Sisters of Genna", "type": "Secret", "description": "Increase the power and role of women in the church of the High Lord." },
+		{ "label": "Brothers of the Hunt", "type": "Public", "description": "Companionship, camaraderie." },
+		{ "label": "Learning Man's Society", "type": "Public", "description": "Share knowledge (primarily of the ancient civilization)." },
+		{ "label": "name", "type": "Secret", "description": "Bring back the worship of the old gods and overthrow the High Lord." },
+		{ "label": "another name", "type": "Public", "description": "Ostensibly a trade organization but really plotting independence and revolution." },
+		{ "label": "Friends of Egbert", "type": "Public", "description": "Mapping and exploration, including natural science." },
+		{ "label": "The Lord’s Civilizers", "type": "Public", "description": "A group of Angles dedicated to wiping out all the natives in the New World." },
+		{ "label": "Coven of Ella", "type": "Secret", "description": "You gotta have witches, right?" },
+    ],
+    "goals_secret": [
+    	"Political Conservatism",
+    	"Political Revolution",
+    	"Heretical Religious",
+    	"Conservative Religious",
+    	"Magic",
+    	"Shared Secret"
+    ],
+    "goals_public": [
+    	"Comaraderie",
+    	"Charity",
+    	"Mutual Interest",
+    	"Debate",
+    	"Political Action",
+    	"Religious Affinity",
+    	"Learning",
+    	"Activity"
+    ],
+  }
+};
+
+
+//!colonial_heresies
+appdata.tables.colonial_religions = {
+  "title": "Religions (colonial)",
+  "author": "Derik Badman",
+  "tags": [
+    "colonial",
+    "npcs"
+  ],
+  "tables": {
+    "default": [
+    	{ "label": "Church of the High Lord" },
+    	{ "label": "High Lord Sect", "subtable": "sects", "weight": 3 },
+    	{ "label": "High Lord Heretical Sect", "subtable": "heresies", "weight": 3 },
+    	{ "label": "Cult / Old God" },
+    	{ "label": "Spirit Worship" },
+    	{ "label": "Atheism" }
+    ],
+    "sects": [
+    	{ "label": "Monks of St. Cavil" },
+    	{ "label": "Nuns of the Prairie" },
+    	{ "label": "Knights of Saint Ceren", "description": "Within the church of the High Lord, tasked with hunting and eliminating practitioners of black magic (which is pretty much all magic to them)." },
+    	{ "label": "Order of the Ring" },
+    	{ "label": "Brothers of Amadeus" },
+    	{ "label": "Knights Rampant" }
+    ],
+    "heresies": [
+    	"Matriarchy",
+    	"Return to Nature",
+    	"Local leader as new son of deity",
+    	"Worship of obscure saint",
+    	"Satanism (or whatever the equivalent is)",
+    	"Death cult",
+    	"Non-hierarchical structure (no priests)",
+    	"Polygamy",
+    	"Normalization of magic use",
+    	"Some obscure minor theologial issue that almost no one understands but makes the authorities really mad",
+    ],
+    "old_gods": [
+    	"???",
+    	"???",
+    	"???"
+    ]
+  }
+};
+
 
 //!colonial_encounters_road
 appdata.tables.colonial_encounters_road = {
@@ -364,6 +448,15 @@ appdata.tables.colonial_encounters_road = {
     "colonial",
     "encounters"
   ],
+  "print": {
+	  "actions_men": { "hide_table": 1 },
+	  "actions_animal": { "hide_table": 1 },
+	  "men": { "hide_table": 1 },
+	  "animals": { "hide_table": 1 },
+	  "monsters": { "hide_table": 1 },
+	  "other": { "hide_table": 1 },
+	  "weather": { "hide_table": 1 }
+  },
   "tables": {
     "default": [
       { "label": "Animal", "weight": 2, "print": false, "subtable": "animals" },
@@ -395,8 +488,8 @@ appdata.tables.colonial_encounters_road = {
       { "label": "Eating/Drinking/Playing" }
     ],
     "men": [
-      { "label": "Group from: {{table:tables.colonial_factions}}", "subtable": "actions_men" },
-      { "label": "Individual from {{table:tables.colonial_factions}}", "subtable": "actions_men" },
+      { "label": "Group from: {{table:colonial_factions}}", "subtable": "actions_men" },
+      { "label": "Individual from {{table:colonial_factions}}", "subtable": "actions_men" },
       { "label": "Peddler and cart", "subtable": "actions_men" },
       { "label": "A group of soldiers on patrol", "subtable": "actions_men" },
       { "label": "A wagon/carriage transporting people", "subtable": "actions_men" },
@@ -490,6 +583,15 @@ appdata.tables.colonial_encounters_forest = {
     "colonial",
     "encounters"
   ],
+  "print": {
+	  "actions_men": { "hide_table": 1 },
+	  "actions_animal": { "hide_table": 1 },
+	  "men": { "hide_table": 1 },
+	  "animals": { "hide_table": 1 },
+	  "monsters": { "hide_table": 1 },
+	  "other": { "hide_table": 1 },
+	  "weather": { "hide_table": 1 }
+  },
   "tables": {
     "default": [
       { "label": "Animal", "weight": 2, "print": false, "subtable": "animals" },
@@ -592,7 +694,7 @@ appdata.tables.colonial_encounters_forest = {
 	 	"Bright Sun": { "weight": 2 },
 	 	"Major Weather event": { "description": "Hurricane, tornado, blizzard, flood, etc." }
  	},
- 	 	"hexdressing": [
+ 	"hexdressing": [
       { "label": "Clearing" },
       { "label": "Brook" },
       { "label": "Bee hive" },
@@ -646,6 +748,15 @@ appdata.tables.colonial_encounters_rivers = {
     "colonial",
     "encounters"
   ],
+  "print": {
+	  "actions_men": { "hide_table": 1 },
+	  "actions_animal": { "hide_table": 1 },
+	  "men": { "hide_table": 1 },
+	  "animals": { "hide_table": 1 },
+	  "monsters": { "hide_table": 1 },
+	  "other": { "hide_table": 1 },
+	  "weather": { "hide_table": 1 }
+  },
   "tables": {
     "default": [
       { "label": "Animal", "weight": 2, "print": false, "subtable": "animals" },
@@ -686,14 +797,14 @@ appdata.tables.colonial_encounters_rivers = {
       { "label": "Native canoes" },
       { "label": "Dwarven raiders" },
       { "label": "Bathers" },
-      { "label": "A camp on the shore for {{table:tables.colonial_factions}}" }
+      { "label": "A camp on the shore for {{table:colonial_factions}}" }
     ],
     "animals": [
       { "label": "Fish", "subtable": "actions_animal" },
       { "label": "Turtle", "subtable": "actions_animal" },
       { "label": "Snake", "subtable": "actions_animal" },
       { "label": "Frog", "subtable": "actions_animal" },
-      { "label": "{{table:tables.colonial_encounters_forest:animals}} drinking" }
+      { "label": "{{table:colonial_encounters_forest:animals}} drinking" }
     ],
 	"monsters": {
 		"???": { "subtable": "actions_animal" },
@@ -737,6 +848,15 @@ appdata.tables.colonial_encounters_swamp = {
     "colonial",
     "encounters"
   ],
+  "print": {
+	  "actions_men": { "hide_table": 1 },
+	  "actions_animal": { "hide_table": 1 },
+	  "men": { "hide_table": 1 },
+	  "animals": { "hide_table": 1 },
+	  "monsters": { "hide_table": 1 },
+	  "other": { "hide_table": 1 },
+	  "weather": { "hide_table": 1 }
+  },
   "tables": {
     "default": [
       { "label": "Animal", "weight": 2, "print": false, "subtable": "animals" },
@@ -860,17 +980,26 @@ appdata.tables.colonial_encounters_town = {
     "encounters",
     "colonial"
   ],
+  "print": {
+	  "actions_men": { "hide_table": 1 },
+	  "actions_animal": { "hide_table": 1 },
+	  "men": { "hide_table": 1 },
+	  "animals": { "hide_table": 1 },
+	  "monsters": { "hide_table": 1 },
+	  "other": { "hide_table": 1 },
+	  "weather": { "hide_table": 1 }
+  },
   "tables": {
     "default": [
-      { "label": "{{table:tables.colonial_occupations:laborer}}",
+      { "label": "{{table:colonial_occupations:laborer}}",
         "subtable": "actions_men" },
-      { "label": "{{table:tables.colonial_occupations:artisan}}",
+      { "label": "{{table:colonial_occupations:artisan}}",
         "subtable": "actions_men" },
-      { "label": "{{table:tables.colonial_occupations:criminal}}",
+      { "label": "{{table:colonial_occupations:criminal}}",
         "subtable": "actions_men" },
-      { "label": "{{table:tables.colonial_occupations:professional}}",
+      { "label": "{{table:colonial_occupations:professional}}",
         "subtable": "actions_men" },
-      { "label": "Member(s) of {{table:tables.colonial_factions}}",
+      { "label": "Member(s) of {{table:colonial_factions}}",
         "subtable": "actions_men" },
       { "label": "Farmer",
         "subtable": "actions_men" },
@@ -931,7 +1060,7 @@ appdata.tables.colonial_settlement_locations = {
       { "label": "Tavern" },
       { "label": "General Store" },
       { "label": "Commons" },
-      { "label": "Artisan Shop: {{table:tables.colonial_occupations:artisan}}" },
+      { "label": "Artisan Shop: {{table:colonial_occupations:artisan}}" },
       { "label": "Merchant" },
       { "label": "Meeting House (for club/society)" },
       { "label": "Barracks" },
@@ -1004,7 +1133,7 @@ appdata.tables.colonial_settlement_riled = {
   "tables": {
     "default": [
       { "label": "New tax on alcohol sales." },
-      { "label": "Excise tax on {{table:tables.mission_thing:default}}" },
+      { "label": "Excise tax on {{table:mission_thing:default}}" },
       { "label": "Popular adventurer to be hanged on charges of treason." },
       { "label": "Additional troops have been billeted in local homes." },
       { "label": "New curfew instituted." },
@@ -1012,9 +1141,88 @@ appdata.tables.colonial_settlement_riled = {
       { "label": "Religious crackdown on minor sects." },
       { "label": "Popular preacher jailed for vagrancy/impiety." },
       { "label": "Attack by natives on nearby settlement" },
-      { "label": "Shortage of {{table:tables.mission_thing:default}}" },
+      { "label": "Shortage of {{table:mission_thing:default}}" },
       { "label": "Epidemic of sickness" },
       { "label": "Political scandal" }
+    ]
+  }
+};
+
+//!settlement flemish names
+appdata.tables.colonial_settlement_flemish_names = {
+  "title": "Flemish Town Names",
+  "tags": [
+    "colonial",
+    "settlements"
+  ],
+  "tables": {
+    "default": [
+      { "label": "Aalst" },
+      { "label": "Aarschot" },
+      { "label": "Antwerp" },
+      { "label": "Beringen" },
+      { "label": "Bilzen" },
+      { "label": "Blankenberge" },
+      { "label": "Borgloon" },
+      { "label": "Bree" },
+      { "label": "Bruges" },
+      { "label": "Damme" },
+      { "label": "Deinze" },
+      { "label": "Dendermonde" },
+      { "label": "Diest" },
+      { "label": "Diksmuide" },
+      { "label": "Dilsen-Stokkem" },
+      { "label": "Eeklo" },
+      { "label": "Geel" },
+      { "label": "Genk" },
+      { "label": "Ghent" },
+      { "label": "Geraardsbergen" },
+      { "label": "Gistel" },
+      { "label": "Halen" },
+      { "label": "Halle" },
+      { "label": "Hamont-Achel" },
+      { "label": "Harelbeke" },
+      { "label": "Hasselt" },
+      { "label": "Herentals" },
+      { "label": "Herk-de-Stad" },
+      { "label": "Hoogstraten" },
+      { "label": "Ypres" },
+      { "label": "Izegem" },
+      { "label": "Kortrijk" },
+      { "label": "Landen" },
+      { "label": "Leuven" },
+      { "label": "Lier" },
+      { "label": "Lo-Reninge" },
+      { "label": "Lokeren" },
+      { "label": "Lommel" },
+      { "label": "Maaseik" },
+      { "label": "Mechelen" },
+      { "label": "Menen" },
+      { "label": "Mesen" },
+      { "label": "Mortsel" },
+      { "label": "Nieuwpoort" },
+      { "label": "Ninove" },
+      { "label": "Ostend" },
+      { "label": "Oudenaarde" },
+      { "label": "Oudenburg" },
+      { "label": "Peer" },
+      { "label": "Poperinge" },
+      { "label": "Roeselare" },
+      { "label": "Ronse" },
+      { "label": "Scherpenheuvel-Zichem" },
+      { "label": "Sint-Niklaas" },
+      { "label": "Sint-Truiden" },
+      { "label": "Tielt" },
+      { "label": "Tienen" },
+      { "label": "Tongeren" },
+      { "label": "Torhout" },
+      { "label": "Turnhout" },
+      { "label": "Veurne" },
+      { "label": "Vilvoorde" },
+      { "label": "Waregem" },
+      { "label": "Wervik" },
+      { "label": "Zottegem" },
+      { "label": "Zoutleeuw" }
     ]
   }
 }

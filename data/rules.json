@@ -506,7 +506,7 @@ appdata.rules = {
 		]
 	},
 	//!dnd 5e
-	"lotfp": {
+	"dnd5e": {
 		"label": "D&D 5e",
 		"ability_scores": {
 			"str": "strength",
@@ -533,7 +533,9 @@ appdata.rules = {
 				"15": 2,
 				"16": 3,
 				"17": 3,
-				"18": 4
+				"18": 4,
+				"19": 4,
+				"20": 5
 			}
 		},
 		"armorclass": {
@@ -575,12 +577,12 @@ appdata.rules = {
 				"armor": ["Buff Coat", "Leather Armor", "Pikeman Armor", "Chainmail"],
 			},
 			"magic-user": {
-				"label": "Magic-User",
+				"label": "Wizard",
 				"hd": 6,
 				"attack": function(lvl) { return Math.ceil(lvl/4) + 1; },
 				"spellcaster": true,
 				"spelllist": "spells_magicuser",
-				"spells": [ [1], [2], [2,1], [2,2], [3,2,1], [3,2,2], [3,3,2,1], [4,3,2,2], [4,3,3,2,1] ],
+				"spells": [ [2], [3], [4,2], [4,3], [4,3,2], [4,3,3], [4,3,3,1], [4,3,3,2], [4,3,3,3,1] ],
 				"armor": ["No Armor"]
 			},
 			"cleric": {
@@ -589,7 +591,7 @@ appdata.rules = {
 				"attack": function(lvl) { return Math.ceil(lvl/4) + 1; },
 				"spellcaster": true,
 				"spelllist": "spells_cleric",
-				"spells": [ [1], [2], [3], [3,1], [3,2,1], [3,3,2], [4,3,3,1], [4,3,3,2], [4,3,3,3,1] ],
+				"spells": [ [2], [3], [4,2], [4,3], [4,3,2], [4,3,3], [4,3,3,1], [4,3,3,2], [4,3,3,3,1] ],
 				"armor": ["Buff Coat", "Leather Armor"],
 			},
 			"rogue": {
@@ -606,13 +608,14 @@ appdata.rules = {
 			}
 		},
 		"armor": [
-			{ "name": "Buff Coat", "ac_base": 0, "ac_bonus": 1 },
-			{ "name": "Leather Armor", "ac_base": 14, "ac_bonus": 0 },
-			{ "name": "Pikeman Armor", "ac_base": 14, "ac_bonus": 0 },
-			{ "name": "Chainmail", "ac_base": 16, "ac_bonus": 0 },
-			{ "name": "Morion", "ac_base": 0, "ac_bonus": 1 },
-			{ "name": "Shield", "ac_base": 0, "ac_bonus": 1 },
-			{ "name": "No Armor", "ac_base": 12, "ac_bonus": 0 }
+			{ "name": "Leather Armor", "ac_base": 11, "ac_bonus": 0 },
+			{ "name": "Chain shirt", "ac_base": 13, "ac_bonus": 0 },
+			{ "name": "Breast plate", "ac_base": 14, "ac_bonus": 0 },
+			{ "name": "Half plate", "ac_base": 15, "ac_bonus": 0 },
+			{ "name": "Chain mail", "ac_base": 16, "ac_bonus": 0 },
+			{ "name": "Plate", "ac_base": 18, "ac_bonus": 0 },
+			{ "name": "Shield", "ac_base": 0, "ac_bonus": 2 },
+			{ "name": "No Armor", "ac_base": 10, "ac_bonus": 0 }
 		]
 		
 	},

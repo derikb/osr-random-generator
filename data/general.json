@@ -1,55 +1,57 @@
 //! general simple tables
 
 appdata = (typeof appdata == "undefined") ? {} : appdata;
+appdata.tables = (typeof appdata.tables == "undefined") ? {} : appdata.tables;
 
-appdata.general = {
-	"direction": {
-		"table": [
-			"North",
-			"South",
-			"East",
-			"West"
-		]
-	},
-	"color": {
-		"table": [
-			"Black",
-			"White",
-			"Grey",
-			"Blue",
-			"Red",
-			"Yellow",
-			"Gold",
-			"Silver",
-			"Crimson",
-			"Azure",
-			"Green",
-			"Orange",
-			"Violet"
-		]
-	},
-	"ordinal": {
-		"table": [
-			"First",
-			"Second",
-			"Third",
-			"Fourth",
-			"Fifth",
-			"Sixth",
-			"Seventh",
-			"Eighth",
-			"Ninth",
-			"Tenth",
-			"Last"
-		]
-	},
-	"season": {
-		"table": [
-			"Winter",
-			"Spring",
-			"Summer",
-			"Autumn"
-		]
-	}
-	
-}
+appdata.tables.direction = {
+	"table": [
+		"North",
+		"South",
+		"East",
+		"West"
+	]
+};
+
+appdata.tables.color = {
+	"table": [
+		"Black",
+		"White",
+		"Grey",
+		"Blue",
+		"Red",
+		"Yellow",
+		"Gold",
+		"Silver",
+		"Crimson",
+		"Azure",
+		"Green",
+		"Orange",
+		"Violet"
+	]
+};
+
+
+appdata.tables.ordinal = {
+	"table": [
+		"First",
+		"Second",
+		"Third",
+		"Fourth",
+		"Fifth",
+		"Sixth",
+		"Seventh",
+		"Eighth",
+		"Ninth",
+		"Tenth",
+		"Last"
+	]
+};
+
+appdata.tables.season = {
+	"table": [
+		"Winter",
+		"Spring",
+		"Summer",
+		"Autumn"
+	]
+};

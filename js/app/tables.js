@@ -95,6 +95,12 @@ var RandomTable = Backbone.Model.extend(
 		}
 		//we look in the start table for what to roll if the start wasn't explicitly set in the call
 		var sequence = (start == '') ? this.get('sequence') : start;
+		
+		if (sequence == 'rollall') {
+			//roll all the tables in order
+			sequence = _.keys(this.get('tables'));
+		}
+		
 		if (sequence == '') {
 			//if no start attribute
 			//try for "default" table
@@ -227,13 +233,30 @@ var RandomTable = Backbone.Model.extend(
 		if (_.isString(r)) { return r; }
 		if (simple) { return r[0]['result']; }
 		var o = '';
+		var print_opt = (this.get('print')) ? this.get('print') : {};
 		_.each(r, function (v){
-			if (v.table == 'default') {
-				o += v.result.capitalize()+'<br/>';
+			
+			if (print_opt[v.table]) {
+				
+				if (!print_opt[v.table].hide_table || print_opt[v.table].hide_table == 0) {
+					o += v.table.capitalize()+': ';
+				}
+				if (!print_opt[v.table].hide_result || print_opt[v.table].hide_result == 0) {
+					o += v.result.capitalize()+'<br/>';
+				}
+				if (!print_opt[v.table].hide_desc || print_opt[v.table].hide_desc == 0) {
+					if (v.desc !== '') { o += v.desc+'<br/>'; }
+				}
+					
 			} else {
-				o += v.table.capitalize()+': '+v.result.capitalize()+'<br/>';
+			
+				if (v.table == 'default') {
+					o += v.result.capitalize()+'<br/>';
+				} else {
+					o += v.table.capitalize()+': '+v.result.capitalize()+'<br/>';
+				}
+				if (v.desc !== '') { o += v.desc+'<br/>'; }
 			}
-			if (v.desc !== '') { o += v.desc+'<br/>'; }
 		}, this);
 		o = o.replace(/<br\/>$/, '');
 		return o;

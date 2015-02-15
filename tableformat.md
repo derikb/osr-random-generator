@@ -19,7 +19,7 @@ Table data should be formatted as:
 * _(optional)_ You can cause a roll on a subtable if the result is selected by adding two pounds signs and the title of a table to the end of a line: `Bandits##bandit_types` where "bandit_types" is the title of a subtable.
 * _(optional)_ You can insert tokens into the results to perform actions like generating numbers or rolling on other random tables. For instance:
     * Roll a number: `{{roll:3d6+1}}` in the results will generate a new random number every time that result comes up. The section after the semi-colon should accept any form of `[A Number or Blank]d[Another number][An arithmatic operator: +, -, *, or /][Another number]` such as `{{roll:d6}}` `{{roll:d6*2}}` `{{roll:2d10+10}}`.
-    * Select from a table: `{{table:general.color}}` will randomly select a color. You can reference any other table in the app, but I still need to improve the table references (how to reference them and where to find those names).
+    * Select from a table: `{{table:color}}` will randomly select a color. You can reference any other table in the app, but I still need to improve the table references (how to reference them and where to find those names).
     
 Alternately, you can paste in HTML (select the "html" format option). In this case tags will be stripped and line breaks will be added at the end of list item `<li>`, table rows `<tr>`, div `<div>`, br `<br>`, and paragraph tags `<p>` (that should cover most of what people would use).
 
@@ -148,6 +148,10 @@ This table adds information about the table which helps with finding it in the t
 * `source`: Book or website where the table came from (include a url/link)
 * `description`: What is this table? What is it for?
 * `tags`: a list of tags to categorize the table (you can filter on the tags in the table list)
+* `print`: a list of objects to describe what parts of a (sub)table should be displayed in the results
+    * `hide_table` set to 1 will not show the table name
+    * `hide_result` set to 1 will not show the result on that (sub)table
+    * `hide_desc` set to 1 will not show any description for a result on that (sub)table
 * `tables`: an object made up of table names and table data
 
 ### Complex Table with Subtables
@@ -158,6 +162,10 @@ This table adds information about the table which helps with finding it in the t
 		"source": "",
 		"description": "",
 		"tags": ["swamp", "encounters"],
+		"print": {
+			"general": { "hide_table": 1, "hide_result": 1 },
+			"trap": { "hide_table": 1 },
+		},
 		"sequence": "general",	
 	 	"tables": {
 		 	"general": {
@@ -267,7 +275,7 @@ This table adds information about the table which helps with finding it in the t
 	
 ### Other options
 
-The `sequence` property can be used to set what table or tables should be rolled on by default. This can be a single table name or a list of table names.
+The `sequence` property can be used to set what table or tables should be rolled on by default. This can be a single table name or a list of table names. If you set `sequence` to `rollall` all the tables will be rolled in order.
 
 Results within (sub)tables can have a variety of properties:
 
@@ -285,6 +293,14 @@ You can also use tokens to generate random numbers or results from other tables 
 
 ##### Roll on other tables
 
-`{{table:general.color}}` in a result will generate a random color. Also available in the general category is "direction", "ordinal", and "season".
+`{{table:color}}` in a result will generate a random color. Also available in a more general category are "direction", "ordinal", and "season".
+
+`{{table:TABLE}}` and `{{table:TABLE:SUBTABLE}}` will generate a result on the names table/subtable (using the table title).
+
+To roll on subtables of the current table use `{{table:this:SUBTABLE_NAME}}`
 
 _Still need to get this working well for user added tables._
+
+##### Generate a Name
+
+`{{name:NAMETYPE:GENDER:STYLE}}` will insert a name into the table. `nametype` is required and should be one of the name lists (flemish, dutch, holmesian) or "random". `gender` is optional and can be male, female, or random. If left blank, only a surname will be generated. `style` is optional and only accepts the value "first", in which case only a first name will be generated.

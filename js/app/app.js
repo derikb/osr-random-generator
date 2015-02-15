@@ -35,9 +35,9 @@ var AppRouter = Backbone.Router.extend(
 
 		$('#mission-form').html(new MissionForm({ model: this.AppSettings }).render().el);
 		
-		$('#wilderness-form').append(new WildernessForm({ model: this.AppSettings }).render().el);
+		$('#wilderness-form').html(new WildernessForm({ model: this.AppSettings }).render().el);
 		
-		$('#dungeon-form').append(new DungeonForm({ model: this.AppSettings }).render().el);
+		$('#dungeon-form').html(new DungeonForm({ model: this.AppSettings }).render().el);
 		
 		this.creator = new Creator();
 		this.exporter = new Exporter();
@@ -206,7 +206,6 @@ var AppSettings = Backbone.Model.extend(
 			wilderness: {
 				hexdressing_count: 3,
 				encounter_count: 5,
-				
 				hexdressing_default: 'hex_dressing'
 			},
 			
@@ -217,6 +216,13 @@ var AppSettings = Backbone.Model.extend(
 				settlement: '',
 				rivers: '',
 				town: ''
+			},
+			
+			mission_tables: {
+				complication: '',
+				antagonist: '',
+				patron: '',
+				reward: ''
 			}
 		
 			
@@ -240,6 +246,31 @@ var AppSettings = Backbone.Model.extend(
 		if (changed.version) {
 			//console.log(changed)
 		}
+		
+	},
+	
+	/**
+	 * Export the saved settings
+	 * @param {String} [which] placeholder
+	 * @param {Boolean} [compress=false] if true JSON will not be indented with tabs/lines
+	 * @returns {Array} Array of  objects ? 
+	 */
+	exportOutput: function(which, compress) {
+		if (typeof which == 'undefined') {
+			which = '';
+		}
+		if (typeof compress == 'undefined') {
+			compress = false;
+		}
+		
+		var att = _.clone(this.attributes);
+		// _.each(att, function(v,k,l){
+// 			if (!editmode && _.isEmpty(v)) {
+// 				delete l[k];
+// 			}
+// 		}, this);
+		delete att.id;
+		return att;
 		
 	}
 	
@@ -275,7 +306,6 @@ var AppSettingsView = Backbone.View.extend(
 	
 	/**
 	 * Save the settings
-	 * @todo validate this a bit as bad data could break the whole app
 	 */
 	editSettings: function(e) {
 		e.preventDefault();
@@ -291,11 +321,24 @@ var AppSettingsView = Backbone.View.extend(
 			}
 		}, this);
 		
+		//convert mission settings into an object
+		formdata.mission_tables = {};
+		var mission_tables = this.model.get('mission_tables');
+		_.each(mission_tables, function(v,k) {
+			if (formdata['mission_'+k]) {
+				formdata.mission_tables[k] = formdata['mission_'+k];
+				delete(formdata['mission_'+k]);
+			}
+		}, this);
+		
+		//convert wilderness fields to object
 		formdata.wilderness = this.model.get('wilderness');
 		formdata.wilderness.encounter_count = formdata.wilderness_encounter_count;
 		delete(formdata.wilderness_encounter_count);
 		formdata.wilderness.hexdressing_count = formdata.wilderness_hexdressing_count;
 		delete(formdata.wilderness_hexdressing_count);
+		formdata.wilderness.hexdressing_default = formdata.wilderness_hexdressing_default;
+		delete(formdata.wilderness_hexdressing_default);
 		
 		this.model.save(formdata);
 		
@@ -350,14 +393,14 @@ var AppSettingsView = Backbone.View.extend(
     			var sel = (v.get('key') == this.model.get('occupation_type')) ? 'selected=selected' : '';
 	    		form += '<option value="'+v.get('key')+'" '+sel+'>'+v.get('title')+'</option>';
     		}, this);
-		form += '</select><div class="help-block">For 0 level NPCs.</div></div></div>';
+		form += '</select><div class="help-block">For 0 level NPCs. Tag a table with "occupation" to have it appear here.</div></div></div>';
 		
 		form += '<div class="row"><div class="form-group col-sm-9"><label for="personality_type" class="control-label">Personality List</label><select class="form-control" id="personality_type" name="personality_type">';
-    		_.each(appdata.personality_options, function(v){
-    			var sel = (v.option == this.model.get('personality_type')) ? 'selected=selected' : '';
-	    		form += '<option value="'+v.option+'" '+sel+'>'+v.label+'</option>';
+    		_.each(app.rtables.getByTags('personality'), function(v){
+    			var sel = (v.get('key') == this.model.get('personality_type')) ? 'selected=selected' : '';
+	    		form += '<option value="'+v.get('key')+'" '+sel+'>'+v.get('title')+'</option>';
     		}, this);
-		form += '</select><div class="help-block">For added color.</div></div>';
+		form += '</select><div class="help-block">For added color. Tag a table with "personality" to have it appear here.</div></div>';
 		
 		form += '<div class="form-group col-sm-3"><label for="personality_count" class="control-label"># Traits</label><select class="form-control" id="personality_count" name="personality_count">';
 			for(var i=0;i<=4;i++) {
@@ -367,11 +410,11 @@ var AppSettingsView = Backbone.View.extend(
 		form += '</select><div class="help-block"></div></div></div>';
 		
 		form += '<div class="row"><div class="form-group col-sm-9"><label for="appearance_type" class="control-label">Appearance List</label><select class="form-control" id="appearance_type" name="appearance_type">';
-    		_.each(appdata.appearance_options, function(v){
-    			var sel = (v.option == this.model.get('appearance_type')) ? 'selected=selected' : '';
-	    		form += '<option value="'+v.option+'" '+sel+'>'+v.label+'</option>';
+    		_.each(app.rtables.getByTags('appearance'), function(v){
+    			var sel = (v.get('key') == this.model.get('appearance_type')) ? 'selected=selected' : '';
+	    		form += '<option value="'+v.get('key')+'" '+sel+'>'+v.get('title')+'</option>';
     		}, this);
-		form += '</select><div class="help-block">For added color.</div></div>';
+		form += '</select><div class="help-block">For added color. Tag a table with "appearance" to have it appear here.</div></div>';
 		
 		form += '<div class="form-group col-sm-3"><label for="appearance_count" class="control-label"># Traits</label><select class="form-control" id="appearance_count" name="appearance_count">';
 			for(var i=0;i<=4;i++) {
@@ -380,6 +423,12 @@ var AppSettingsView = Backbone.View.extend(
 			}
 		form += '</select><div class="help-block"></div></div></div>';
 		
+		form += '<div class="row"><div class="form-group col-sm-12"><label for="goals_type" class="control-label">Goals List</label><select class="form-control" id="goals_type" name="goals_type">';
+    		_.each(app.rtables.getByTags('goals'), function(v){
+    			var sel = (v.get('key') == this.model.get('goals_type')) ? 'selected=selected' : '';
+	    		form += '<option value="'+v.get('key')+'" '+sel+'>'+v.get('title')+'</option>';
+    		}, this);
+		form += '</select><div class="help-block">Tag a table with "goals" to have it appear here.</div></div></div>';
 				
 		form += '</fieldset>';
 		
@@ -397,6 +446,25 @@ var AppSettingsView = Backbone.View.extend(
 		form += '</div>';
 		
 		form += '<div class="col-sm-6">';
+			
+			form += '<fieldset><legend>Mission Settings</legend>';
+						
+			var mission_tables = this.model.get('mission_tables');
+			
+			_.each(mission_tables, function(v,k){
+				
+				form += '<div class="form-group"><label for=mission_'+k+' class="control-label">Mission '+k.capitalize()+'</label><select class="form-control" id="mission_'+k+'" name="mission_'+k+'">';			
+					_.each(app.rtables.getByTags('mission_'+k), function(t){
+						var sel = (t.get('key') == v) ? 'selected=selected' : '';
+						form += '<option value='+t.get('key')+' '+sel+'>'+t.get('title')+'</option>';
+					}, this);		
+				form += '</select><div class="help-block">Tag a table with "mission_'+k+'" and reload to see it in this list.</div></div>';
+				
+			}, this);
+			
+			form += '</fieldset>';
+		
+		
 			form += '<fieldset><legend>Wilderness Settings</legend>';
 			
 			form += '<div class="row"><div class="form-group col-sm-6"><label for=wilderness_encounter_count class="control-label">Encounters to Generate</label><input type="number" class="form-control" id="wilderness_encounter_count" name="wilderness_encounter_count" value="'+this.model.get('wilderness').encounter_count+'" /></div>';
@@ -404,6 +472,15 @@ var AppSettingsView = Backbone.View.extend(
 			form += '<div class="form-group col-sm-6"><label for=wilderness_hexdressing_count class="control-label">Hexdressing to Generate</label><input type="number" class="form-control" id="wilderness_hexdressing_count" name="wilderness_hexdressing_count" value="'+this.model.get('wilderness').hexdressing_count+'" /></div>';
 			
 			form += '</div>'; //.row
+			
+			var hexdressing_default = this.model.get('wilderness').hexdressing_default; 
+			form += '<div class="form-group"><label for="wilderness_hexdressing_default" class="control-label">Default Hexdressing Table</label><select class="form-control" id="wilderness_hexdressing_default" name="wilderness_hexdressing_default">';
+				_.each(app.rtables.getByTags('hexdressing'), function(t){
+					var sel = (t.get('key') == hexdressing_default) ? 'selected=selected' : '';
+					form += '<option value='+t.get('key')+' '+sel+'>'+t.get('title')+'</option>';
+				}, this);			
+			form += '</select><div class="help-block">If a subtable called "hexdressing" is not defined for the terrain encounter table then this table will be used instead. Tag a table with "hexdressing" to have it appear here.</div></div>';
+			
 			
 			var encounter_tables = this.model.get('encounter_tables');
 			
@@ -560,7 +637,7 @@ var AppRandomizer = function() {
 	
 	/**
 	 * Perform token replacement.  Only table and roll actions are accepted
-	 * @param {String} token A value passed from {@link AppRandomizer#findToken} containing a token(s) {{SOME OPERATION}} Tokens are {{table:SOMETABLE}} {{table:SOMETABLE:SUBTABLE}} {{table:SOMETABLE*3}} (roll that table 3 times) {{roll:1d6+2}} (etc) (i.e. {{table:tables.colonial_occupations:laborer}} {{table:general.color}} also generate names with {{name:flemish}} (surname only) {{name:flemish:male}} {{name:dutch:female}}
+	 * @param {String} token A value passed from {@link AppRandomizer#findToken} containing a token(s) {{SOME OPERATION}} Tokens are {{table:SOMETABLE}} {{table:SOMETABLE:SUBTABLE}} {{table:SOMETABLE*3}} (roll that table 3 times) {{roll:1d6+2}} (etc) (i.e. {{table:colonial_occupations:laborer}} {{table:color}} also generate names with {{name:flemish}} (surname only) {{name:flemish:male}} {{name:dutch:female}}
 	 * 
 	 * Note: this function runs out of scope (?) via the replace function, so "this" does not refer to the randomizer object
 	 *
@@ -584,19 +661,10 @@ var AppRandomizer = function() {
 				
 				//what table do we roll on
 				if (parts[1] == 'this') {
-					//reroll on same tables
+					//reroll on same table
 					var t = app.rtables.getByTitle(curtable);
-					//$.extend(true, {}, model.toJSON());
-					//var t = _.clone(app.rtables.getByTitle(this.get('key')));
-					//var t = new RandomTable(_.clone(app.rtables.getByTitle(this.get('key')).attributes));
 				} else {
-					var subtables = parts[1].split('.');
-					var vlist = 'appdata';
-					for(i=0;i<subtables.length;i++) {
-						vlist += '.'+subtables[i];
-					}
-					eval('var table = '+vlist+';');
-					var t = new RandomTable(table);
+					var t = app.rtables.getByTitle(parts[1]);
 				}
 				if (typeof parts[2] !== 'undefined' && parts[2].indexOf('*') !== -1) {
 					var x = parts[2].split('*');
@@ -618,12 +686,20 @@ var AppRandomizer = function() {
 				break;
 			case "name":
 				var n = new Names();
+				if (typeof parts[1] == 'undefined' || parts[1]=='' || parts[1]=='random') {
+					parts[1] = '';
+				}
+				if (typeof parts[3] == 'undefined' || parts[3] !== 'first') {
+					parts[3] = '';
+				}
 				if (typeof parts[2] == 'undefined') {
 					string = n.generateSurname(parts[1]);
 				} else if (parts[2] == 'male') {
-					string = n.generateName(parts[1], 'male');
+					string = n.generateName(parts[1], 'male', parts[3]);
 				} else if (parts[2] == 'female') {
-					string = n.generateName(parts[1], 'female');
+					string = n.generateName(parts[1], 'female', parts[3]);
+				} else if (parts[2] == 'random') {
+					string = n.generateName(parts[1], 'random', parts[3]);
 				}
 				break;
 			default:
