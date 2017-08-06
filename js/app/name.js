@@ -168,7 +168,7 @@ var Names = Backbone.Model.extend(
 		var thename = '';
 		
 		if (!this.get('markov').memory) {
-			var markov = new Markov({ order: 3 });
+			var markov = new Markov({ order: 2 });
 			this.set('markov', markov);
 		} else {
 			var markov = this.get('markov');
@@ -301,7 +301,6 @@ var NameForm = Backbone.View.extend(
     
 });
 
-
 /**
  * Adapted from http://blog.javascriptroom.com/2013/01/21/markov-chains/
  */
@@ -321,15 +320,18 @@ var Markov = function(config){
 		
 		/**
 		 * add element to memory
-		 * @param {Array} key array for chain (converted to a,b,c by toString())
+		 * @param {Array} key array for chain (converted to a,b,c by toString()), implicitly coerced into a string 'a,b,c'
 		 * @param {String} value next element in chain
 		 */
 		function learnPart (key, value) {
-			//console.log(key);
 			if (!mem[key]) {
-				mem[key] = [];
+				mem[key] = {};
 			}
-			mem[key].push(value);
+			if (mem[key][value]) {
+				mem[key][value].weight = mem[key][value].weight + 1;
+			} else {
+				mem[key][value] = { weight: 1 };
+			}
 			return mem;
 		}
 		
@@ -349,13 +351,13 @@ var Markov = function(config){
 	};
 	/**
 	 * iterate through, calls self
-	 * @param {Array} state array of most recent x(x=order) elements in chain
+	 * @param {Array} state array of most recent x(x=order) elements in chain, implicitly coerced into a string 'a,b,c'
 	 * @param {Array} ret the chain
 	 * @return {Array}
 	 */
 	this.step = function (state, ret) {
-		var nextAvailable = this.memory[this.cur_key][state] || [''],
-		next = nextAvailable.random();
+		var nextAvailable = this.memory[this.cur_key][state] || [''];
+		next = app.randomizer.rollRandom(nextAvailable);
 		//we don't have anywhere to go
 		if (!next) {
 			return ret;
@@ -395,7 +397,6 @@ var Markov = function(config){
 	 */
     this.genInitial = function () {
         var ret = [];
- 
         for (
             var i = 0;
             i < this.order;
@@ -404,9 +405,5 @@ var Markov = function(config){
  
         return ret;
     };
-};
- 
-Array.prototype.random = function () {
-    return this[Math.floor(Math.random() * this.length)];
 };
 

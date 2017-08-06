@@ -15,6 +15,9 @@ It has a few related functions that are in varying states of development.
 
 4) Wilderness Hex Generation: Put in a terrain type and it will generate hex dressing and encounters of various sorts. Primarily meant as a pre-session prep in case your PCs head off into an unplanned wilderness, or as a way to add some extra flavor to travel. Still very much in progress (needs more encounter tables and a way to customize them).
 
+5) Name Generator: Select names from various nationality lists (and a couple fantasy ones) or generate new names that are like the real names.
+
+6) Mission Generator: Simple framework for creating goal-based adventures.
 
 Install on a Desktop or Laptop
 ------------------------------

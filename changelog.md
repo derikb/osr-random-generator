@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+v0.87 - 2015-xx-xx
+------------------
+
+* Improvements to the Markov chains for name generator
+* updated jquery to 213
+
 v0.86 - 2015-02-15
 ------------------
 
