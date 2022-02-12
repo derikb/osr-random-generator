@@ -1,6 +1,10 @@
 osr-random-generator
 ====================
 
+**ABANDONED**: As is probably obvious, I am no longer working on this project. But I did create the [rpg-table-randomizer](https://github.com/derikb/rpg-table-randomizer) a javascript module for handling randomization, name generation, and npc creation. I've also been working on [hadleyville-online](https://github.com/derikb/hadleyville-online) an online version of a rules-light rpg I made that uses a lot of these ideas. Also [character-sheet-app](https://github.com/derikb/character-sheet-app) a webapp for character sheets.
+
+---
+
 A random generator for old school fantasy rpgs.
 
 Online version at: http://derikb.github.io/osr-random-generator/
